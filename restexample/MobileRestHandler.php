@@ -15,11 +15,12 @@ class MobileRestHandler extends SimpleRest {
 		} else {
 			$statusCode = 200;
 		}
-        $response = $this->encodeJson($rawData);
+        // $response = $this->encodeJson($rawData);
 
-        echo $response;
+        // echo $response;
 
-		/*$requestContentType = $_SERVER['HTTP_ACCEPT'];
+		// $requestContentType = $_SERVER['HTTP_ACCEPT'];
+        $requestContentType = "application/json";
 		$this ->setHttpHeaders($requestContentType, $statusCode);
 				
 		if(strpos($requestContentType,'application/json') !== false){
@@ -31,7 +32,7 @@ class MobileRestHandler extends SimpleRest {
 		} else if(strpos($requestContentType,'application/xml') !== false){
 			$response = $this->encodeXml($rawData);
 			echo $response;
-		}*/
+		}
 	}
 	
 	public function encodeHtml($responseData) {
@@ -69,10 +70,10 @@ class MobileRestHandler extends SimpleRest {
 		} else {
 			$statusCode = 200;
 		}
-        $response = $this->encodeJson($rawData);
-        echo $response;
-/*
-		$requestContentType = $_SERVER['HTTP_ACCEPT'];
+        // $response = $this->encodeJson($rawData);
+        // echo $response;
+
+		$requestContentType = "application/json";
 		$this ->setHttpHeaders($requestContentType, $statusCode);
 				
 		if(strpos($requestContentType,'application/json') !== false){
@@ -84,7 +85,7 @@ class MobileRestHandler extends SimpleRest {
 		} else if(strpos($requestContentType,'application/xml') !== false){
 			$response = $this->encodeXml($rawData);
 			echo $response;
-		}*/
+		}
 	}
 }
 ?>

@@ -49,7 +49,8 @@ Class Mobile {
         $mobilephones[0] = $cellphone1;
         $mobilephones[1] = $cellphone2;
         $mobilephones[2] = $cellphone3;
-		$mobile = array($id => ($mobilephones[$id]) ?: $mobilephones[0]);
+		// $mobile = array($id => $mobilephones[$id] ?: $mobilephones[0]);
+        $mobile = $mobilephones[$id] ?: $mobilephones[0];
 		return $mobile;
 	}	
 }
