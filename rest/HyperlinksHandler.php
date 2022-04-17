@@ -49,6 +49,10 @@ class HyperlinksHandler
         $hyperlinks[0] = $hyperLink1;
         return $hyperlinks;
     }
+    public function insertHyperlink($ID, $group, $category, $webdescription, $website)
+    {
+        return true;
+    }
 }
 
 ?>

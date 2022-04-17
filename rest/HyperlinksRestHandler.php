@@ -40,7 +40,7 @@ class HyperLinksRestHandler extends SimpleRest
     public function encodeHtml($responseData)
     {
 
-        $htmlResponse = "<table border='1'>";
+        $htmlResponse = "<table >";
         foreach ($responseData as $key => $value) {
             $htmlResponse .= "<tr><td>" . $key . "</td><td>" . $value . "</td></tr>";
         }
@@ -63,7 +63,25 @@ class HyperLinksRestHandler extends SimpleRest
         }
         return $xml->asXML();
     }
+    public function insertHyperlink($ID, $group, $category, $webdescription, $website)
+    {
+        $hyperlinksHandler = new HyperlinksHandler();
+        $returncode = $hyperlinksHandler->insertHyperlink($ID, $group, $category, $webdescription, $website);
+        $requestContentType = "application/json";
+        $statusCode = 200;
+        $this->setHttpHeaders($requestContentType, $statusCode);
 
+        if (strpos($requestContentType, 'application/json') !== false) {
+            $response = $this->encodeJson("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'text/html') !== false) {
+            $response = $this->encodeHtml("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'application/xml') !== false) {
+            $response = $this->encodeXml("OK");
+            echo $response;
+        }
+    }
     public function getHyperlink($id)
     {
 
