@@ -1,15 +1,15 @@
 <?php
 require_once("SimpleRest.php");
-require_once("Mobile.php");
+require_once("HyperlinksHandler.php");
 
-class MobileRestHandler extends SimpleRest
+class HyperLinksRestHandler extends SimpleRest
 {
 
-    function getAllMobiles()
+    function getAllHyperlinks()
     {
 
-        $mobile = new Mobile();
-        $rawData = $mobile->getAllMobile();
+        $hyperlinksHandler = new HyperlinksHandler();
+        $rawData = $hyperlinksHandler->getAllHyperlinks();
 
         if (empty($rawData)) {
             $statusCode = 404;
@@ -64,11 +64,11 @@ class MobileRestHandler extends SimpleRest
         return $xml->asXML();
     }
 
-    public function getMobile($id)
+    public function getHyperlink($id)
     {
 
-        $mobile = new Mobile();
-        $rawData = $mobile->getMobile($id);
+        $hyperlinksHandler = new HyperlinksHandler();
+        $rawData = $hyperlinksHandler->getHyperlink($id);
 
         if (empty($rawData)) {
             $statusCode = 404;
@@ -84,6 +84,9 @@ class MobileRestHandler extends SimpleRest
 
         if (strpos($requestContentType, 'application/json') !== false) {
             $response = $this->encodeJson($rawData);
+            $response = str_replace("[","",$response);
+            $response = str_replace("]","",$response);
+
             echo $response;
         } else if (strpos($requestContentType, 'text/html') !== false) {
             $response = $this->encodeHtml($rawData);

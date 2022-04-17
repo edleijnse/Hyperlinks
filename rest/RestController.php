@@ -1,8 +1,8 @@
 <?php
-require_once("MobileRestHandler.php");
+require_once("HyperlinksRestHandler.php");
 // echo "let's dance!";
 
-$view = "all";
+$view = "single";
 if (isset($_GET["view"]))
     $view = $_GET["view"];
 // echo "view: " + $view;
@@ -15,14 +15,14 @@ switch ($view) {
 
     case "all":
         // to handle REST Url /mobile/list/
-        $mobileRestHandler = new MobileRestHandler();
-        $mobileRestHandler->getAllMobiles();
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->getAllHyperlinks();
         break;
 
     case "single":
         // to handle REST Url /mobile/show/<id>/
-        $mobileRestHandler = new MobileRestHandler();
-        $mobileRestHandler->getMobile($_GET["ID"]);
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->getHyperlink($_GET["ID"]);
         break;
 
     case "" :
