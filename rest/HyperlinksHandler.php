@@ -15,31 +15,77 @@ class Hyperlink
 
 class HyperlinksHandler
 {
-
-    private $hyperlinks = array();
+    var $cfg_dsn = "DRIVER=Microsoft Access Driver (*.mdb, *.accdb);
+DBQ=D:/www/www780/database/hyperlinks.mdb;
+UserCommitSync=Yes;
+Threads=3;
+SafeTransactions=0;
+PageTimeout=5;
+MaxScanRows=8;
+MaxBufferSize=2048;
+DriverId=281;
+DefaultDir=D:/www/www780/database";
+    var $adodb_path = "d:/www/www780/adodb";
 
     /*
         you should hookup the DAO here
     */
-    public function getAllHyperlinks()
+    public function getAllHyperlinks($myCount, $myFrom)
     {
-        $hyperLink1 = new Hyperlink();
-        $hyperLink1->ID = 1;
-        $hyperLink1->category = "Museums";
-        $hyperLink1->webdescription = "Artists Keith Haring";
-        $hyperLink1->website = "https://haring.com";
-        $hyperlinks[0] = $hyperLink1;
-        $hyperLink2 = new Hyperlink();
-        $hyperLink2->ID = 2;
-        $hyperLink2->category = "Museums";
-        $hyperLink2->webdescription = "Artists Hans Glanzmann";
-        $hyperLink1->website = "https://glanzmann.info";
-        $hyperlinks[1] = $hyperLink2;
+        $myadodbpath = $this->adodb_path;
+        $mycfg_dsn = $this->cfg_dsn;
+        include($myadodbpath . "/adodb.inc.php"); // includes the adodb library
+        include($myadodbpath . "/drivers/adodb-odbc.inc.php"); // includes the odbc driver
+        $database_type = "access";
+        $host = $mycfg_dsn;
+        $user = "";
+        $password = "";
+        $database_name = "hyperlinks.mdb";
+
+        $hyperlinks = array();
+        $db = NewADOConnection("$database_type"); // A new connection
+        $db->Connect("$host", "$user", "$password", "$database_name");
+        // echo "CONNECTED";
+        $sql = "SELECT * from hyperlinks";
+        $rs = $db->Execute($sql);
+        if (!$rs) {
+            print $db->ErrorMsg(); // Displays the error message if no results could be returned
+            // echo ErrorMsg();
+        } else {
+            // echo "execute OK";
+            $iiCount=0;
+            $iiFrom=0;
+            while (!$rs->EOF) {
+                // echo "record found";
+                if ($iiFrom >= $myFrom){
+                    if ($iiCount < $myCount) {
+                        // print $rs->fields[0] . ' ' . $rs->fields[1] . ' ' . $rs->fields[2] . ' ' . $rs->fields[3] . '<BR>';
+                        $hyperLink1 = new HyperLink();
+                        $hyperLink1->ID = $rs->fields[0];
+                        $hyperLink1->group= $rs->fields[1];
+                        $hyperLink1->category = $rs->fields[2];
+                        $hyperLink1->webdescription=$rs->fields[3];
+                        $hyperLink1->website=$rs->fields[4];
+                        $hyperlinks[$iiCount] = $hyperLink1;
+                    }
+                    $iiCount++;
+                }
+                $iiFrom++;
+                $rs->MoveNext();  //  Moves to the next row
+            }  // end while
+        } // end else
+
         return $hyperlinks;
     }
 
     public function getHyperlink($id)
     {
+        $myadodbpath = $this->adodb_path;
+        $mycfg_dsn = $this->cfg_dsn;
+        include($myadodbpath . "/adodb.inc.php"); // includes the adodb library
+        include($myadodbpath . "/drivers/adodb-odbc.inc.php"); // includes the odbc driver
+        $Quelle = odbc_connect($mycfg_dsn, "", "");
+        $hyperlinks = array();
         $hyperLink1 = new Hyperlink();
         $hyperLink1->ID = 1;
         $hyperLink1->category = "Museums";
@@ -51,20 +97,11 @@ class HyperlinksHandler
 
     public function insertHyperlink($ID, $group, $category, $webdescription, $website)
     {
-        $cfg_dsn = "DRIVER=Microsoft Access Driver (*.mdb, *.accdb);
-DBQ=D:/www/www780/database/hyperlinks.mdb;
-UserCommitSync=Yes;
-Threads=3;
-SafeTransactions=0;
-PageTimeout=5;
-MaxScanRows=8;
-MaxBufferSize=2048;
-DriverId=281;
-DefaultDir=D:/www/www780/database";
-        $adodb_path = "d:/www/www780/adodb";
-        include("$adodb_path/adodb.inc.php"); // includes the adodb library
-        include("$adodb_path/drivers/adodb-odbc.inc.php"); // includes the odbc driver
-        $Quelle = odbc_connect($cfg_dsn, "", "");
+        $myadodbpath = $this->adodb_path;
+        $mycfg_dsn = $this->cfg_dsn;
+        include($myadodbpath . "/adodb.inc.php"); // includes the adodb library
+        include($myadodbpath . "/drivers/adodb-odbc.inc.php"); // includes the odbc driver
+        $Quelle = odbc_connect($mycfg_dsn, "", "");
         $MyCmdStr = "INSERT INTO hyperlinks  VALUES (";
         $MyCmdStr = $MyCmdStr . $ID . ",";
         $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$group) . "'".",";

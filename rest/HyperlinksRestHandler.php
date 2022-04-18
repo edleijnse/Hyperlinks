@@ -5,11 +5,11 @@ require_once("HyperlinksHandler.php");
 class HyperLinksRestHandler extends SimpleRest
 {
 
-    function getAllHyperlinks()
+    function getAllHyperlinks($myCount,$myFrom)
     {
 
         $hyperlinksHandler = new HyperlinksHandler();
-        $rawData = $hyperlinksHandler->getAllHyperlinks();
+        $rawData = $hyperlinksHandler->getAllHyperlinks($myCount,$myFrom);
 
         if (empty($rawData)) {
             $statusCode = 404;
@@ -23,7 +23,7 @@ class HyperLinksRestHandler extends SimpleRest
 
         // $requestContentType = $_SERVER['HTTP_ACCEPT'];
         $requestContentType = "application/json";
-        $this->setHttpHeaders($requestContentType, $statusCode);
+        //$this->setHttpHeaders($requestContentType, $statusCode);
 
         if (strpos($requestContentType, 'application/json') !== false) {
             $response = $this->encodeJson($rawData);
