@@ -16,7 +16,6 @@ class Hyperlink
 class HyperlinksHandler
 {
 
-
     private $hyperlinks = array();
 
     /*
@@ -49,9 +48,32 @@ class HyperlinksHandler
         $hyperlinks[0] = $hyperLink1;
         return $hyperlinks;
     }
+
     public function insertHyperlink($ID, $group, $category, $webdescription, $website)
     {
-        return true;
+        $cfg_dsn = "DRIVER=Microsoft Access Driver (*.mdb, *.accdb);
+DBQ=D:/www/www780/database/hyperlinks.mdb;
+UserCommitSync=Yes;
+Threads=3;
+SafeTransactions=0;
+PageTimeout=5;
+MaxScanRows=8;
+MaxBufferSize=2048;
+DriverId=281;
+DefaultDir=D:/www/www780/database";
+        $adodb_path = "d:/www/www780/adodb";
+        include("$adodb_path/adodb.inc.php"); // includes the adodb library
+        include("$adodb_path/drivers/adodb-odbc.inc.php"); // includes the odbc driver
+        $Quelle = odbc_connect($cfg_dsn, "", "");
+        $MyCmdStr = "INSERT INTO hyperlinks  VALUES (";
+        $MyCmdStr = $MyCmdStr . $ID . ",";
+        $MyCmdStr = $MyCmdStr . "'". $group . "'".",";
+        $MyCmdStr = $MyCmdStr . "'" . $category . "'". ",";
+        $MyCmdStr = $MyCmdStr . "'" . $webdescription ."'" . ",";
+        $MyCmdStr = $MyCmdStr . "'" . $website . "'" ;
+        $MyCmdStr = $MyCmdStr . ');';
+        $Result = odbc_exec($Quelle, $MyCmdStr);
+        return $Result;
     }
 }
 
