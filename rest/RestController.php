@@ -4,8 +4,8 @@ require_once("HyperlinksRestHandler.php");
 
 $command = "insert";
 $myId = 1;
-$myGroup = "Windows";
-$myCategory = "Tools";
+$myGroup = "Windööws";
+$myCategory = "Tüüls";
 $myWebdescription = "Performance";
 $myWebsite = "https://leijnse.info";
 if (isset($_GET["command"]))
