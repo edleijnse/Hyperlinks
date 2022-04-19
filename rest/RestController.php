@@ -2,14 +2,14 @@
 require_once("HyperlinksRestHandler.php");
 // echo "let's dance!";
 
-$command = "delete";
+$command = "all";
 $myId = 1;
 $myGroup = "Zindööws";
 $myCategory = "Züüls";
 $myWebdescription = "Performance";
 $myWebsite = "https://leijnse.info";
 $myCount = 100;
-$myFrom = 0;
+$myFrom = 559;
 $mySearch = "";
 if (isset($_GET["command"]))
     $command = $_GET["command"];

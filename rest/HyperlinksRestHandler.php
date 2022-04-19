@@ -51,6 +51,10 @@ class HyperLinksRestHandler extends SimpleRest
     public function encodeJson($responseData)
     {
         $jsonResponse = json_encode($responseData);
+        // decode sample test
+        // var_dump(json_decode($jsonResponse));
+        // $hyperlinks = array();
+        // $hyperlinks = json_decode($jsonResponse);
         return $jsonResponse;
     }
 
