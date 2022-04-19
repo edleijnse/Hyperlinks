@@ -8,8 +8,8 @@ $myGroup = "Windööws";
 $myCategory = "Tüüls";
 $myWebdescription = "Performance";
 $myWebsite = "https://leijnse.info";
-$myCount = 25;
-$myFrom = 111;
+$myCount = 700;
+$myFrom = 0;
 if (isset($_GET["command"]))
     $command = $_GET["command"];
 if (isset($_GET["ID"]))

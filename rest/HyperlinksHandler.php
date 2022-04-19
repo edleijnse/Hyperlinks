@@ -46,7 +46,7 @@ DefaultDir=D:/www/www780/database";
         $db = NewADOConnection("$database_type"); // A new connection
         $db->Connect("$host", "$user", "$password", "$database_name");
         // echo "CONNECTED";
-        $sql = "SELECT * from hyperlinks";
+        $sql = "SELECT * from hyperlinks order by group, category, webdescription, website";
         $rs = $db->Execute($sql);
         if (!$rs) {
             print $db->ErrorMsg(); // Displays the error message if no results could be returned
@@ -59,13 +59,21 @@ DefaultDir=D:/www/www780/database";
                 // echo "record found";
                 if ($iiFrom >= $myFrom){
                     if ($iiCount < $myCount) {
-                        // print $rs->fields[0] . ' ' . $rs->fields[1] . ' ' . $rs->fields[2] . ' ' . $rs->fields[3] . '<BR>';
+                        // print iconv("ISO-8859-1", "UTF-8", $rs->fields[1]) . ' ' . $rs->fields[1] . ' ' . $rs->fields[2] . ' ' . $rs->fields[3] . '<BR>';
                         $hyperLink1 = new HyperLink();
                         $hyperLink1->ID = $rs->fields[0];
-                        $hyperLink1->group= $rs->fields[1];
-                        $hyperLink1->category = $rs->fields[2];
-                        $hyperLink1->webdescription=$rs->fields[3];
-                        $hyperLink1->website=$rs->fields[4];
+                        $mygroup=$rs->fields[1];
+                        $mygroupconv=iconv("ISO-8859-1", "UTF-8", $mygroup);
+                        $hyperLink1->group=$mygroupconv;
+                        $mycategory=$rs->fields[2];
+                        $mycategoryconv=iconv("ISO-8859-1", "UTF-8", $mycategory);
+                        $hyperLink1->category=$mycategoryconv;
+                        $mywebsitedescription=$rs->fields[3];
+                        $mywebsitedescriptionconv=iconv("ISO-8859-1", "UTF-8", $mywebsitedescription);
+                        $hyperLink1->webdescription=$mywebsitedescriptionconv;
+                        $mywebsite=$rs->fields[4];
+                        $mywebsiteconv=iconv("ISO-8859-1", "UTF-8", $mywebsite);
+                        $hyperLink1->website=$mywebsiteconv;
                         $hyperlinks[$iiCount] = $hyperLink1;
                     }
                     $iiCount++;

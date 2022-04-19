@@ -13,7 +13,7 @@ class HyperLinksRestHandler extends SimpleRest
 
         if (empty($rawData)) {
             $statusCode = 404;
-            $rawData = array('error' => 'No mobiles found!');
+            $rawData = array('error' => 'No data found!');
         } else {
             $statusCode = 200;
         }
