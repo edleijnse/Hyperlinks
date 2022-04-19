@@ -59,7 +59,7 @@ DefaultDir=D:/www/www780/database";
                 // echo "record found";
                 if ($iiFrom >= $myFrom){
                     if ($iiCount < $myCount) {
-                        // print iconv("ISO-8859-1", "UTF-8", $rs->fields[1]) . ' ' . $rs->fields[1] . ' ' . $rs->fields[2] . ' ' . $rs->fields[3] . '<BR>';
+                        // print iconv("ISO-8859-1","UTF-8",$rs->fields[1]). ' ' . $rs->fields[1] . ' ' . $rs->fields[2] . ' ' . $rs->fields[3] . '<BR>';
                         $hyperLink1 = new HyperLink();
                         $hyperLink1->ID = $rs->fields[0];
                         $mygroup=$rs->fields[1];

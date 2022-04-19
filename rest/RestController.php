@@ -4,12 +4,12 @@ require_once("HyperlinksRestHandler.php");
 
 $command = "all";
 $myId = 1;
-$myGroup = "Windööws";
-$myCategory = "Tüüls";
+$myGroup = "Zindööws";
+$myCategory = "Züüls";
 $myWebdescription = "Performance";
 $myWebsite = "https://leijnse.info";
-$myCount = 700;
-$myFrom = 0;
+$myCount = 10;
+$myFrom = 572;
 if (isset($_GET["command"]))
     $command = $_GET["command"];
 if (isset($_GET["ID"]))
