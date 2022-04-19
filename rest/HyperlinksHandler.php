@@ -30,7 +30,7 @@ DefaultDir=D:/www/www780/database";
     /*
         you should hookup the DAO here
     */
-    public function getAllHyperlinks($myCount, $myFrom)
+    public function getAllHyperlinks($myCount, $myFrom, $mySearch)
     {
         $myadodbpath = $this->adodb_path;
         $mycfg_dsn = $this->cfg_dsn;
@@ -46,7 +46,34 @@ DefaultDir=D:/www/www780/database";
         $db = NewADOConnection("$database_type"); // A new connection
         $db->Connect("$host", "$user", "$password", "$database_name");
         // echo "CONNECTED";
-        $sql = "SELECT * from hyperlinks order by group, category, webdescription, website";
+        $sql = "";
+        if (empty($mySearch)){
+            $sql = "SELECT * from hyperlinks order by group, category, webdescription, website ";
+        } else {
+            $sql = "SELECT * from hyperlinks ";
+            $sql = $sql . " WHERE ";
+            $sql = $sql . "(group like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . " OR ";
+            $sql = $sql . "(category like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . " OR ";
+            $sql = $sql . "(webdescription like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . " OR ";
+            $sql = $sql . "(website like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . "order by group, category, webdescription, website;";
+        }
+
         $rs = $db->Execute($sql);
         if (!$rs) {
             print $db->ErrorMsg(); // Displays the error message if no results could be returned

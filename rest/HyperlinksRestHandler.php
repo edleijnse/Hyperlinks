@@ -5,11 +5,11 @@ require_once("HyperlinksHandler.php");
 class HyperLinksRestHandler extends SimpleRest
 {
 
-    function getAllHyperlinks($myCount,$myFrom)
+    function getAllHyperlinks($myCount,$myFrom, $mySearch)
     {
 
         $hyperlinksHandler = new HyperlinksHandler();
-        $rawData = $hyperlinksHandler->getAllHyperlinks($myCount,$myFrom);
+        $rawData = $hyperlinksHandler->getAllHyperlinks($myCount,$myFrom, $mySearch);
 
         if (empty($rawData)) {
             $statusCode = 404;

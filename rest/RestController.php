@@ -9,7 +9,8 @@ $myCategory = "Züüls";
 $myWebdescription = "Performance";
 $myWebsite = "https://leijnse.info";
 $myCount = 10;
-$myFrom = 572;
+$myFrom = 1;
+$mySearch = "";
 if (isset($_GET["command"]))
     $command = $_GET["command"];
 if (isset($_GET["ID"]))
@@ -26,6 +27,8 @@ if (isset($_GET["count"]))
     $myCount = $_GET["count"];
 if (isset($_GET["from"]))
     $myFrom = $_GET["from"];
+if (isset($_GET["search"]))
+    $mySearch = $_GET["search"];
 // echo "view: " + $view;
 /*
 controls the RESTful services
@@ -37,7 +40,7 @@ switch ($command) {
     case "all":
         // to handle REST Url /mobile/list/
         $hyperlinksRestHandler = new HyperLinksRestHandler();
-        $hyperlinksRestHandler->getAllHyperlinks($myCount, $myFrom);
+        $hyperlinksRestHandler->getAllHyperlinks($myCount, $myFrom, $mySearch);
         break;
 
     case "single":
