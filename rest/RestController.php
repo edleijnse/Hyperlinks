@@ -2,14 +2,14 @@
 require_once("HyperlinksRestHandler.php");
 // echo "let's dance!";
 
-$command = "all";
+$command = "delete";
 $myId = 1;
 $myGroup = "Zindööws";
 $myCategory = "Züüls";
 $myWebdescription = "Performance";
 $myWebsite = "https://leijnse.info";
-$myCount = 10;
-$myFrom = 1;
+$myCount = 100;
+$myFrom = 0;
 $mySearch = "";
 if (isset($_GET["command"]))
     $command = $_GET["command"];
@@ -52,6 +52,11 @@ switch ($command) {
         // to handle REST Url /mobile/show/<id>/
         $hyperlinksRestHandler = new HyperLinksRestHandler();
         $hyperlinksRestHandler->insertHyperlink($myId,$myGroup, $myCategory, $myWebdescription, $myWebsite);
+        break;
+    case "delete":
+        // to handle REST Url /mobile/show/<id>/
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->deleteHyperlink($myId);
         break;
 
     case "" :

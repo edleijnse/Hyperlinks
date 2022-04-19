@@ -27,10 +27,42 @@ DriverId=281;
 DefaultDir=D:/www/www780/database";
     var $adodb_path = "d:/www/www780/adodb";
 
-    /*
-        you should hookup the DAO here
-    */
-    public function getAllHyperlinks($myCount, $myFrom, $mySearch)
+    public function processRsHyperLinks($rs, $myFrom, $myCount): array
+    {
+        $hyperlinks = array();
+        // echo "execute OK";
+        $iiCount = 0;
+        $iiFrom = 0;
+        while (!$rs->EOF) {
+            // echo "record found";
+            if ($iiFrom >= $myFrom) {
+                if ($iiCount < $myCount) {
+                    // print iconv("ISO-8859-1","UTF-8",$rs->fields[1]). ' ' . $rs->fields[1] . ' ' . $rs->fields[2] . ' ' . $rs->fields[3] . '<BR>';
+                    $hyperLink1 = new HyperLink();
+                    $hyperLink1->ID = $rs->fields[0];
+                    $mygroup = $rs->fields[1];
+                    $mygroupconv = iconv("ISO-8859-1", "UTF-8", $mygroup);
+                    $hyperLink1->group = $mygroupconv;
+                    $mycategory = $rs->fields[2];
+                    $mycategoryconv = iconv("ISO-8859-1", "UTF-8", $mycategory);
+                    $hyperLink1->category = $mycategoryconv;
+                    $mywebsitedescription = $rs->fields[3];
+                    $mywebsitedescriptionconv = iconv("ISO-8859-1", "UTF-8", $mywebsitedescription);
+                    $hyperLink1->webdescription = $mywebsitedescriptionconv;
+                    $mywebsite = $rs->fields[4];
+                    $mywebsiteconv = iconv("ISO-8859-1", "UTF-8", $mywebsite);
+                    $hyperLink1->website = $mywebsiteconv;
+                    $hyperlinks[$iiCount] = $hyperLink1;
+                }
+                $iiCount++;
+            }
+            $iiFrom++;
+            $rs->MoveNext();  //  Moves to the next row
+        }  // end while
+        return $hyperlinks;
+    }
+
+    public function getAllHyperlinks($myCount, $myFrom, $mySearch): array
     {
         $myadodbpath = $this->adodb_path;
         $mycfg_dsn = $this->cfg_dsn;
@@ -47,7 +79,7 @@ DefaultDir=D:/www/www780/database";
         $db->Connect("$host", "$user", "$password", "$database_name");
         // echo "CONNECTED";
         $sql = "";
-        if (empty($mySearch)){
+        if (empty($mySearch)) {
             $sql = "SELECT * from hyperlinks order by group, category, webdescription, website ";
         } else {
             $sql = "SELECT * from hyperlinks ";
@@ -79,55 +111,67 @@ DefaultDir=D:/www/www780/database";
             print $db->ErrorMsg(); // Displays the error message if no results could be returned
             // echo ErrorMsg();
         } else {
-            // echo "execute OK";
-            $iiCount=0;
-            $iiFrom=0;
-            while (!$rs->EOF) {
-                // echo "record found";
-                if ($iiFrom >= $myFrom){
-                    if ($iiCount < $myCount) {
-                        // print iconv("ISO-8859-1","UTF-8",$rs->fields[1]). ' ' . $rs->fields[1] . ' ' . $rs->fields[2] . ' ' . $rs->fields[3] . '<BR>';
-                        $hyperLink1 = new HyperLink();
-                        $hyperLink1->ID = $rs->fields[0];
-                        $mygroup=$rs->fields[1];
-                        $mygroupconv=iconv("ISO-8859-1", "UTF-8", $mygroup);
-                        $hyperLink1->group=$mygroupconv;
-                        $mycategory=$rs->fields[2];
-                        $mycategoryconv=iconv("ISO-8859-1", "UTF-8", $mycategory);
-                        $hyperLink1->category=$mycategoryconv;
-                        $mywebsitedescription=$rs->fields[3];
-                        $mywebsitedescriptionconv=iconv("ISO-8859-1", "UTF-8", $mywebsitedescription);
-                        $hyperLink1->webdescription=$mywebsitedescriptionconv;
-                        $mywebsite=$rs->fields[4];
-                        $mywebsiteconv=iconv("ISO-8859-1", "UTF-8", $mywebsite);
-                        $hyperLink1->website=$mywebsiteconv;
-                        $hyperlinks[$iiCount] = $hyperLink1;
-                    }
-                    $iiCount++;
-                }
-                $iiFrom++;
-                $rs->MoveNext();  //  Moves to the next row
-            }  // end while
+            // echo "execute OK"
+            $hyperlinks = $this->processRsHyperLinks($rs, $myFrom, $myCount);
+
         } // end else
 
         return $hyperlinks;
     }
 
-    public function getHyperlink($id)
+
+    public function getHyperlink($id): array
+    {
+        $myadodbpath = $this->adodb_path;
+        $mycfg_dsn = $this->cfg_dsn;
+        include($myadodbpath . "/adodb.inc.php"); // includes the adodb library
+        include($myadodbpath . "/drivers/adodb-odbc.inc.php"); // includes the odbc driver
+        $database_type = "access";
+        $host = $mycfg_dsn;
+        $user = "";
+        $password = "";
+        $database_name = "hyperlinks.mdb";
+
+        $hyperlinks = array();
+        $db = NewADOConnection("$database_type"); // A new connection
+        $db->Connect("$host", "$user", "$password", "$database_name");
+        // echo "CONNECTED";
+        $sql = "";
+
+        $sql = "SELECT * from hyperlinks ";
+        $sql = $sql . " WHERE ";
+        $sql = $sql . "(ID = ";
+        $sql = $sql . trim($id);
+        $sql = $sql . ") ";
+            $sql = $sql . "order by group, category, webdescription, website;";
+        
+
+        $rs = $db->Execute($sql);
+        if (!$rs) {
+            print $db->ErrorMsg(); // Displays the error message if no results could be returned
+            // echo ErrorMsg();
+        } else {
+            // echo "execute OK"
+            $myFrom = 0;
+            $myCount = 100;
+            $hyperlinks = $this->processRsHyperLinks($rs, $myFrom, $myCount);
+
+        } // end else
+
+        return $hyperlinks;
+    }
+
+    public function deleteHyperlink($ID)
     {
         $myadodbpath = $this->adodb_path;
         $mycfg_dsn = $this->cfg_dsn;
         include($myadodbpath . "/adodb.inc.php"); // includes the adodb library
         include($myadodbpath . "/drivers/adodb-odbc.inc.php"); // includes the odbc driver
         $Quelle = odbc_connect($mycfg_dsn, "", "");
-        $hyperlinks = array();
-        $hyperLink1 = new Hyperlink();
-        $hyperLink1->ID = 1;
-        $hyperLink1->category = "Museums";
-        $hyperLink1->webdescription = "Artists Keith Haring";
-        $hyperLink1->website = "https://haring.com";
-        $hyperlinks[0] = $hyperLink1;
-        return $hyperlinks;
+        $MyCmdStr = "DELETE FROM hyperlinks WHERE (ID = ";
+        $MyCmdStr = $MyCmdStr . $ID . "); ";
+        $Result = odbc_exec($Quelle, $MyCmdStr);
+        return $Result;
     }
 
     public function insertHyperlink($ID, $group, $category, $webdescription, $website)
@@ -137,8 +181,8 @@ DefaultDir=D:/www/www780/database";
         include($myadodbpath . "/adodb.inc.php"); // includes the adodb library
         include($myadodbpath . "/drivers/adodb-odbc.inc.php"); // includes the odbc driver
         $Quelle = odbc_connect($mycfg_dsn, "", "");
-        $MyCmdStr = "INSERT INTO hyperlinks  VALUES (";
-        $MyCmdStr = $MyCmdStr . $ID . ",";
+        $MyCmdStr = "INSERT INTO hyperlinks  VALUES(";
+        $MyCmdStr = $MyCmdStr . $ID . ", ";
         $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$group) . "'".",";
         $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$category) . "'".",";
         $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$webdescription) . "'".",";
