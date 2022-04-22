@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["search"])) {
         $nameErr = "search is required";
     } else {
-        $search = $_POST["search"];
+        $search = test_input($_POST["search"]);
         // check if name only contains letters and whitespace
         // if (!preg_match("/^[a-zA-Z-' ]*$/",$search)) {
         //    $searchErr = "Only letters and white space allowed";
@@ -53,7 +53,7 @@ if (function_exists('test_input')){
 ?>
 <h2>Search hyperlinks</h2>
 <p><span class="error">* required field</span></p>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<form method="post" action="">
     Search for: <input type="text" name="search" value="<?php echo $search;?>">
     <span class="error">* <?php echo $searchErr;?></span>
     <br><br>
@@ -90,12 +90,12 @@ foreach ($hyperlinks as $hyperlink) {
     echo "</th>";
     echo "<th>";
     echo "<a href=" . $hyperlink['website'] . ">" . $hyperlink['website'] . "</a>";
-   // echo $hyperlink['website'];
+    // echo $hyperlink['website'];
     echo "</th>";
-   /* print($hyperlink['ID']) . ", " . $hyperlink['group'] . ", " . $hyperlink['category']
-        . ", " . $hyperlink['webdescription']
-        . ", " . $hyperlink['website']
-        . PHP_EOL;*/
+    /* print($hyperlink['ID']) . ", " . $hyperlink['group'] . ", " . $hyperlink['category']
+         . ", " . $hyperlink['webdescription']
+         . ", " . $hyperlink['website']
+         . PHP_EOL;*/
     echo "</tr>";
 }
 echo "</table>";
