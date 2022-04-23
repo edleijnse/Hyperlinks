@@ -5,6 +5,7 @@
         .error {
             color: #FF0000;
         }
+
         table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
@@ -24,25 +25,43 @@
 </head>
 <body>
 <?php
-$searchErr = "";
-$search = "";
+$IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = "";
+$ID = $group = $category = $webdescription = $website = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["search"])) {
-        $nameErr = "search is required";
+    if (empty($_POST["ID"])) {
+        $IDErr = "ID is required";
     } else {
-        $search = test_input($_POST["search"]);
-        // check if name only contains letters and whitespace
-        // if (!preg_match("/^[a-zA-Z-' ]*$/",$search)) {
-        //    $searchErr = "Only letters and white space allowed";
+        $ID = $_POST["ID"];
+    }
+    if (empty($_POST["group"])) {
+        $groupErrr = "group is required";
+    } else {
+        $group = $_POST["group"];
         // }
+    }
+    if (empty($_POST["category"])) {
+        $categoryErr = "category is required";
+    } else {
+        $category = $_POST["category"];
+    }
+    if (empty($_POST["webdescription"])) {
+        $webdescriptionErr = "webdescription is required";
+    } else {
+        $webdescription = $_POST["webdescription"];
+    }
+    if (empty($_POST["website"])) {
+        $websiteErrr = "website is required";
+    } else {
+        $website = $_POST["website"];
     }
 
 }
-if (function_exists('test_input')){
+if (function_exists('test_input')) {
     echo "Function Exists";
-}else{
-    function test_input($data) {
+} else {
+    function test_input($data)
+    {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
@@ -53,52 +72,51 @@ if (function_exists('test_input')){
 ?>
 <h2>Search hyperlinks</h2>
 <p><span class="error">* required field</span></p>
-<form method="post" action="">
-    Search for: <input type="text" name="search" value="<?php echo $search;?>">
-    <span class="error">* <?php echo $searchErr;?></span>
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+    ID : <input type="text" name="ID" value="<?php echo $ID; ?>">
+    <span class="error">* <?php echo $IDErr; ?></span>
     <br><br>
+    group : <input type="text" name="group" value="<?php echo $group; ?>">
+    <span class="error">* <?php echo $groupErr; ?></span>
+    <br><br>
+    category : <input type="text" name="category" value="<?php echo $category; ?>">
+    <span class="error">* <?php echo $categoryErr; ?></span>
+    <br><br>
+    web description: <input type="text" name="webdescription" value="<?php echo $webdescription; ?>">
+    <span class="error">* <?php echo $webdescriptionErr; ?></span>
+    <br><br>
+    website : <input type="text" name="website" value="<?php echo $website; ?>">
+    <span class="error">* <?php echo $websiteErr; ?></span>
+    <br><br>
+
     <input type="submit" name="submit" value="Submit">
 </form>
 <?php
-echo "<h2>Searched for:</h2>";
-echo $search;
+echo "<h2>insert row with id:</h2>";
+echo $ID;
 echo "<br>";
-$url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . $search;
-//$url = 'http://192.168.0.210/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . $search;
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_HTTPGET, true);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response_json = curl_exec($ch);
-curl_close($ch);
-$hyperlinks = array();
-$hyperlinks = json_decode($response_json, true);
-echo "<h2>Search Results</h2>";
-echo "<table>";
-foreach ($hyperlinks as $hyperlink) {
-    echo "<tr>";
-    echo "<th>";
-    echo $hyperlink['ID'];
-    echo "</th>";
-    echo "<th>";
-    echo $hyperlink['group'];
-    echo "</th>";
-    echo "<th>";
-    echo $hyperlink['category'];
-    echo "</th>";
-    echo "<th>";
-    echo $hyperlink['webdescription'];
-    echo "</th>";
-    echo "<th>";
-    echo "<a href=" . $hyperlink['website'] . ">" . $hyperlink['website'] . "</a>";
-    // echo $hyperlink['website'];
-    echo "</th>";
-    /* print($hyperlink['ID']) . ", " . $hyperlink['group'] . ", " . $hyperlink['category']
-         . ", " . $hyperlink['webdescription']
-         . ", " . $hyperlink['website']
-         . PHP_EOL;*/
-    echo "</tr>";
+if (empty($_POST["ID"])) {
+
+} else {
+
+    $url = 'http://192.168.0.54/hyperlinks/rest/Restcontroller.php/?command=insert';
+    $url = $url . '&ID=' . $ID;
+    $url = $url . '&category=' . $category;
+    $url = $url . '&group=' . $group;
+    $url = $url . '&webdescription=' . $webdescription;
+    $url = $url . '&website=' . $website;
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response_json = curl_exec($ch);
+    echo("response_json: " . $response_json);
+    curl_close($ch);
+    $myResponce = "";
+    $myResponce = json_decode($response_json, true);
+    echo "<h2>Result</h2>";
+    echo $myResponce;
 }
-echo "</table>";
+
 ?>
 </body>
 </html>
