@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ID = $_POST["ID"];
     }
     if (empty($_POST["group"])) {
-        $groupErrr = "group is required";
+        $groupErr = "group is required";
     } else {
         $group = $_POST["group"];
         // }
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $webdescription = $_POST["webdescription"];
     }
     if (empty($_POST["website"])) {
-        $websiteErrr = "website is required";
+        $websiteErr = "website is required";
     } else {
         $website = $_POST["website"];
     }
@@ -73,32 +73,34 @@ if (function_exists('test_input')) {
 <h2>Search hyperlinks</h2>
 <p><span class="error">* required field</span></p>
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-    ID : <input type="text" name="ID" value="<?php echo $ID; ?>">
+    ID______________: <input type="text" name="ID" value="<?php echo $ID; ?>">
     <span class="error">* <?php echo $IDErr; ?></span>
     <br><br>
-    group : <input type="text" name="group" value="<?php echo $group; ?>">
+    group___________: <input type="text" name="group" value="<?php echo $group; ?>">
     <span class="error">* <?php echo $groupErr; ?></span>
     <br><br>
-    category : <input type="text" name="category" value="<?php echo $category; ?>">
+    category_________: <input type="text" name="category" value="<?php echo $category; ?>">
     <span class="error">* <?php echo $categoryErr; ?></span>
     <br><br>
-    web description: <input type="text" name="webdescription" value="<?php echo $webdescription; ?>">
+    web description___: <input type="text" name="webdescription" value="<?php echo $webdescription; ?>">
     <span class="error">* <?php echo $webdescriptionErr; ?></span>
     <br><br>
-    website : <input type="text" name="website" value="<?php echo $website; ?>">
+    website_________: <input type="text" name="website" value="<?php echo $website; ?>">
     <span class="error">* <?php echo $websiteErr; ?></span>
     <br><br>
 
     <input type="submit" name="submit" value="Submit">
 </form>
 <?php
-echo "<h2>insert row with id:</h2>";
-echo $ID;
 echo "<br>";
-if (empty($_POST["ID"])) {
-
+if ((empty($_POST["ID"]))
+    || (empty($_POST["group"]))
+    || (empty($_POST["category"]))
+    || (empty($_POST["webdescription"]))
+    || (empty($_POST["website"]))) {
+    echo "<h2>enter missing fields</h2>";
 } else {
-
+    echo "<h2>insert row with id: ". $ID . "</h2>";
     $url = 'http://192.168.0.54/hyperlinks/rest/Restcontroller.php/?command=insert';
     $url = $url . '&ID=' . $ID;
     $url = $url . '&category=' . $category;
@@ -109,7 +111,6 @@ if (empty($_POST["ID"])) {
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response_json = curl_exec($ch);
-    echo("response_json: " . $response_json);
     curl_close($ch);
     $myResponce = "";
     $myResponce = json_decode($response_json, true);
