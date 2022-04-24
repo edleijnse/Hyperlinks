@@ -70,44 +70,24 @@ if (function_exists('test_input')) {
 }
 
 ?>
-<h2>Insert hyperlinks</h2>
+<h2>Delete hyperlinks</h2>
 <p><span class="error">* required field</span></p>
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
     ID______________: <input type="text" name="ID" value="<?php echo $ID; ?>">
     <span class="error">* <?php echo $IDErr; ?></span>
-    <br><br>
-    group___________: <input type="text" name="group" value="<?php echo $group; ?>">
-    <span class="error">* <?php echo $groupErr; ?></span>
-    <br><br>
-    category_________: <input type="text" name="category" value="<?php echo $category; ?>">
-    <span class="error">* <?php echo $categoryErr; ?></span>
-    <br><br>
-    web description___: <input type="text" name="webdescription" value="<?php echo $webdescription; ?>">
-    <span class="error">* <?php echo $webdescriptionErr; ?></span>
-    <br><br>
-    website_________: <input type="text" name="website" value="<?php echo $website; ?>">
-    <span class="error">* <?php echo $websiteErr; ?></span>
     <br><br>
 
     <input type="submit" name="submit" value="Submit">
 </form>
 <?php
 echo "<br>";
-if ((empty($_POST["ID"]))
-    || (empty($_POST["group"]))
-    || (empty($_POST["category"]))
-    || (empty($_POST["webdescription"]))
-    || (empty($_POST["website"]))) {
+if (empty($_POST["ID"])) {
     echo "<h2>enter missing fields</h2>";
 } else {
-    echo "<h2>insert row with id: ". $ID . "</h2>";
-    // $url = 'http://192.168.0.54/hyperlinks/rest/Restcontroller.php/?command=insert';
-    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=insert';
+    echo "<h2>delete row with id: ". $ID . "</h2>";
+    // $url = 'http://192.168.0.54/hyperlinks/rest/Restcontroller.php/?command=delete';
+    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=delete';
     $url = $url . '&ID=' . $ID;
-    $url = $url . '&category=' . $category;
-    $url = $url . '&group=' . $group;
-    $url = $url . '&webdescription=' . $webdescription;
-    $url = $url . '&website=' . $website;
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
