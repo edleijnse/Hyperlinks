@@ -72,7 +72,7 @@ if (function_exists('test_input')) {
 ?>
 <h2>Delete hyperlinks</h2>
 <p><span class="error">* required field</span></p>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+<form method="post" action="">
     ID______________: <input type="text" name="ID" value="<?php echo $ID; ?>">
     <span class="error">* <?php echo $IDErr; ?></span>
     <br><br>

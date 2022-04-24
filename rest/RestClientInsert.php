@@ -25,8 +25,8 @@
 </head>
 <body>
 <?php
-$IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = "";
-$ID = $group = $category = $webdescription = $website = "";
+$IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = $confirmErr = "";
+$ID = $group = $category = $webdescription = $website = $confirm = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["ID"])) {
@@ -55,6 +55,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $website = $_POST["website"];
     }
+    if (empty($_POST["confirm"])) {
+        $confirmErr = "confirmation required/already saved";
+    } else {
+        $confirm = $_POST["confirm"];
+    }
 
 }
 if (function_exists('test_input')) {
@@ -72,7 +77,7 @@ if (function_exists('test_input')) {
 ?>
 <h2>Insert hyperlinks</h2>
 <p><span class="error">* required field</span></p>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+<form method="post" action="">
     ID______________: <input type="text" name="ID" value="<?php echo $ID; ?>">
     <span class="error">* <?php echo $IDErr; ?></span>
     <br><br>
@@ -88,12 +93,16 @@ if (function_exists('test_input')) {
     website_________: <input type="text" name="website" value="<?php echo $website; ?>">
     <span class="error">* <?php echo $websiteErr; ?></span>
     <br><br>
+    confirm_________: <input type="text" name="confirm" value="<?php echo $confirm; ?>">
+    <span class="error">* <?php echo $confirmErr; ?></span>
+    <br><br>
 
     <input type="submit" name="submit" value="Submit">
 </form>
 <?php
 echo "<br>";
 if ((empty($_POST["ID"]))
+    || (empty($_POST["confirm"]))
     || (empty($_POST["group"]))
     || (empty($_POST["category"]))
     || (empty($_POST["webdescription"]))
@@ -104,10 +113,10 @@ if ((empty($_POST["ID"]))
     // $url = 'http://192.168.0.54/hyperlinks/rest/Restcontroller.php/?command=insert';
     $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=insert';
     $url = $url . '&ID=' . $ID;
-    $url = $url . '&category=' . $category;
-    $url = $url . '&group=' . $group;
-    $url = $url . '&webdescription=' . $webdescription;
-    $url = $url . '&website=' . $website;
+    $url = $url . '&category=' . urlencode( $category);
+    $url = $url . '&group=' . urlencode ($group);
+    $url = $url . '&webdescription=' . urlencode($webdescription);
+    $url = $url . '&website=' . urlencode($website);
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_HTTPGET, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -117,6 +126,7 @@ if ((empty($_POST["ID"]))
     $myResponce = json_decode($response_json, true);
     echo "<h2>Result</h2>";
     echo $myResponce;
+    $_POST["confirm"] = "";
 }
 
 ?>

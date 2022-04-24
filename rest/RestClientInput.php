@@ -5,6 +5,7 @@
         .error {
             color: #FF0000;
         }
+
         table {
             font-family: arial, sans-serif;
             border-collapse: collapse;
@@ -39,10 +40,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 }
-if (function_exists('test_input')){
+if (function_exists('test_input')) {
     echo "Function Exists";
-}else{
-    function test_input($data) {
+} else {
+    function test_input($data)
+    {
         $data = trim($data);
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
@@ -53,9 +55,9 @@ if (function_exists('test_input')){
 ?>
 <h2>Search hyperlinks</h2>
 <p><span class="error">* required field</span></p>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-    Search for: <input type="text" name="search" value="<?php echo $search;?>">
-    <span class="error">* <?php echo $searchErr;?></span>
+<form method="post" action="">
+    Search for: <input type="text" name="search" value="<?php echo $search; ?>">
+    <span class="error">* <?php echo $searchErr; ?></span>
     <br><br>
     <input type="submit" name="submit" value="Submit">
 </form>
@@ -63,40 +65,49 @@ if (function_exists('test_input')){
 echo "<h2>Searched for:</h2>";
 echo $search;
 echo "<br>";
-$url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . $search;
+$url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . urlencode($search);
 //$url = 'http://192.168.0.210/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . $search;
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response_json = curl_exec($ch);
-phpinfo(p)curl_close($ch);
+curl_close($ch);
 $hyperlinks = array();
 $hyperlinks = json_decode($response_json, true);
 echo "<h2>Search Results</h2>";
 echo "<table>";
 foreach ($hyperlinks as $hyperlink) {
-    echo "<tr>";
-    echo "<th>";
-    echo $hyperlink['ID'];
-    echo "</th>";
-    echo "<th>";
-    echo $hyperlink['group'];
-    echo "</th>";
-    echo "<th>";
-    echo $hyperlink['category'];
-    echo "</th>";
-    echo "<th>";
-    echo $hyperlink['webdescription'];
-    echo "</th>";
-    echo "<th>";
-    echo "<a href=" . $hyperlink['website'] . ">" . $hyperlink['website'] . "</a>";
-   // echo $hyperlink['website'];
-    echo "</th>";
-   /* print($hyperlink['ID']) . ", " . $hyperlink['group'] . ", " . $hyperlink['category']
-        . ", " . $hyperlink['webdescription']
-        . ", " . $hyperlink['website']
-        . PHP_EOL;*/
-    echo "</tr>";
+    if (isset($hyperlink['ID'])) {
+        echo "<tr>";
+        try {
+            echo "<th>";
+            echo $hyperlink['ID'];
+            echo "</th>";
+            echo "<th>";
+            echo $hyperlink['group'];
+            echo "</th>";
+            echo "<th>";
+            echo $hyperlink['category'];
+            echo "</th>";
+            echo "<th>";
+            echo $hyperlink['webdescription'];
+            echo "</th>";
+            echo "<th>";
+            echo "<a href=" . $hyperlink['website'] . ">" . $hyperlink['website'] . "</a>";
+            // echo $hyperlink['website'];
+            echo "</th>";
+            /* print($hyperlink['ID']) . ", " . $hyperlink['group'] . ", " . $hyperlink['category']
+                 . ", " . $hyperlink['webdescription']
+                 . ", " . $hyperlink['website']
+                 . PHP_EOL;*/
+
+        } catch (TypeError $e) {
+
+        } finally {
+
+        }
+        echo "</tr>";
+    }
 }
 echo "</table>";
 ?>
