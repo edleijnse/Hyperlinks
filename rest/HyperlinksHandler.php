@@ -108,7 +108,7 @@ DefaultDir=D:/www/www780/database";
 
         $rs = $db->Execute($sql);
         if (!$rs) {
-            print $db->ErrorMsg(); // Displays the error message if no results could be returned
+            // print $db->ErrorMsg(); // Displays the error message if no results could be returned
             // echo ErrorMsg();
         } else {
             // echo "execute OK"
