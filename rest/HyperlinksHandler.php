@@ -119,6 +119,124 @@ DefaultDir=D:/www/www780/database";
         return $hyperlinks;
     }
 
+    public function getAllHyperlinksMySql($myCount, $myFrom, $mySearch): array
+    {
+        $servername = "mysql2.webland.ch";
+        $username = "leijn_hyperlinks";
+        $password = "XarDam09;09DamXar";
+        $dbname = "leijn_hyperlinks";
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        $sql = "";
+        if (empty($mySearch)) {
+            $sql = "SELECT * from hyperlinks order by webgroup, webcategory, webdescription, website ";
+        } else {
+            $sql = "SELECT * from hyperlinks ";
+            $sql = $sql . " WHERE ";
+            $sql = $sql . "(webgroup like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . " OR ";
+            $sql = $sql . "(webcategory like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . " OR ";
+            $sql = $sql . "(webdescription like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . " OR ";
+            $sql = $sql . "(website like ";
+            $sql = $sql . "'%";
+            $sql = $sql . trim($mySearch);
+            $sql = $sql . "%') ";
+            $sql = $sql . "order by webgroup, webcategory, webdescription, website;";
+        }
+        $result = mysqli_query($conn, $sql);
+        $hyperlinks = array();
+        $iiCount = 0;
+        $iiFrom = 0;
+        if (mysqli_num_rows($result) > 0) {
+            // output data of each row
+            while ($row = mysqli_fetch_assoc($result)) {
+                // echo ("ID: " . $row["ID"]. " - webgroup: " . $row["webgroup"]. " " . $row["webcategory"]. $row["webdescription"] . "<br>");
+
+                if ($iiFrom >= $myFrom) {
+                    if ($iiCount < $myCount) {
+                        $hyperLink1 = new HyperLink();
+                        $hyperLink1->ID = $row["ID"];
+                        $mygroup = $row["webgroup"];
+                        $mygroupconv = iconv("ISO-8859-1", "UTF-8", $mygroup);
+                        $hyperLink1->group = $mygroupconv;
+                        $mycategory = $row["webcategory"];
+                        $mycategoryconv = iconv("ISO-8859-1", "UTF-8", $mycategory);
+                        $hyperLink1->category = $mycategoryconv;
+                        $mywebsitedescription = $row["webdescription"];
+                        $mywebsitedescriptionconv = iconv("ISO-8859-1", "UTF-8", $mywebsitedescription);
+                        $hyperLink1->webdescription = $mywebsitedescriptionconv;
+                        $mywebsite = $row["website"];
+                        $mywebsiteconv = iconv("ISO-8859-1", "UTF-8", $mywebsite);
+                        $hyperLink1->website = $mywebsiteconv;
+                        $hyperlinks[$iiCount] = $hyperLink1;
+                        $iiCount++;
+                    }
+                }
+                $iiFrom++;
+            }
+        } else {
+            echo "0 results";
+        }
+
+
+        return $hyperlinks;
+    }
+
+    public function getHyperlinkMySql($id): array
+    {
+        $servername = "mysql2.webland.ch";
+        $username = "leijn_hyperlinks";
+        $password = "XarDam09;09DamXar";
+        $dbname = "leijn_hyperlinks";
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        $sql = "";
+        $sql = "SELECT * from hyperlinks ";
+        $sql = $sql . " WHERE ";
+        $sql = $sql . "(ID = ";
+        $sql = $sql . trim($id);
+        $sql = $sql . ") ";
+        $sql = $sql . "order by webgroup, webcategory, webdescription, website;";
+        $result = mysqli_query($conn, $sql);
+        $hyperlinks = array();
+        $iiCount = 0;
+        if (mysqli_num_rows($result) > 0) {
+            // output data of each row
+            while ($row = mysqli_fetch_assoc($result)) {
+                $hyperLink1 = new HyperLink();
+                $hyperLink1->ID = $row["ID"];
+                $mygroup = $row["webgroup"];
+                $mygroupconv = iconv("ISO-8859-1", "UTF-8", $mygroup);
+                $hyperLink1->group = $mygroupconv;
+                $mycategory = $row["webcategory"];
+                $mycategoryconv = iconv("ISO-8859-1", "UTF-8", $mycategory);
+                $hyperLink1->category = $mycategoryconv;
+                $mywebsitedescription = $row["webdescription"];
+                $mywebsitedescriptionconv = iconv("ISO-8859-1", "UTF-8", $mywebsitedescription);
+                $hyperLink1->webdescription = $mywebsitedescriptionconv;
+                $mywebsite = $row["website"];
+                $mywebsiteconv = iconv("ISO-8859-1", "UTF-8", $mywebsite);
+                $hyperLink1->website = $mywebsiteconv;
+                $hyperlinks[$iiCount] = $hyperLink1;
+                $iiCount++;
+            }
+        } else {
+            echo "0 results";
+        }
+
+
+        return $hyperlinks;
+    }
+
 
     public function getHyperlink($id): array
     {
@@ -143,8 +261,8 @@ DefaultDir=D:/www/www780/database";
         $sql = $sql . "(ID = ";
         $sql = $sql . trim($id);
         $sql = $sql . ") ";
-            $sql = $sql . "order by group, category, webdescription, website;";
-        
+        $sql = $sql . "order by group, category, webdescription, website;";
+
 
         $rs = $db->Execute($sql);
         if (!$rs) {
@@ -174,6 +292,28 @@ DefaultDir=D:/www/www780/database";
         return $Result;
     }
 
+    public function deleteHyperlinkMySql($ID)
+    {
+        try {
+            $servername = "mysql2.webland.ch";
+            $username = "leijn_hyperlinks";
+            $password = "XarDam09;09DamXar";
+            $dbname = "leijn_hyperlinks";
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
+            if (!$conn) {
+                echo("Connection failed: " . mysqli_connect_error());
+            }
+            $MyCmdStr = "DELETE FROM hyperlinks WHERE (ID = ";
+            $MyCmdStr = $MyCmdStr . $ID . "); ";
+            $result = mysqli_query($conn, $MyCmdStr);
+
+            mysqli_close($conn);
+            return $result;
+        } catch (Exception $ex) {
+            echo "Fehler: " . $ex->getMessage();
+        }
+    }
+
     public function insertHyperlink($ID, $group, $category, $webdescription, $website)
     {
         $myadodbpath = $this->adodb_path;
@@ -183,13 +323,40 @@ DefaultDir=D:/www/www780/database";
         $Quelle = odbc_connect($mycfg_dsn, "", "");
         $MyCmdStr = "INSERT INTO hyperlinks  VALUES(";
         $MyCmdStr = $MyCmdStr . $ID . ", ";
-        $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$group) . "'".",";
-        $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$category) . "'".",";
-        $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$webdescription) . "'".",";
-        $MyCmdStr = $MyCmdStr . "'". iconv("UTF-8","ISO-8859-1//TRANSLIT",$website) ."'";
+        $MyCmdStr = $MyCmdStr . "'" . iconv("UTF-8", "ISO-8859-1//TRANSLIT", $group) . "'" . ",";
+        $MyCmdStr = $MyCmdStr . "'" . iconv("UTF-8", "ISO-8859-1//TRANSLIT", $category) . "'" . ",";
+        $MyCmdStr = $MyCmdStr . "'" . iconv("UTF-8", "ISO-8859-1//TRANSLIT", $webdescription) . "'" . ",";
+        $MyCmdStr = $MyCmdStr . "'" . iconv("UTF-8", "ISO-8859-1//TRANSLIT", $website) . "'";
         $MyCmdStr = $MyCmdStr . ');';
         $Result = odbc_exec($Quelle, $MyCmdStr);
         return $Result;
+    }
+
+    public function insertHyperlinkMySql($ID, $group, $category, $webdescription, $website)
+    {
+        try {
+            $servername = "mysql2.webland.ch";
+            $username = "leijn_hyperlinks";
+            $password = "XarDam09;09DamXar";
+            $dbname = "leijn_hyperlinks";
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
+            if (!$conn) {
+                echo("Connection failed: " . mysqli_connect_error());
+            }
+            $MyCmdStr = "INSERT INTO hyperlinks (`ID`, `webgroup`, `webcategory`, `webdescription`, `website`)  VALUES(";
+            $MyCmdStr = $MyCmdStr . $ID . ", ";
+            $MyCmdStr = $MyCmdStr . "'" .  $group . "'" . ",";
+            $MyCmdStr = $MyCmdStr . "'" .  $category . "'" . ",";
+            $MyCmdStr = $MyCmdStr . "'" .  $webdescription . "'" . ",";
+            $MyCmdStr = $MyCmdStr . "'" .  $website . "'";
+            $MyCmdStr = $MyCmdStr . ');';
+            $result = mysqli_query($conn, $MyCmdStr);
+
+            mysqli_close($conn);
+            return $result;
+        } catch (Exception $ex) {
+            echo "Fehler: " . $ex->getMessage();
+        }
     }
 }
 

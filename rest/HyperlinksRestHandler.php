@@ -36,7 +36,37 @@ class HyperLinksRestHandler extends SimpleRest
             echo $response;
         }
     }
+    function getAllHyperlinksMySql($myCount,$myFrom, $mySearch)
+    {
 
+        $hyperlinksHandler = new HyperlinksHandler();
+        $rawData = $hyperlinksHandler->getAllHyperlinksMySql($myCount,$myFrom, $mySearch);
+
+        if (empty($rawData)) {
+            $statusCode = 404;
+            $rawData = array('error' => 'No data found!');
+        } else {
+            $statusCode = 200;
+        }
+        // $response = $this->encodeJson($rawData);
+
+        // echo $response;
+
+        // $requestContentType = $_SERVER['HTTP_ACCEPT'];
+        $requestContentType = "application/json";
+        //$this->setHttpHeaders($requestContentType, $statusCode);
+
+        if (strpos($requestContentType, 'application/json') !== false) {
+            $response = $this->encodeJson($rawData);
+            echo $response;
+        } else if (strpos($requestContentType, 'text/html') !== false) {
+            $response = $this->encodeHtml($rawData);
+            echo $response;
+        } else if (strpos($requestContentType, 'application/xml') !== false) {
+            $response = $this->encodeXml($rawData);
+            echo $response;
+        }
+    }
     public function encodeHtml($responseData)
     {
 
@@ -86,10 +116,48 @@ class HyperLinksRestHandler extends SimpleRest
             echo $response;
         }
     }
+    public function insertHyperlinkMySql($ID, $group, $category, $webdescription, $website)
+    {
+        $hyperlinksHandler = new HyperlinksHandler();
+        $returncode = $hyperlinksHandler->insertHyperlinkMySql($ID, $group, $category, $webdescription, $website);
+        $requestContentType = "application/json";
+        $statusCode = 200;
+        $this->setHttpHeaders($requestContentType, $statusCode);
+
+        if (strpos($requestContentType, 'application/json') !== false) {
+            $response = $this->encodeJson("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'text/html') !== false) {
+            $response = $this->encodeHtml("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'application/xml') !== false) {
+            $response = $this->encodeXml("OK");
+            echo $response;
+        }
+    }
     public function deleteHyperlink($ID)
     {
         $hyperlinksHandler = new HyperlinksHandler();
         $returncode = $hyperlinksHandler->deleteHyperlink($ID);
+        $requestContentType = "application/json";
+        $statusCode = 200;
+        $this->setHttpHeaders($requestContentType, $statusCode);
+
+        if (strpos($requestContentType, 'application/json') !== false) {
+            $response = $this->encodeJson("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'text/html') !== false) {
+            $response = $this->encodeHtml("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'application/xml') !== false) {
+            $response = $this->encodeXml("OK");
+            echo $response;
+        }
+    }
+    public function deleteHyperlinkMySql($ID)
+    {
+        $hyperlinksHandler = new HyperlinksHandler();
+        $returncode = $hyperlinksHandler->deleteHyperlinkMySql($ID);
         $requestContentType = "application/json";
         $statusCode = 200;
         $this->setHttpHeaders($requestContentType, $statusCode);
@@ -110,6 +178,38 @@ class HyperLinksRestHandler extends SimpleRest
 
         $hyperlinksHandler = new HyperlinksHandler();
         $rawData = $hyperlinksHandler->getHyperlink($id);
+
+        if (empty($rawData)) {
+            $statusCode = 404;
+            $rawData = array('error' => 'No data found!');
+        } else {
+            $statusCode = 200;
+        }
+        // $response = $this->encodeJson($rawData);
+        // echo $response;
+
+        $requestContentType = "application/json";
+        $this->setHttpHeaders($requestContentType, $statusCode);
+
+        if (strpos($requestContentType, 'application/json') !== false) {
+            $response = $this->encodeJson($rawData);
+            // $response = str_replace("[","",$response);
+            // $response = str_replace("]","",$response);
+
+            echo $response;
+        } else if (strpos($requestContentType, 'text/html') !== false) {
+            $response = $this->encodeHtml($rawData);
+            echo $response;
+        } else if (strpos($requestContentType, 'application/xml') !== false) {
+            $response = $this->encodeXml($rawData);
+            echo $response;
+        }
+    }
+    public function getHyperlinkMySql($id)
+    {
+
+        $hyperlinksHandler = new HyperlinksHandler();
+        $rawData = $hyperlinksHandler->getHyperlinkMySql($id);
 
         if (empty($rawData)) {
             $statusCode = 404;

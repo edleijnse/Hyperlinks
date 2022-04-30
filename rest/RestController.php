@@ -4,13 +4,13 @@ require_once("HyperlinksRestHandler.php");
 
 $command = "all";
 $myId = 1;
-$myGroup = "Mylena ";
-$myCategory = "Hobbyt";
-$myWebdescription = "My hobbyt, my life: wunderschön!";
-$myWebsite = "https://hobbyt.ch";
+$myGroup = "";
+$myCategory = "";
+$myWebdescription = "";
+$myWebsite = "";
 $myCount = 100;
 $myFrom = 0;
-$mySearch = "Mylena";
+$mySearch = "";
 if (isset($_GET["command"]))
     $command = $_GET["command"];
 if (isset($_GET["ID"]))
@@ -57,6 +57,27 @@ switch ($command) {
         // to handle REST Url /mobile/show/<id>/
         $hyperlinksRestHandler = new HyperLinksRestHandler();
         $hyperlinksRestHandler->deleteHyperlink($myId);
+        break;
+    case "allmysql":
+        // to handle REST Url /mobile/list/
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->getAllHyperlinksMySql($myCount, $myFrom, $mySearch);
+        break;
+
+    case "singlemysql":
+        // to handle REST Url /mobile/show/<id>/
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->getHyperlinkMySql($myId);
+        break;
+    case "insertmysql":
+        // to handle REST Url /mobile/show/<id>/
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->insertHyperlinkMySql($myId,$myGroup, $myCategory, $myWebdescription, $myWebsite);
+        break;
+    case "deletemysql":
+        // to handle REST Url /mobile/show/<id>/
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->deleteHyperlinkMySql($myId);
         break;
 
     case "" :
