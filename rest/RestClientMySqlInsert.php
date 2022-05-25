@@ -29,11 +29,6 @@ $IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = $confirmE
 $ID = $group = $category = $webdescription = $website = $confirm = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["ID"])) {
-        $IDErr = "ID is required";
-    } else {
-        $ID = $_POST["ID"];
-    }
     if (empty($_POST["group"])) {
         $groupErr = "group is required";
     } else {
@@ -78,9 +73,6 @@ if (function_exists('test_input')) {
 <h2>Insert hyperlinks</h2>
 <p><span class="error">* required field</span></p>
 <form method="post" action="">
-    ID______________: <input type="text" name="ID" value="<?php echo $ID; ?>">
-    <span class="error">* <?php echo $IDErr; ?></span>
-    <br><br>
     group___________: <input type="text" name="group" value="<?php echo $group; ?>">
     <span class="error">* <?php echo $groupErr; ?></span>
     <br><br>
@@ -101,8 +93,7 @@ if (function_exists('test_input')) {
 </form>
 <?php
 echo "<br>";
-if ((empty($_POST["ID"]))
-    || (empty($_POST["confirm"]))
+if ((empty($_POST["confirm"]))
     || (empty($_POST["group"]))
     || (empty($_POST["category"]))
     || (empty($_POST["webdescription"]))
@@ -111,7 +102,6 @@ if ((empty($_POST["ID"]))
 } else {
     echo "<h2>insert row with id: ". $ID . "</h2>";
     $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=insertmysql';
-    $url = $url . '&ID=' . $ID;
     $url = $url . '&category=' . urlencode( $category);
     $url = $url . '&group=' . urlencode ($group);
     $url = $url . '&webdescription=' . urlencode($webdescription);

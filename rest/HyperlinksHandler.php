@@ -339,8 +339,8 @@ DefaultDir=D:/www/www780/database";
             if (!$conn) {
                 echo("Connection failed: " . mysqli_connect_error());
             }
-            $MyCmdStr = "INSERT INTO hyperlinks (`ID`, `webgroup`, `webcategory`, `webdescription`, `website`)  VALUES(";
-            $MyCmdStr = $MyCmdStr . $ID . ", ";
+            $MyCmdStr = "INSERT INTO hyperlinks ( `webgroup`, `webcategory`, `webdescription`, `website`)  VALUES(";
+            // $MyCmdStr = $MyCmdStr . $ID . ", ";
             $MyCmdStr = $MyCmdStr . "'" .  $group . "'" . ",";
             $MyCmdStr = $MyCmdStr . "'" .  $category . "'" . ",";
             $MyCmdStr = $MyCmdStr . "'" .  $webdescription . "'" . ",";
