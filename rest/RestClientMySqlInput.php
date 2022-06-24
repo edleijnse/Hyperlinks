@@ -91,14 +91,16 @@ foreach ($hyperlinks as $hyperlink) {
             echo "<th>";
             echo $hyperlink['webdescription'];
             echo "</th>";
-            echo "<th>";
-            echo "<a href=" . $hyperlink['website'] . ">" . $hyperlink['website'] . "</a>";
-            // echo $hyperlink['website'];
-            echo "</th>";
             /* print($hyperlink['ID']) . ", " . $hyperlink['group'] . ", " . $hyperlink['category']
                  . ", " . $hyperlink['webdescription']
                  . ", " . $hyperlink['website']
                  . PHP_EOL;*/
+            echo "<th>";
+            echo "<a href=" .$hyperlink['website'] . ">" . "LINK" . "</a>";
+            echo "</th>";
+            echo "<th>";
+            echo "<a href=" . "update.php?id=".$hyperlink['ID'] . ">" . "UPDATE" . "</a>";
+            echo "</th>";
 
         } catch (TypeError $e) {
 

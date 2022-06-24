@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 }
 if (function_exists('test_input')) {
-    echo "Function Exists";
+    // echo "Function Exists";
 } else {
     function test_input($data)
     {
