@@ -99,7 +99,7 @@ foreach ($hyperlinks as $hyperlink) {
             echo "<a href=" .$hyperlink['website'] . ">" . "LINK" . "</a>";
             echo "</th>";
             echo "<th>";
-            echo "<a href=" . "update.php?id=".$hyperlink['ID'] . ">" . "UPDATE" . "</a>";
+            echo "<a href=" . "https://leijnse.info/hyperlinks/rest/RestClientMySQLupdate.php?ID=".$hyperlink['ID'] . ">" . "UPDATE" . "</a>";
             echo "</th>";
 
         } catch (TypeError $e) {
