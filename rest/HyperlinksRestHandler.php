@@ -135,6 +135,25 @@ class HyperLinksRestHandler extends SimpleRest
             echo $response;
         }
     }
+    public function updateHyperlinkMySql($ID, $group, $category, $webdescription, $website)
+    {
+        $hyperlinksHandler = new HyperlinksHandler();
+        $returncode = $hyperlinksHandler->updateHyperlinkMySql($ID, $group, $category, $webdescription, $website);
+        $requestContentType = "application/json";
+        $statusCode = 200;
+        $this->setHttpHeaders($requestContentType, $statusCode);
+
+        if (strpos($requestContentType, 'application/json') !== false) {
+            $response = $this->encodeJson("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'text/html') !== false) {
+            $response = $this->encodeHtml("OK");
+            echo $response;
+        } else if (strpos($requestContentType, 'application/xml') !== false) {
+            $response = $this->encodeXml("OK");
+            echo $response;
+        }
+    }
     public function deleteHyperlink($ID)
     {
         $hyperlinksHandler = new HyperlinksHandler();

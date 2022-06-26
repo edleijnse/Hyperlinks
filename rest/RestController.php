@@ -74,6 +74,11 @@ switch ($command) {
         $hyperlinksRestHandler = new HyperLinksRestHandler();
         $hyperlinksRestHandler->insertHyperlinkMySql($myId,$myGroup, $myCategory, $myWebdescription, $myWebsite);
         break;
+    case "updatemysql":
+        // to handle REST Url /mobile/show/<id>/
+        $hyperlinksRestHandler = new HyperLinksRestHandler();
+        $hyperlinksRestHandler->updateHyperlinkMySql($myId,$myGroup, $myCategory, $myWebdescription, $myWebsite);
+        break;
     case "deletemysql":
         // to handle REST Url /mobile/show/<id>/
         $hyperlinksRestHandler = new HyperLinksRestHandler();

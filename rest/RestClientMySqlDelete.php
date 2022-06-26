@@ -27,7 +27,8 @@
 <?php
 $IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = "";
 $ID = $group = $category = $webdescription = $website = "";
-
+if (isset($_GET["ID"]))
+    $ID = $_GET["ID"];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["ID"])) {
         $IDErr = "ID is required";

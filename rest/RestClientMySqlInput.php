@@ -96,10 +96,19 @@ foreach ($hyperlinks as $hyperlink) {
                  . ", " . $hyperlink['website']
                  . PHP_EOL;*/
             echo "<th>";
-            echo "<a href=" .$hyperlink['website'] . ">" . "LINK" . "</a>";
+            echo "<a href=" .$hyperlink['website'] . ">" . "link" . "</a>";
             echo "</th>";
             echo "<th>";
-            echo "<a href=" . "https://leijnse.info/hyperlinks/rest/RestClientMySQLupdate.php?ID=".$hyperlink['ID'] . ">" . "UPDATE" . "</a>";
+            echo "<a href=" . "https://tagger.biz/hyperlink-update/?ID=".$hyperlink['ID']
+                ."&category=".urlencode($hyperlink["category"])
+                ."&group=".urlencode($hyperlink["group"])
+                ."&webdescription=".urlencode($hyperlink["webdescription"])
+                ."&website=".urlencode($hyperlink["website"])
+                . ">" . "update" . "</a>";
+            echo "</th>";
+            echo "<th>";
+            echo "<a href=" . "https://tagger.biz/hyperlink-delete-2/?ID=".$hyperlink['ID']
+                . ">" . "delete" . "</a>";
             echo "</th>";
 
         } catch (TypeError $e) {

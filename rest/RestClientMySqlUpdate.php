@@ -29,6 +29,14 @@ $IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = $confirmE
 $ID = $group = $category = $webdescription = $website = $confirm = "";
 if (isset($_GET["ID"]))
     $ID = $_GET["ID"];
+if (isset($_GET["group"]))
+    $group = $_GET["group"];
+if (isset($_GET["category"]))
+    $category = $_GET["category"];
+if (isset($_GET["webdescription"]))
+    $webdescription = $_GET["webdescription"];
+if (isset($_GET["website"]))
+    $website = $_GET["website"];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["ID"])) {
         $IDErr = "ID is required";
@@ -77,7 +85,7 @@ if (function_exists('test_input')) {
 }
 
 ?>
-<h2>Insert hyperlinks</h2>
+<h2>Update hyperlinks</h2>
 <p><span class="error">* required field</span></p>
 <form method="post" action="">
     ID______________: <input type="text" name="ID" value="<?php echo $ID; ?>">
@@ -110,8 +118,9 @@ if ((empty($_POST["confirm"]))
     || (empty($_POST["website"]))) {
     echo "<h2>enter missing fields</h2>";
 } else {
-    echo "<h2>insert row with id: ". $ID . "</h2>";
-    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=insertmysql';
+    echo "<h2>update row with id: ". $ID . "</h2>";
+    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=updatemysql';
+    $url = $url . '&ID=' . $ID;
     $url = $url . '&category=' . urlencode( $category);
     $url = $url . '&group=' . urlencode ($group);
     $url = $url . '&webdescription=' . urlencode($webdescription);
@@ -121,10 +130,10 @@ if ((empty($_POST["confirm"]))
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response_json = curl_exec($ch);
     curl_close($ch);
-    $myResponce = "";
-    $myResponce = json_decode($response_json, true);
+    $myResponse = "";
+    $myResponse = json_decode($response_json, true);
     echo "<h2>Result</h2>";
-    echo $myResponce;
+    echo $myResponse;
     $_POST["confirm"] = "";
 }
 

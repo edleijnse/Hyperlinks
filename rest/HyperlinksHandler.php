@@ -354,6 +354,34 @@ DefaultDir=D:/www/www780/database";
             echo "Fehler: " . $ex->getMessage();
         }
     }
+    public function updateHyperlinkMySql($ID, $group, $category, $webdescription, $website)
+    {
+        try {
+            $servername = "mysql2.webland.ch";
+            $username = "leijn_hyperlinks";
+            $password = "XarDam09;09DamXar";
+            $dbname = "leijn_hyperlinks";
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
+            if (!$conn) {
+                echo("Connection failed: " . mysqli_connect_error());
+            }
+            $MyCmdStr = "UPDATE `hyperlinks` SET ";
+            $MyCmdStr = $MyCmdStr . "`webgroup` = " . "'" . $group . "'";
+            $MyCmdStr = $MyCmdStr . ", ";
+            $MyCmdStr = $MyCmdStr . "`webcategory` = " . "'" . $category . "'";
+            $MyCmdStr = $MyCmdStr . ", ";
+            $MyCmdStr = $MyCmdStr . "`webdescription` = " . "'" . $webdescription. "'";
+            $MyCmdStr = $MyCmdStr . ", ";
+            $MyCmdStr = $MyCmdStr . "`website` = " . "'" . $website. "'";
+            $MyCmdStr = $MyCmdStr   ." WHERE `hyperlinks`.`ID` = " .$ID;
+            $result = mysqli_query($conn, $MyCmdStr);
+
+            mysqli_close($conn);
+            return $result;
+        } catch (Exception $ex) {
+            echo "Fehler: " . $ex->getMessage();
+        }
+    }
 }
 
 ?>
