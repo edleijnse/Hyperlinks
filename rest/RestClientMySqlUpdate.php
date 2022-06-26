@@ -25,8 +25,8 @@
 </head>
 <body>
 <?php
-$IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = $confirmErr = "";
-$ID = $group = $category = $webdescription = $website = $confirm = "";
+$IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = "";
+$ID = $group = $category = $webdescription = $website = "";
 if (isset($_GET["ID"]))
     $ID = $_GET["ID"];
 if (isset($_GET["group"]))
@@ -65,12 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $website = $_POST["website"];
     }
-    if (empty($_POST["confirm"])) {
-        $confirmErr = "confirmation required/already saved";
-    } else {
-        $confirm = $_POST["confirm"];
-    }
-
 }
 if (function_exists('test_input')) {
     echo "Function Exists";
@@ -103,16 +97,11 @@ if (function_exists('test_input')) {
     website_________: <input type="text" name="website" value="<?php echo $website; ?>">
     <span class="error">* <?php echo $websiteErr; ?></span>
     <br><br>
-    confirm_________: <input type="text" name="confirm" value="<?php echo $confirm; ?>">
-    <span class="error">* <?php echo $confirmErr; ?></span>
-    <br><br>
-
     <input type="submit" name="submit" value="Submit">
 </form>
 <?php
 echo "<br>";
-if ((empty($_POST["confirm"]))
-    || (empty($_POST["group"]))
+if ((empty($_POST["group"]))
     || (empty($_POST["category"]))
     || (empty($_POST["webdescription"]))
     || (empty($_POST["website"]))) {
@@ -134,7 +123,6 @@ if ((empty($_POST["confirm"]))
     $myResponse = json_decode($response_json, true);
     echo "<h2>Result</h2>";
     echo $myResponse;
-    $_POST["confirm"] = "";
 }
 
 ?>
