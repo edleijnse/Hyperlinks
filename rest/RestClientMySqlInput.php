@@ -80,23 +80,13 @@ foreach ($hyperlinks as $hyperlink) {
         echo "<tr>";
         try {
             echo "<th>";
-            echo $hyperlink['ID'];
-            echo "</th>";
-            echo "<th>";
             echo $hyperlink['group'];
             echo "</th>";
             echo "<th>";
             echo $hyperlink['category'];
             echo "</th>";
             echo "<th>";
-            echo $hyperlink['webdescription'];
-            echo "</th>";
-            /* print($hyperlink['ID']) . ", " . $hyperlink['group'] . ", " . $hyperlink['category']
-                 . ", " . $hyperlink['webdescription']
-                 . ", " . $hyperlink['website']
-                 . PHP_EOL;*/
-            echo "<th>";
-            echo "<a href=" .$hyperlink['website'] . ">" . "link" . "</a>";
+            echo "<a href=" .$hyperlink['website'] . ">" . $hyperlink['webdescription'] . "</a>";
             echo "</th>";
             echo "<th>";
             echo "<a href=" . "https://tagger.biz/hyperlink-update/?ID=".$hyperlink['ID']
