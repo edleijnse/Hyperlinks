@@ -26,7 +26,8 @@
 <body>
 <?php
 $IDErr = $groupErr = $categoryErr = $webdescriptionErr = $websiteErr = $confirmErr = "";
-$ID = $group = $category = $webdescription = $website = $confirm = "";
+$ID = $group = $category = $webdescription = $website =  "";
+$confirm = "yes";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["group"])) {
