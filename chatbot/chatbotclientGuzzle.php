@@ -16,8 +16,21 @@ use GuzzleHttp\Client;
 
 
 if (isset($_POST['submit_button'])) {
-    // Your OpenAI API key
-    $api_key = "";
+    // Your OpenAI API key from a file
+    // Get the current working directory
+    $current_dir = getcwd();
+    // Get the directory one level above the current working directory
+    $parent_dir = dirname($current_dir);
+    // Open the file located in the parent directory
+    $file = fopen($parent_dir . '/api_key', 'r');
+    // Read the contents of the file
+    $api_key = fread($file, filesize($parent_dir . '/api_key'));
+    // Close the file
+    fclose($file);
+    // Remove the end of line characters from the contents
+    $api_key = str_replace(array("\r", "\n"), '', $api_key);
+
+
     // Set up the client
     $client = new Client([
         'base_uri' => 'https://api.openai.com',
@@ -51,9 +64,14 @@ if (isset($_POST['submit_button'])) {
     $completion = $responseData['choices'][0]['text'];
     # echo "<p>Answer: </p>";
     # echo $completion;
+    echo "<br>";
+    echo "<br>";
+    echo "<label for='question'>Question:</label><br>";
+    echo "<textarea id='question' rows='5' cols='50'>$prompt</textarea>";
+    echo "<p>";
     echo "<label for='output'>Answer:</label><br>";
-    echo "<textarea id='output' rows='5' cols='50'>$completion</textarea>";
-
+    echo "<textarea id='output' rows='20' cols='50'>$completion</textarea>";
+    echo "</p";
 }
 ?>
 </body>
