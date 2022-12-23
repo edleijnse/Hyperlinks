@@ -49,7 +49,7 @@ if (isset($_POST['submit_button'])) {
     $requestBody = [
         'model' => 'text-davinci-002',
         'prompt' => $prompt,
-        'max_tokens' => 256,
+        'max_tokens' => 512,
     ];
     // Make the request
     $response = $client->post('/v1/completions', [
