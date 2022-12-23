@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PHP GUI Example</title>
+    <title>PHP ChatGPT example</title>
 </head>
 <body>
 <form method="post">
     <textarea name="input_text" rows="5" cols="50"></textarea>
     <br>
-    <textarea name="output_text" rows="5" cols="50"><?php echo isset($_POST['output_text']) ? $_POST['output_text'] : ''; ?></textarea>
-    <br>
-    <input type="submit" name="submit_button" value="Predict Output">
+    <input type="submit" name="submit_button" value="Ask me anything">
 </form>
 <?php
 require 'vendor/autoload.php';
@@ -19,7 +17,7 @@ use GuzzleHttp\Client;
 
 if (isset($_POST['submit_button'])) {
     // Your OpenAI API key
-    $api_key = "sk-YOUR KEY";
+    $api_key = "";
     // Set up the client
     $client = new Client([
         'base_uri' => 'https://api.openai.com',
@@ -51,10 +49,11 @@ if (isset($_POST['submit_button'])) {
 
 // Access the completion text
     $completion = $responseData['choices'][0]['text'];
+    # echo "<p>Answer: </p>";
+    # echo $completion;
+    echo "<label for='output'>Answer:</label><br>";
+    echo "<textarea id='output' rows='5' cols='50'>$completion</textarea>";
 
-    echo $completion;
-    // Set the output text to the predicted text
-    $output_text = $completion;
 }
 ?>
 </body>
