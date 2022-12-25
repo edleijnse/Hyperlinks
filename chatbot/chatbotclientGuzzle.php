@@ -47,31 +47,36 @@ if (isset($_POST['submit_button'])) {
     $prompt = $input_text;
     // Set up the request body
     $requestBody = [
-        'model' => 'text-davinci-002',
+        'model' => 'text-davinci-003',
         'prompt' => $prompt,
         'max_tokens' => 512,
     ];
     // Make the request
-    $response = $client->post('/v1/completions', [
-        'body' => json_encode($requestBody)
-    ]);
-    // Get the response body as a string
-    $responseBody = $response->getBody()->getContents();
+    try {
+        $response = $client->post('/v1/completions', [
+            'body' => json_encode($requestBody)
+        ]);
+        // Get the response body as a string
+        $responseBody = $response->getBody()->getContents();
 // Decode the JSON response
-    $responseData = json_decode($responseBody, true);
+        $responseData = json_decode($responseBody, true);
 
 // Access the completion text
-    $completion = $responseData['choices'][0]['text'];
-    # echo "<p>Answer: </p>";
-    # echo $completion;
-    echo "<br>";
-    echo "<br>";
-    echo "<label for='question'>Question:</label><br>";
-    echo "<textarea id='question' rows='5' cols='50'>$prompt</textarea>";
-    echo "<p>";
-    echo "<label for='output'>Answer:</label><br>";
-    echo "<textarea id='output' rows='20' cols='50'>$completion</textarea>";
-    echo "</p";
+        $completion = $responseData['choices'][0]['text'];
+        # echo "<p>Answer: </p>";
+        # echo $completion;
+        echo "<br>";
+        echo "<br>";
+        echo "<label for='question'>Question:</label><br>";
+        echo "<textarea id='question' rows='5' cols='50'>$prompt</textarea>";
+        echo "<p>";
+        echo "<label for='output'>Answer:</label><br>";
+        echo "<textarea id='output' rows='20' cols='50'>$completion</textarea>";
+        echo "</p";
+    } catch (Exception $e) {
+        // An error occurred, print the error message
+        echo "Error occurred: " . $e->getMessage();
+    }
 }
 ?>
 </body>
