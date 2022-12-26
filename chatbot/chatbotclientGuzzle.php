@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PHP ChatGPT example</title>
+    <title>ChatGPT client</title>
+    <style>
+        .input {
+            font-size: 24px;
+            color: royalblue;
+        }
+        .output {
+            font-size: 24px;
+            color: dimgray;
+        }
+        .ask {
+            font-size: 64px;
+        }
+        .heading {
+            font-size: 64px;
+        }
+        .large-font {
+            font-size: 72px;
+        }
+    </style>
 </head>
 <body>
+<h3 class="heading">Enter your question here</h3>
 <form method="post">
-    <textarea name="input_text" rows="5" cols="50"></textarea>
+    <textarea name="input_text" class="input" rows="5" cols="50"></textarea>
     <br>
-    <input type="submit" name="submit_button" value="Ask me anything">
+    <input type="submit" name="submit_button" class="ask" value="Ask me anything">
 </form>
 <?php
 require 'vendor/autoload.php';
@@ -29,7 +49,6 @@ if (isset($_POST['submit_button'])) {
     fclose($file);
     // Remove the end of line characters from the contents
     $api_key = str_replace(array("\r", "\n"), '', $api_key);
-
 
     // Set up the client
     $client = new Client([
@@ -65,13 +84,18 @@ if (isset($_POST['submit_button'])) {
         $completion = $responseData['choices'][0]['text'];
         # echo "<p>Answer: </p>";
         # echo $completion;
+
         echo "<br>";
         echo "<br>";
-        echo "<label for='question'>Question:</label><br>";
-        echo "<textarea id='question' rows='5' cols='50'>$prompt</textarea>";
         echo "<p>";
-        echo "<label for='output'>Answer:</label><br>";
-        echo "<textarea id='output' rows='20' cols='50'>$completion</textarea>";
+        echo "<label for='question' class='large-font'>Question:</label><br>";
+        echo "<textarea id='question' class='output' rows='5' cols='50'>$prompt</textarea>";
+        echo "</p";
+        echo "<br>";
+        echo "<br>";
+        echo "<p>";
+        echo "<label for='output' class='large-font'>Answer:</label><br>";
+        echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";
         echo "</p";
     } catch (Exception $e) {
         // An error occurred, print the error message
