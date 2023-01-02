@@ -27,6 +27,14 @@
     </style>
 </head>
 <body>
+<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordEnglish.php/" class="heading">English</a>
+<sp>__</sp>
+<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordGerman.php/" class="heading">German</a>
+<sp>__</sp>
+<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordSpanish.php/" class="heading">Spanish</a>
+<sp>__</sp>
+<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordDutch.php/" class="heading">Dutch</a>
+
 <h3 class="heading">Enter your question here</h3>
 <form method="post">
     <textarea name="input_text" class="input" rows="5" cols="50"></textarea>

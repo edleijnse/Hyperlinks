@@ -27,6 +27,7 @@
     </style>
 </head>
 <body>
+<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzle.php/" class="heading">Home</a>
 <h3 class="heading">Formulieren Sie ihre Frage!</h3>
 <form method="post">
     <label for="your_choice" class="list">Was möchten Sie?</label><br>
