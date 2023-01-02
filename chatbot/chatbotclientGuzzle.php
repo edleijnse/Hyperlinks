@@ -7,6 +7,10 @@
             font-size: 24px;
             color: royalblue;
         }
+        .list {
+            font-size: 38px;
+            color: goldenrod;
+        }
         .output {
             font-size: 24px;
             color: dimgray;
@@ -15,7 +19,7 @@
             font-size: 64px;
         }
         .heading {
-            font-size: 64px;
+            font-size: 38px;
         }
         .large-font {
             font-size: 72px;

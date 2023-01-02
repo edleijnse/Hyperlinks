@@ -27,25 +27,26 @@
     </style>
 </head>
 <body>
-<h3 class="heading">Formulieren Sie ihre Frage!</h3>
+<h3 class="heading">Stel je vraag!</h3>
 <form method="post">
-    <label for="your_choice" class="list">Was möchten Sie?</label><br>
-    <select name="your_choice" class="list" id="your_choice" size="8">
-        <option value="" selected>Keine Hilfe nötig. Ansonsten wähle hier unten.</option>
-        <option value="Gib mir eine Zusammenfassung des folgenden Textes:">Gib mir eine Zusammenfassung des folgenden Textes:</option>
-        <option value="Dieser Text muss korrigiert werden:">Dieser Text muss korrigiert werden:</option>
-        <option value="Übersetze diesen Text auf Deutsch:">Übersetze diesen Text auf Deutsch:</option>
-        <option value="Übersetze diesen Text auf English:">Übersetze diesen Text auf English:</option>
-        <option value="Übersetze diesen Text auf Spanisch:">Übersetze diesen Text auf Spanisch:</option>
-        <option value="Übersetze diesen Text auf Französisch:">Übersetze diesen Text auf Französisch:</option>
-        <option value="Übersetze diesen Text auf Italienisch:">Übersetze diesen Text auf Italienisch:</option>
+    <label for="your_choice" class="list">Vertel mij wat je wilt</label><br>
+    <select name="your_choice" class="list" id="your_choice" size="9">
+        <option value="" selected>Geen hulp nodig. Maak uw keuze hier onder</option>
+        <option value="Maak een samenvatting van deze tekst:">Maak een samenvatting van deze tekst:</option>
+        <option value="Korrigeer deze tekst:">Korrigeer deze tekst:</option>
+        <option value="Vertaal in het Nederlands:">Vertaal in het Nederlands:</option>
+        <option value="Vertaal in het Engels:">Vertaal in het Engels:</option>
+        <option value="Vertaal in het Spaans:">Vertaal in het Spaans:</option>
+        <option value="Vertaal in het Frans:">Vertaal in het Frans:</option>
+        <option value="Vertaal in het Italiaans:">Vertaal in het Italiaans:</option>
+        <option value="Vertaal in het Duits:">Vertaal in het Duits:</option>
     </select>
     <br>
     <br>
     <textarea name="input_text" class="input" rows="5" cols="50"></textarea>
     <br>
     <br>
-    <input type="submit" name="submit_button" class="ask" value="Gib mir eine Antwort!">
+    <input type="submit" name="submit_button" class="ask" value="Antwoord mij!">
 </form>
 <?php
 require 'vendor/autoload.php';
@@ -64,7 +65,7 @@ if (isset($_POST['submit_button'])) {
     $file = fopen($parent_dir . '/api_key', 'r');
     // Read the contents of the file
     $api_key = fread($file, filesize($parent_dir . '/api_key'));
-    // Close the file
+    // Close the file<option value="Translate in Italian:">Vertaal in het Italiaans:</option>
     fclose($file);
     // Remove the end of line characters from the contents
     $api_key = str_replace(array("\r", "\n"), '', $api_key);

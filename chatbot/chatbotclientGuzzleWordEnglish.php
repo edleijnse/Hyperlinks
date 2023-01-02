@@ -8,7 +8,7 @@
             color: royalblue;
         }
         .list {
-            font-size: 24px;
+            font-size: 38px;
             color: goldenrod;
         }
         .output {
@@ -31,7 +31,7 @@
 <form method="post">
     <label for="your_choice" class="list">Tell me what you want</label><br>
     <select name="your_choice" class="list" id="your_choice" size="8">
-        <option value="" selected>I don't need help!</option>
+        <option value="" selected>No need for help. Otherwise choose below</option>
         <option value="Make a summary of the following text:">Make a summary of the following text:</option>
         <option value="Correct this text:">Correct this text:</option>
         <option value="Translate in German:">Translate in German:</option>
@@ -40,7 +40,10 @@
         <option value="Translate in French:">Translate in French:</option>
         <option value="Translate in Italian:">Translate in Italian:</option>
     </select>
+    <br>
+    <br>
     <textarea name="input_text" class="input" rows="5" cols="50"></textarea>
+    <br>
     <br>
     <input type="submit" name="submit_button" class="ask" value="Answer me!">
 </form>

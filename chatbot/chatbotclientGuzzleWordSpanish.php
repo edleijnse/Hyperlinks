@@ -27,25 +27,25 @@
     </style>
 </head>
 <body>
-<h3 class="heading">Formulieren Sie ihre Frage!</h3>
+<h3 class="heading">¿Ingresa tu pregunta?</h3>
 <form method="post">
-    <label for="your_choice" class="list">Was möchten Sie?</label><br>
+    <label for="your_choice" class="list">Dime lo que quieres</label><br>
     <select name="your_choice" class="list" id="your_choice" size="8">
-        <option value="" selected>Keine Hilfe nötig. Ansonsten wähle hier unten.</option>
-        <option value="Gib mir eine Zusammenfassung des folgenden Textes:">Gib mir eine Zusammenfassung des folgenden Textes:</option>
-        <option value="Dieser Text muss korrigiert werden:">Dieser Text muss korrigiert werden:</option>
-        <option value="Übersetze diesen Text auf Deutsch:">Übersetze diesen Text auf Deutsch:</option>
-        <option value="Übersetze diesen Text auf English:">Übersetze diesen Text auf English:</option>
-        <option value="Übersetze diesen Text auf Spanisch:">Übersetze diesen Text auf Spanisch:</option>
-        <option value="Übersetze diesen Text auf Französisch:">Übersetze diesen Text auf Französisch:</option>
-        <option value="Übersetze diesen Text auf Italienisch:">Übersetze diesen Text auf Italienisch:</option>
+        <option value="" selected>No hay necesidad de ayuda. De lo contrario, elija a continuación.</option>
+        <option value="Haga un resumen del siguiente texto:">Haga un resumen del siguiente texto:</option>
+        <option value="Corrige este texto:">Corrige este texto:</option>
+        <option value="Traducir al alemán:">Traducir al alemán:</option>
+        <option value="Traducir al inglés:">Traducir al inglés:</option>
+        <option value="Traducir al español:">Traducir al español:</option>
+        <option value="Traducir al francés:">Traducir al francés:</option>
+        <option value="Traducir al italiano:">Traducir al italiano:</option>
     </select>
     <br>
     <br>
     <textarea name="input_text" class="input" rows="5" cols="50"></textarea>
     <br>
     <br>
-    <input type="submit" name="submit_button" class="ask" value="Gib mir eine Antwort!">
+    <input type="submit" name="submit_button" class="ask" value="Respóndeme!">
 </form>
 <?php
 require 'vendor/autoload.php';
