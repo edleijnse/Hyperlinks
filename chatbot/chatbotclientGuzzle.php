@@ -42,7 +42,8 @@
 <a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordSpanish.php/" class="heading">Spanish</a>
 <sp>__</sp>
 <a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordDutch.php/" class="heading">Dutch</a>
-
+<sp>__</sp>
+<a href="https://tagger.biz/2023/01/04/chatgpt-client-user-manual/" class="heading">HELP</a>
 <h3 class="heading">Enter your question here</h3>
 <form method="post">
     <textarea name="input_text" class="input" rows="5" cols="50"></textarea>
@@ -91,7 +92,7 @@ if (isset($_POST['submit_button'])) {
         $requestBody = [
             'model' => 'text-davinci-003',
             'prompt' => $prompt,
-            'max_tokens' => 512,
+            'max_tokens' => 2048,
         ];
         // Make the request
         try {

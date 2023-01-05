@@ -94,7 +94,7 @@ if (isset($_POST['submit_button'])) {
         $requestBody = [
             'model' => 'text-davinci-003',
             'prompt' => $prompt,
-            'max_tokens' => 512,
+            'max_tokens' => 2048,
         ];
         // Make the request
         try {
