@@ -35,18 +35,18 @@
     </style>
 </head>
 <body>
-<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordEnglish.php/" class="heading">English</a>
+<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordEnglish.php/" class="heading">English</a>
 <sp>__</sp>
-<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordGerman.php/" class="heading">German</a>
+<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordGerman.php/" class="heading">German</a>
 <sp>__</sp>
-<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordSpanish.php/" class="heading">Spanish</a>
+<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordSpanish.php/" class="heading">Spanish</a>
 <sp>__</sp>
-<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzleWordDutch.php/" class="heading">Dutch</a>
+<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordDutch.php/" class="heading">Dutch</a>
 <sp>__</sp>
 <a href="https://tagger.biz/2023/01/04/chatgpt-client-user-manual/" class="heading">HELP</a>
 <h3 class="heading">Enter your question here</h3>
 <form method="post">
-    <textarea name="input_text" class="input" rows="5" cols="50"></textarea>
+    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo htmlspecialchars($_POST['input_text']); ?></textarea>
     <br>
     <input type="submit" name="submit_button" class="ask" value="Ask me anything">
 </form>
@@ -109,14 +109,6 @@ if (isset($_POST['submit_button'])) {
             # echo "<p>Answer: </p>";
             # echo $completion;
 
-            echo "<br>";
-            echo "<br>";
-            echo "<p>";
-            echo "<label for='question' class='large-font'>Question:</label><br>";
-            echo "<textarea id='question' class='output' rows='5' cols='50'>$prompt</textarea>";
-            echo "</p";
-            echo "<br>";
-            echo "<br>";
             echo "<p>";
             echo "<label for='output' class='large-font'>Answer:</label><br>";
             echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";

@@ -30,7 +30,7 @@
     </style>
 </head>
 <body>
-<a href="https://leijnse.info/hyperlinks/chatbot/chatbotclientGuzzle.php/" class="heading">Home</a>
+<a href="https://tagger.biz/chatbot/chatbotclientGuzzle.php/" class="heading">Home</a>
 <h3 class="heading">¿Ingresa tu pregunta?</h3>
 <form method="post">
     <label for="your_choice" class="list">Dime lo que quieres</label><br>
@@ -46,7 +46,7 @@
     </select>
     <br>
     <br>
-    <textarea name="input_text" class="input" rows="5" cols="50"></textarea>
+    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo htmlspecialchars($_POST['input_text']); ?></textarea>
     <br>
     <br>
     <input type="submit" name="submit_button" class="ask" value="Respóndeme!">
@@ -110,15 +110,6 @@ if (isset($_POST['submit_button'])) {
             $completion = $responseData['choices'][0]['text'];
             # echo "<p>Answer: </p>";
             # echo $completion;
-
-            echo "<br>";
-            echo "<br>";
-            echo "<p>";
-            echo "<label for='question' class='large-font'>Question:</label><br>";
-            echo "<textarea id='question' class='output' rows='5' cols='50'>$prompt</textarea>";
-            echo "</p";
-            echo "<br>";
-            echo "<br>";
             echo "<p>";
             echo "<label for='output' class='large-font'>Answer:</label><br>";
             echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";
