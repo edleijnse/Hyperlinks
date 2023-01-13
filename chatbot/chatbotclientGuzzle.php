@@ -2,13 +2,13 @@
 <html>
 <?php include 'head.php'; ?>
 <body>
-<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordEnglish.php/" class="heading">English</a>
+<a href="/chatbot/chatbotclientGuzzleWordEnglish.php/" class="heading">English</a>
 <sp>__</sp>
-<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordGerman.php/" class="heading">German</a>
+<a href="/chatbot/chatbotclientGuzzleWordGerman.php/" class="heading">German</a>
 <sp>__</sp>
-<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordSpanish.php/" class="heading">Spanish</a>
+<a href="/chatbot/chatbotclientGuzzleWordSpanish.php/" class="heading">Spanish</a>
 <sp>__</sp>
-<a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordDutch.php/" class="heading">Dutch</a>
+<a href="/chatbot/chatbotclientGuzzleWordDutch.php/" class="heading">Dutch</a>
 <sp>__</sp>
 <a href="https://tagger.biz/2023/01/04/chatgpt-client-user-manual/" class="heading">HELP</a>
 <h3 class="heading">Enter your question here</h3>

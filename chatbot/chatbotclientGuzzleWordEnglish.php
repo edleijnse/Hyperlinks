@@ -2,7 +2,7 @@
 <html>
 <?php include 'head.php'; ?>
 <body>
-<a href="https://tagger.biz/chatbot/chatbotclientGuzzle.php/" class="heading">Home</a>
+<a href="/chatbot/chatbotclientGuzzle.php/" class="heading">Home</a>
 <h3 class="heading">Enter your question!</h3>
 <form method="post">
     <label for="your_choice" class="list">Tell me what you want</label><br>
