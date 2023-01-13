@@ -1,39 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>ChatGPT client</title>
-    <style>
-        .input {
-            font-size: 24px;
-            color: royalblue;
-        }
-
-        .list {
-            font-size: 38px;
-            color: goldenrod;
-        }
-
-        .output {
-            font-size: 24px;
-            color: dimgray;
-        }
-
-        .ask {
-            font-size: 64px;
-        }
-
-        .heading {
-            font-size: 38px;
-        }
-        .error-message {
-            font-size: 38px;
-        }
-
-        .large-font {
-            font-size: 72px;
-        }
-    </style>
-</head>
+<?php include 'head.php'; ?>
 <body>
 <a href="https://tagger.biz/chatbot/chatbotclientGuzzleWordEnglish.php/" class="heading">English</a>
 <sp>__</sp>
@@ -61,7 +28,7 @@ $client = $openai_data[1];
 
 if (isset($_POST['submit_button'])) {
     if (empty($_POST['input_text'])) {
-        echo '<p class="error-message">Please enter your questionss</p>';
+        echo '<p class="error-message">Please enter your questions</p>';
     } else {
         // Load the Guzzle library
         // Get the input text

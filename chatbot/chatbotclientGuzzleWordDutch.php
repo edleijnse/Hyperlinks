@@ -1,34 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>ChatGPT client</title>
-    <style>
-        .input {
-            font-size: 24px;
-            color: royalblue;
-        }
-        .list {
-            font-size: 38px;
-            color: goldenrod;
-        }
-        .output {
-            font-size: 24px;
-            color: dimgray;
-        }
-        .ask {
-            font-size: 64px;
-        }
-        .heading {
-            font-size: 38px;
-        }
-        .error-message {
-            font-size: 38px;
-        }
-        .large-font {
-            font-size: 72px;
-        }
-    </style>
-</head>
+<?php include 'head.php'; ?>
 <body>
 <a href="https://tagger.biz/chatbot/chatbotclientGuzzle.php/" class="heading">Home</a>
 <h3 class="heading">Stel je vraag!</h3>
@@ -36,7 +8,7 @@
     <label for="your_choice" class="list">Vertel mij wat je wilt</label><br>
     <select name="your_choice" class="list" id="your_choice" size="9">
         <option value="" selected>Geen hulp nodig. Maak uw keuze hier onder</option>
-        <option value="aak een samenvatting van deze tekst:">Maak een samenvatting van deze tekst:</option>
+        <option value="Maak een samenvatting van deze tekst:">Maak een samenvatting van deze tekst:</option>
         <option value="Korrigeer deze tekst:">Korrigeer deze tekst:</option>
         <option value="Vertaal in het Nederlands:">Vertaal in het Nederlands:</option>
         <option value="Vertaal in het Engels:">Vertaal in het Engels:</option>
