@@ -37,6 +37,7 @@ function get_openai_response($input_text, $client) {
     $requestBody = [
         'model' => 'text-davinci-003',
         'prompt' => $prompt,
+        'temperature' => 0.0,
         'max_tokens' => 2048,
     ];
     // Make the request
