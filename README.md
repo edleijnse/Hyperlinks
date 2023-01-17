@@ -11,3 +11,5 @@ Note: You have to add your own "api_key" file into the parent directory.
 Added in January 2023:
 Question stored after submitting
 Multilingual support for English, German and Dutch
+
+openai_functions.php to have common functions for communicating with openai. 
