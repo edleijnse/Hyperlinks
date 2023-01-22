@@ -12,16 +12,23 @@
 <sp>__</sp>
 <a href="https://tagger.biz/2023/01/04/chatgpt-client-user-manual/" class="heading">HELP</a>
 <h3 class="heading">Enter your question here</h3>
+<p>
 <form method="post">
-    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo htmlspecialchars($_POST['input_text']); ?></textarea>
+    <textarea name="input_text" class="input"  rows="5" cols="50">
+        <?php if (isset($_POST['input_text'])) {echo htmlentities($_POST['input_text']);
+        } else {
+            echo "";
+        }?></textarea>
     <br>
     <input type="submit" name="submit_button" class="ask" value="Ask me anything">
 </form>
+</p>
 <?php
 require 'vendor/autoload.php';
 require 'openai_functions.php';
 
 use GuzzleHttp\Client;
+
 $openai_data = init_openai();
 $your_choice = $openai_data[0];
 $client = $openai_data[1];

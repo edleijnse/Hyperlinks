@@ -4,6 +4,7 @@
         .input {
     font-size: 24px;
             color: royalblue;
+    text-align: start;
         }
         .list {
     font-size: 38px;

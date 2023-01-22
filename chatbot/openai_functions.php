@@ -18,7 +18,10 @@ function init_openai()
     // Remove the end of line characters from the contents
     $api_key = str_replace(array("\r", "\n"), '', $api_key);
     //Set value of $your_choice
-    $your_choice = $_POST['your_choice'];
+    $your_choice = "";
+    if (isset($_POST['your_choice'])) {
+        $your_choice = $_POST['your_choice'];
+    }
     // Set up the client
     $client = new Client([
         'base_uri' => 'https://api.openai.com',

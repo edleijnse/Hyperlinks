@@ -18,7 +18,12 @@
     </select>
     <br>
     <br>
-    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo htmlspecialchars($_POST['input_text']); ?></textarea>
+    <textarea name="input_text" class="input" rows="5" cols="50">
+        <?php if (isset($_POST['input_text'])) {
+            echo htmlentities($_POST['input_text']);
+        } else {
+            echo "";
+        } ?></textarea>
     <br>
     <br>
     <input type="submit" name="submit_button" class="ask" value="Gib mir eine Antwort!">
