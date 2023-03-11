@@ -37,11 +37,13 @@ function init_openai()
 function get_openai_response($input_text, $client) {
     $prompt = $input_text;
     // Set up the request body
+    $user = 'language teacher English, Spanish and German';
     $requestBody = [
         'model' => 'text-davinci-003',
         'prompt' => $prompt,
         'temperature' => 0.0,
         'max_tokens' => 2048,
+        'user' => $user,
     ];
     // Make the request
     try {
