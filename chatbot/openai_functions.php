@@ -65,4 +65,37 @@ function get_openai_response($input_text, $client) {
         echo "Error occurred: " . $e->getMessage();
     }
 }
+
+function get_openai_response_gpt4($input_text, $client) {
+    // Set up the request body
+    $user = 'language teacher English, Spanish and German';
+    $requestBody = [
+        'model' => 'gpt-4',
+        'messages' => [
+            ['role' => 'user', 'content' => $input_text],
+        ],
+        //'temperature' => 0.0,
+        // 'max_tokens' => 2048,
+        //'user' => $user,
+    ];
+    // Make the request
+    try {
+        $response = $client->post('/v1/chat/completions', [
+            'body' => json_encode($requestBody)
+        ]);
+        // Get the response body as a string
+        $responseBody = $response->getBody()->getContents();
+        // Decode the JSON response
+        $responseData = json_decode($responseBody, true);
+        // Access the completion text
+        $completion = $responseData['choices'][0]['message']['content'];
+        echo "<p>";
+        echo "<label for='output' class='large-font'>Answer:</label><br>";
+        echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";
+        echo "</p";
+    } catch (Exception $e) {
+        // An error occurred, print the error message
+        echo "Error occurred: " . $e->getMessage();
+    }
+}
 ?>
