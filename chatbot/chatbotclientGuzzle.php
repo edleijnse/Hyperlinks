@@ -2,20 +2,11 @@
 <html>
 <?php include 'head.php'; ?>
 <body>
-<a href="/chatbot/chatbotclientGuzzleWordEnglishGPT4.php/" class="heading">English</a>
-<sp>__</sp>
-<a href="/chatbot/chatbotclientGuzzleWordGermanGPT4.php/" class="heading">German</a>
-<sp>__</sp>
-<a href="/chatbot/chatbotclientGuzzleWordSpanishGPT4.php/" class="heading">Spanish</a>
-<sp>__</sp>
-<a href="/chatbot/chatbotclientGuzzleWordDutchGPT4.php/" class="heading">Dutch</a>
-<sp>__</sp>
-<a href="https://tagger.biz/2023/01/04/chatgpt-client-user-manual/" class="heading">HELP</a>
-<h3 class="heading">Enter your question here</h3>
+<h2 class="ask">Enter your question here</h2>
 <p>
 <form method="post">
-    <label class="input" for="model_choice">Choose a model:</label>
-    <select name="model_choice" class="input" id="model_choice">
+    <label class="ask" for="model_choice">Choose a model:</label>
+    <select name="model_choice" class="ask" id="model_choice">
         <option value="gpt">GPT</option>
         <option value="gpt4" selected>GPT4</option>
     </select>
