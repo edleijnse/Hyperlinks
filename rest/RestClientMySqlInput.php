@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["search"])) {
     // call function with $url as parameter
     $search = filter_input(INPUT_POST, 'search', FILTER_SANITIZE_STRING);
     echo "<h2>Searched for: $search</h2>";
-    $url = 'https://leijnsse.info/hyperlinks/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
+    $url = 'http://localhost/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
     $hyperlinks = fetchHyperlinks($url);
     if ($hyperlinks === null) {
         // retry with other URL

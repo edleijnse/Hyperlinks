@@ -126,6 +126,13 @@ DefaultDir=D:/www/www780/database";
         $password = "XarDam09;09DamXar";
         $dbname = "leijn_hyperlinks";
         $conn = mysqli_connect($servername, $username, $password, $dbname);
+        if ($conn === false) {
+            $servername = "192.168.0.37";
+            $username = "edlei";
+            $password = "Rax03Dam";
+            $dbname = "mysql";
+            $conn = mysqli_connect($servername, $username, $password, $dbname);
+        }
         $sql = "";
         if (empty($mySearch)) {
             $sql = "SELECT * from hyperlinks order by webgroup, webcategory, webdescription, website ";
