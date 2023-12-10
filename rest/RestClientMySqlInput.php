@@ -65,16 +65,28 @@ if (function_exists('test_input')) {
 echo "<h2>Searched for:</h2>";
 echo $search;
 echo "<br>";
-$url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
+$url = 'https://leijnsse.info/hyperlinks/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response_json = curl_exec($ch);
 curl_close($ch);
 $hyperlinks = array();
-$hyperlinks = json_decode($response_json, true,512);
+$hyperlinks = json_decode($response_json, true, 512);
+if ($hyperlinks === null){
+    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
+    // $url = 'http://192.168.0.37/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_HTTPGET, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response_json = curl_exec($ch);
+    curl_close($ch);
+    $hyperlinks = array();
+    $hyperlinks = json_decode($response_json, true, 512);
+}
 echo "<h2>Search Results</h2>";
 echo "<table>";
+
 foreach ($hyperlinks as $hyperlink) {
     if (isset($hyperlink['ID'])) {
         echo "<tr>";
@@ -86,18 +98,18 @@ foreach ($hyperlinks as $hyperlink) {
             echo $hyperlink['category'];
             echo "</th>";
             echo "<th>";
-            echo "<a href=" .$hyperlink['website'] . ">" . $hyperlink['webdescription'] . "</a>";
+            echo "<a href=" . $hyperlink['website'] . ">" . $hyperlink['webdescription'] . "</a>";
             echo "</th>";
             echo "<th>";
-            echo "<a href=" . "https://tagger.biz/hyperlink-update/?ID=".$hyperlink['ID']
-                ."&category=".urlencode($hyperlink["category"])
-                ."&group=".urlencode($hyperlink["group"])
-                ."&webdescription=".urlencode($hyperlink["webdescription"])
-                ."&website=".urlencode($hyperlink["website"])
+            echo "<a href=" . "https://tagger.biz/hyperlink-update/?ID=" . $hyperlink['ID']
+                . "&category=" . urlencode($hyperlink["category"])
+                . "&group=" . urlencode($hyperlink["group"])
+                . "&webdescription=" . urlencode($hyperlink["webdescription"])
+                . "&website=" . urlencode($hyperlink["website"])
                 . ">" . "update" . "</a>";
             echo "</th>";
             echo "<th>";
-            echo "<a href=" . "https://tagger.biz/hyperlink-delete-2/?ID=".$hyperlink['ID']
+            echo "<a href=" . "https://tagger.biz/hyperlink-delete-2/?ID=" . $hyperlink['ID']
                 . ">" . "delete" . "</a>";
             echo "</th>";
 
