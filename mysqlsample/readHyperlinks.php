@@ -4,7 +4,7 @@ $servername = "192.168.0.37";
 //$username = "{USERNAME}";
 $username = "edlei";
 // $password = "{PASSWORD}";
-$password = "Rax03Dam";
+$password = "xxxxx";
 $dbname = "mysql";
 
 try {
