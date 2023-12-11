@@ -123,7 +123,7 @@ function displayHyperlinksTable($hyperlinks) {
                 echo "<a style='color:blue' href=" . $hyperlink['website'] . ">" . $hyperlink['webdescription'] . "</a>";
                 echo "</th>";
                 echo "<th>";
-                echo "<a href=" . "https://tagger.biz/rest/RestClientMySqlUpdate.php/?ID=" . $hyperlink['ID']
+                echo "<a style='color:green' href=" . "https://tagger.biz/rest/RestClientMySqlUpdate.php/?ID=" . $hyperlink['ID']
                     . "&category=" . urlencode($hyperlink["category"])
                     . "&group=" . urlencode($hyperlink["group"])
                     . "&webdescription=" . urlencode($hyperlink["webdescription"])
@@ -131,7 +131,7 @@ function displayHyperlinksTable($hyperlinks) {
                     . ">" . "update" . "</a>";
                 echo "</th>";
                 echo "<th>";
-                echo "<a href=" . "https://tagger.biz/rest/RestClientMySqlDelete.php/?ID=" . $hyperlink['ID']
+                echo "<a style='color:red' href=" . "https://tagger.biz/rest/RestClientMySqlDelete.php/?ID=" . $hyperlink['ID']
                     . ">" . "delete" . "</a>";
                 echo "</th>";
 
@@ -145,7 +145,7 @@ function displayHyperlinksTable($hyperlinks) {
     }
     echo "</table>";
     echo "<br><br>";
-    echo "<a href=" . "https://tagger.biz/rest/RestClientMySqlInsert.php/"
+    echo "<a style='color:green; font-weight:bold;'  href=" . "https://tagger.biz/rest/RestClientMySqlInsert.php/"
         . ">" . "insert new" . "</a>";
 }
 ?>
