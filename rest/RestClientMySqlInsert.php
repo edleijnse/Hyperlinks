@@ -118,7 +118,9 @@ if ((empty($_POST["confirm"]))
     echo $myResponce;
     $_POST["confirm"] = "";
 }
-
+echo "<br><br>";
+echo "<a href=" . "https://tagger.biz/rest/RestClientMySqlInput.php/"
+    . ">" . "search" . "</a>";
 ?>
 </body>
 </html>

@@ -98,7 +98,6 @@ if (empty($_POST["ID"])) {
     echo "<h2>Result</h2>";
     echo $myResponce;
 }
-
 ?>
 </body>
 </html>

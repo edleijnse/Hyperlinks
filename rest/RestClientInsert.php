@@ -128,7 +128,6 @@ if ((empty($_POST["ID"]))
     echo $myResponce;
     $_POST["confirm"] = "";
 }
-
 ?>
 </body>
 </html>

@@ -69,7 +69,6 @@ if (function_exists('test_input')) {
         return $data;
     }
 }
-
 ?>
 <h2>Delete hyperlinks</h2>
 <p><span class="error">* required field</span></p>
@@ -98,7 +97,9 @@ if (empty($_POST["ID"])) {
     echo "<h2>Result</h2>";
     echo $myResponce;
 }
-
+echo "<br><br>";
+echo "<a href=" . "https://tagger.biz/rest/RestClientMySqlInput.php/"
+    . ">" . "search" . "</a>";
 ?>
 </body>
 </html>
