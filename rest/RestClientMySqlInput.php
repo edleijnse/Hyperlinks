@@ -13,6 +13,7 @@
 
         table {
             font-family: Arial, sans-serif;
+            font-size: 24px;
             border-collapse: collapse;
             width: 80%;
             margin: auto;
@@ -22,6 +23,7 @@
 
         td, th {
             border: 1px solid #dddddd;
+            font-size: 24px;
             text-align: left;
             padding: 12px;
             font-weight: normal;
@@ -39,12 +41,14 @@
         }
 
         input[type=text] {
+            font-size: 24px;
             padding: 10px;
             border: none;
             border-bottom: 2px solid #333333;
         }
 
         input[type=submit] {
+            font-size: 24px;
             padding: 10px 20px;
             border: none;
             color: white;

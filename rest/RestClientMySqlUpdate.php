@@ -13,6 +13,7 @@
 
         table {
             font-family: Arial, sans-serif;
+            font-size: 24px;
             border-collapse: collapse;
             width: 80%;
             margin: auto;
@@ -25,6 +26,7 @@
             text-align: left;
             padding: 12px;
             font-weight: normal;
+            font-size: 24px;
         }
 
         h2 {
@@ -36,12 +38,14 @@
         form {
             text-align: center;
             margin-top: 50px;
+            font-size: 24px;
         }
 
         input[type=text] {
             padding: 10px;
             border: none;
             border-bottom: 2px solid #333333;
+            font-size: 24px;
         }
 
         input[type=submit] {
@@ -50,6 +54,7 @@
             color: white;
             background-color: #333333;
             cursor: pointer;
+            font-size: 24px;
         }
 
         input[type=submit]:hover {
