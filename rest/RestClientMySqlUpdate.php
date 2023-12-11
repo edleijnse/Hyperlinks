@@ -2,25 +2,69 @@
 <html>
 <head>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8F8F8;
+        }
+
         .error {
             color: #FF0000;
         }
 
         table {
-            font-family: arial, sans-serif;
+            font-family: Arial, sans-serif;
             border-collapse: collapse;
-            width: 100%;
+            width: 80%;
+            margin: auto;
+            margin-top: 50px;
+            box-shadow: 0px 0px 20px #CCC;
         }
 
         td, th {
             border: 1px solid #dddddd;
             text-align: left;
-            padding: 8px;
+            padding: 12px;
+            font-weight: normal;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333333;
+            margin-top: 50px;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        input[type=text] {
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid #333333;
+        }
+
+        input[type=submit] {
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            background-color: #333333;
+            cursor: pointer;
+        }
+
+        input[type=submit]:hover {
+            background-color: #4CAF50;
         }
 
         tr:nth-child(even) {
-            background-color: #dddddd;
+            background-color: #e6e6e6;
         }
+
+        a {
+            color: #333;
+            text-decoration: none;
+        }
+
     </style>
 </head>
 <body>
