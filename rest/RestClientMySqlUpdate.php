@@ -124,6 +124,9 @@ if ((empty($_POST["group"]))
     echo "<h2>Result</h2>";
     echo $myResponse;
 }
+echo "<br><br>";
+echo "<a href=" . "https://tagger.biz/rest/RestClientMySqlInput.php/"
+    . ">" . "search" . "</a>";
 
 ?>
 </body>
