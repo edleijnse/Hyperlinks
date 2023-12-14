@@ -68,6 +68,22 @@
             color: #333;
             text-decoration: none;
         }
+        @media screen and (max-width: 1000px) {
+            body {
+                font-size: 18px; // smaller font-size for mobile
+            }
+
+            table {
+                width: 100%; // table should take full width on mobile
+            }
+            td, th {
+                padding: 8px; // lesser padding on mobile
+            }
+
+            form {
+                margin-top: 20px; // lesser margin on mobile
+            }
+        }
 
     </style>
 </head>

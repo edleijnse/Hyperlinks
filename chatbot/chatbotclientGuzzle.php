@@ -2,7 +2,7 @@
 <html>
 <?php include 'head.php'; ?>
 <body>
-<h2 class="ask">Enter your question here</h2>
+<h3 class="ask">Enter your question here</h3>
 <p>
 <form method="post">
     <label class="ask" for="model_choice">Choose a model:</label>

@@ -10,14 +10,14 @@
             padding: 0;
         }
         .input {
-            font-size: 24px;
+            font-size: 34px;
             color: #4054b2;
             text-align: start;
             padding: 10px;
             border-radius: 5px;
         }
         .list {
-            font-size: 38px;
+            font-size: 34px;
             color: #d4af37;
             margin-top: 20px;
             padding: 10px;
@@ -26,16 +26,16 @@
         .output {
             background-color: #f7f7f7;
             color: #707070;
-            font-size: 24px;
+            font-size: 34px;
             padding: 10px;
             border-radius: 5px;
         }
         .ask {
-            font-size: 64px;
+            font-size: 34px;
             color: #3b5998;
         }
         .heading {
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 500;
             color: #3b5998;
         }
@@ -44,12 +44,39 @@
             background-color: #ffe6e6;
             padding: 10px;
             border-radius: 5px;
-            font-size: 38px;
+            font-size: 24px;
             margin: 20px 0;
         }
         .large-font {
             font-size: 72px;
             color: #3b5998;
+        }
+
+        :root {
+            --mobile-font-size: 72px;
+            --mobile-bg-color: lightblue;
+            --mobile-width: 100%;
+            --mobile-padding: 8px;
+            --mobile-margin-top: 20px;
+        }
+
+        @media screen and (max-width: 1000px) {
+            body {
+                font-size: var(--mobile-font-size);
+                background-color: var(--mobile-bg-color);
+            }
+
+            table {
+                width: var(--mobile-width);
+            }
+
+            td, th {
+                padding: var(--mobile-padding);
+            }
+
+            form {
+                margin-top: var(--mobile-margin-top);
+            }
         }
     </style>
 </head>
