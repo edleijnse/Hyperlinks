@@ -11,11 +11,19 @@
         <option value="gpt4" selected>GPT4</option>
     </select>
     <br>
-    <textarea name="input_text" class="input" rows="5" cols="50">
-        <?php if (isset($_POST['input_text'])) { echo htmlentities($_POST['input_text']); } else { echo ""; } ?>
-    </textarea>
+    <?php
+    $display_text = '';
+    if (isset($_POST['submit_button'])) {
+        $display_text = htmlentities($_POST['input_text']);
+    }
+    if (isset($_POST['clean_button'])) {
+        $display_text = '';
+    }
+    ?>
+    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo $display_text ?></textarea>
     <br>
     <input type="submit" name="submit_button" class="ask" value="Ask me anything">
+    <input type="submit" name="clean_button" class="ask" value="Clean Input">
 </form>
 </p>
 <?php

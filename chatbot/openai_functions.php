@@ -70,7 +70,7 @@ function get_openai_response_gpt4($input_text, $client) {
     // Set up the request body
     $user = 'language teacher English, Spanish and German';
     $requestBody = [
-        'model' => 'gpt-4',
+        'model' => 'gpt-4o',
         'messages' => [
             ['role' => 'user', 'content' => $input_text],
         ],
