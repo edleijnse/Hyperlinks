@@ -5,9 +5,8 @@
 <h3 class="ask">Enter your question here</h3>
 <p>
 <form method="post">
-    <label class="ask" for="model_choice">Choose a model:</label>
+    <label class="ask" for="model_choice">using model:</label>
     <select name="model_choice" class="ask" id="model_choice">
-        <option value="gpt">GPT</option>
         <option value="gpt4" selected>GPT4</option>
     </select>
     <br>
@@ -26,6 +25,7 @@
     <input type="submit" name="clean_button" class="ask" value="Clean Input">
 </form>
 </p>
+<button class="copy-button" onclick="copyOutputToClipboard()" style="font-size:30px; padding:10px;">copy answer to clipboard</button>
 <?php
 require 'vendor/autoload.php';
 require 'openai_functions.php';
@@ -56,5 +56,31 @@ if (isset($_POST['submit_button'])) {
     }
 }
 ?>
+<!-- Add the "Copy" button -->
+<br>
+
+<script>
+    function copyOutputToClipboard() {
+        const outputText = document.getElementById("output").value;
+
+        // Create a temporary textarea element
+        const tempTextarea = document.createElement("textarea");
+        tempTextarea.value = outputText;
+        document.body.appendChild(tempTextarea);
+
+        // Select the text inside the temporary textarea
+        tempTextarea.select();
+        tempTextarea.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text to the clipboard
+        document.execCommand("copy");
+
+        // Clean up by removing the temporary textarea
+        document.body.removeChild(tempTextarea);
+
+        // Show an alert to indicate successful copy
+        alert("Copied to clipboard: " + outputText);
+    }
+</script>
 </body>
 </html>
