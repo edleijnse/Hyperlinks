@@ -78,5 +78,13 @@
                 margin-top: var(--mobile-margin-top);
             }
         }
+        @keyframes blink {
+            0% {opacity: 1;}
+            50% {opacity: 0.4;}
+            100% {opacity: 1;}
+        }
+        .blink-text {
+            animation: blink 1s infinite;
+        }
     </style>
 </head>

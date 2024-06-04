@@ -35,6 +35,7 @@ function init_openai()
 
 
 function get_openai_response($input_text, $client) {
+
     $prompt = $input_text;
     // Set up the request body
     $user = 'language teacher English, Spanish and German';
@@ -67,6 +68,7 @@ function get_openai_response($input_text, $client) {
 }
 
 function get_openai_response_gpt4($input_text, $client) {
+    echo "<p>..<em>waiting..</em></p>";
     // Set up the request body
     $user = 'language teacher English, Spanish and German';
     $requestBody = [

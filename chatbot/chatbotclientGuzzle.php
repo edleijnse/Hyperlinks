@@ -21,6 +21,9 @@
     ?>
     <textarea name="input_text" class="input" rows="5" cols="50"><?php echo $display_text ?></textarea>
     <br>
+    <?php if (empty($display_text)): // Check if the variable is empty ?>
+        <p class="blink-text">Please wait 5 secs after pressing "Ask me anything"</p> <!-- Add your text here -->
+    <?php endif; ?>
     <input type="submit" name="submit_button" class="ask" value="Ask me anything">
     <input type="submit" name="clean_button" class="ask" value="Clean Input">
 </form>
@@ -42,6 +45,7 @@ if (isset($_POST['submit_button'])) {
     } else {
         // Load the Guzzle library
         // Get the input text
+
         $input_text = $_POST['input_text'];
 
         // Determine the selected model choice
