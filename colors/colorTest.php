@@ -4,6 +4,20 @@ $image = imagecreatetruecolor(400, 400);
 
 // Allocate colors
 $white = imagecolorallocate($image, 255, 255, 255);
+
+$xyellowBright = imagecolorallocate($image, 248, 204, 4);
+$xOrangeBright = imagecolorallocate($image, 255, 188, 0);
+$xOrangeDark = imagecolorallocate($image, 255, 147, 0);
+$xRedBright = imagecolorallocate($image, 255, 91, 0);
+$xRedDark = imagecolorallocate($image, 255, 0, 0);
+$xVioletDark = imagecolorallocate($image, 89, 17, 68);
+$xBlue = imagecolorallocate($image, 0, 0, 255);
+$xBlueDark = imagecolorallocate($image, 0, 93, 255);
+$xBlueMedium = imagecolorallocate($image, 0, 134, 255);
+$xBlueLight = imagecolorallocate($image, 0, 180, 255);
+$xGreenLight = imagecolorallocate($image, 72, 190, 57);
+$xGreenDark = imagecolorallocate($image, 55, 163, 41);
+
 $red = imagecolorallocate($image, 255, 0, 0);
 $green = imagecolorallocate($image, 0, 255, 0);
 $blue = imagecolorallocate($image, 0, 0, 255);
@@ -14,28 +28,32 @@ $orange = imagecolorallocate($image, 255, 165, 0);
 $cyan = imagecolorallocate($image, 0, 255, 255);
 $magenta = imagecolorallocate($image, 255, 0, 255);
 
-
+// Johannes Iten Farbkreis
 imagefill($image, 0, 0, $white);
 
-imagefilledarc($image, 200, 200, 300, 300, 0, 36, $violet, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 0, 30, $xRedBright, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 36, 72, $magenta, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 30, 60, $xRedDark, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 72, 108, $black, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 60, 90, $xVioletDark, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 108, 144, $white, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 90, 120, $xBlue, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 144, 180, $cyan, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 120, 150, $xBlueDark, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 180, 216, $blue, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 150, 180, $xBlueMedium, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 216, 252, $green, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 180, 210, $xBlueLight, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 252, 288, $yellow, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 210, 240, $xGreenDark, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 288, 324, $orange, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 240, 270, $xGreenLight, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 324, 360, $red, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 270, 300, $xyellowBright, IMG_ARC_PIE);
+
+imagefilledarc($image, 200, 200, 300, 300, 300, 330, $xOrangeBright, IMG_ARC_PIE);
+
+imagefilledarc($image, 200, 200, 300, 300, 330, 360, $xOrangeDark, IMG_ARC_PIE);
 
 
 // Output the image to browser
