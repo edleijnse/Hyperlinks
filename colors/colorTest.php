@@ -17,25 +17,25 @@ $magenta = imagecolorallocate($image, 255, 0, 255);
 
 imagefill($image, 0, 0, $white);
 
-imagefilledarc($image, 200, 200, 300, 300, 0, 36, $white, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 0, 36, $violet, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 36, 72, $red, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 36, 72, $magenta, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 72, 108, $green, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 72, 108, $black, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 108, 144, $blue, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 108, 144, $white, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 144, 180, $yellow, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 144, 180, $cyan, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 180, 216, $violet, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 180, 216, $blue, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 216, 252, $black, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 216, 252, $green, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 252, 288, $orange, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 252, 288, $yellow, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 288, 324, $cyan, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 288, 324, $orange, IMG_ARC_PIE);
 
-imagefilledarc($image, 200, 200, 300, 300, 324, 360, $magenta, IMG_ARC_PIE);
+imagefilledarc($image, 200, 200, 300, 300, 324, 360, $red, IMG_ARC_PIE);
 
 
 // Output the image to browser
