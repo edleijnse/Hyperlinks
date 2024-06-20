@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Include jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<button id="complementRed">Complement Red</button>
+<button id="complementGreen">Complement Green</button>
+<button id="complementBlue">Complement Blue</button><br/>
+<img id="colorImage" src="colorComplements.php" />
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#complementRed").click(function(){
+            complementColor('red', 210); // replace 10 with the new position value
+
+        });
+
+        $("#complementGreen").click(function(){
+            complementColor('green', 10); // replace 10 with the new position value
+        });
+
+        $("#complementBlue").click(function(){
+            complementColor('blue', 190); // replace 10 with the new position value
+        });
+
+        function complementColor(color, position){
+            // Append the new position parameter to the image URL and reload it
+            $("#colorImage").attr("src", "colorComplements.php?" + color + "=" + position);
+        }
+    });
+
+</script>
+</html>
