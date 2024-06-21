@@ -7,7 +7,9 @@
 <body>
 <button id="complementRed">Complement Red</button>
 <button id="complementGreen">Complement Green</button>
-<button id="complementBlue">Complement Blue</button><br/>
+<button id="complementBlue">Complement Blue</button>
+<button id="complementYellow">Complement Yellow</button>
+<button id="complementReset">Reset</button><br/>
 <img id="colorImage" src="colorComplements.php" />
 </body>
 
@@ -15,15 +17,20 @@
     $(document).ready(function(){
         $("#complementRed").click(function(){
             complementColor('red', 210); // replace 10 with the new position value
-
         });
 
         $("#complementGreen").click(function(){
-            complementColor('green', 10); // replace 10 with the new position value
+            complementColor('green', 210); // replace 10 with the new position value
         });
 
         $("#complementBlue").click(function(){
-            complementColor('blue', 190); // replace 10 with the new position value
+            complementColor('blue', 210); // replace 10 with the new position value
+        });
+        $("#complementYellow").click(function(){
+            complementColor('yellow', 210); // replace 10 with the new position value
+        });
+        $("#complementReset").click(function(){
+            complementColor('reset', 210); // replace 10 with the new position value
         });
 
         function complementColor(color, position){
