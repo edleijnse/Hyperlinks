@@ -8,7 +8,6 @@ $arcPositions = [
     "reset" => 200
 ];
 $createColor = "";
-
 // Check if there are any query parameters
 if ($_SERVER['QUERY_STRING']) {
     parse_str($_SERVER['QUERY_STRING'], $params);
