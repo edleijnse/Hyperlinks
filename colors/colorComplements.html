@@ -94,15 +94,29 @@
 </head>
 <body>
 <button id="complementRed">Complement Red</button>
-<button id="complementGreen">Complement Green</button>
 <button id="complementBlue">Complement Blue</button>
+<br/>
 <button id="complementYellow">Complement Yellow</button>
+<button id="complementGreen">Complement Green</button>
+<br/>
+<button id="createViolet">create Violet</button>
+<button id="createGreen">create Green</button>
+<button id="createOrange">create Orange</button>
+<br/>
 <button id="complementReset">Reset</button><br/>
 <img id="colorImage" src="colorComplements.php" />
 </body>
 
 <script type="text/javascript">
     $(document).ready(function(){
+        $("#complementRed").css("font-size", "48px");
+        $("#complementGreen").css("font-size", "48px");
+        $("#complementBlue").css("font-size", "48px");
+        $("#complementYellow").css("font-size", "48px");
+        $("#complementReset").css("font-size", "48px");
+        $("#createViolet").css("font-size", "48px");
+        $("#createGreen").css("font-size", "48px");
+        $("#createOrange").css("font-size", "48px");
         $("#complementRed").click(function(){
             complementColor('red', 210); // replace 10 with the new position value
         });
@@ -116,6 +130,15 @@
         });
         $("#complementYellow").click(function(){
             complementColor('yellow', 210); // replace 10 with the new position value
+        });
+        $("#createViolet").click(function(){
+            complementColor('violet', 210); // replace 10 with the new position value
+        });
+        $("#createGreen").click(function(){
+            complementColor('creategreen', 210); // replace 10 with the new position value
+        });
+        $("#createOrange").click(function(){
+            complementColor('createorange', 210); // replace 10 with the new position value
         });
         $("#complementReset").click(function(){
             complementColor('reset', 210); // replace 10 with the new position value
