@@ -63,8 +63,14 @@
             --mobile-padding: 8px;
             --mobile-margin-top: 20px;
         }
+        .button-text {
+            font-size: 24px; // This will be the default font size, which is used for larger screens.
+        }
 
         @media screen and (max-width: 1000px) {
+            .button-text {
+                font-size: 48px; // This will be the default font size, which is used for larger screens.
+            }
             body {
                 font-size: var(--mobile-font-size);
                 background-color: var(--mobile-bg-color);
@@ -93,30 +99,23 @@
     </style>
 </head>
 <body>
-<button id="complementRed">Complement Red</button>
-<button id="complementBlue">Complement Blue</button>
+<button class="button-text" id="complementRed">Complement Red</button>
+<button class="button-text" id="complementBlue">Complement Blue</button>
 <br/>
-<button id="complementYellow">Complement Yellow</button>
-<button id="complementGreen">Complement Green</button>
+<button class="button-text" id="complementYellow">Complement Yellow</button>
+<button class="button-text" id="complementGreen">Complement Green</button>
 <br/>
-<button id="createViolet">create Violet</button>
-<button id="createGreen">create Green</button>
-<button id="createOrange">create Orange</button>
+<button class="button-text" id="createViolet">create Violet</button>
+<button class="button-text" id="createGreen">create Green</button>
+<button class="button-text" id="createOrange">create Orange</button>
 <br/>
-<button id="complementReset">Reset</button><br/>
+<button class="button-text" id="complementReset">Reset</button><br/>
 <img id="colorImage" src="colorComplements.php" />
 </body>
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $("#complementRed").css("font-size", "48px");
-        $("#complementGreen").css("font-size", "48px");
-        $("#complementBlue").css("font-size", "48px");
-        $("#complementYellow").css("font-size", "48px");
-        $("#complementReset").css("font-size", "48px");
-        $("#createViolet").css("font-size", "48px");
-        $("#createGreen").css("font-size", "48px");
-        $("#createOrange").css("font-size", "48px");
+
         $("#complementRed").click(function(){
             complementColor('red', 210); // replace 10 with the new position value
         });

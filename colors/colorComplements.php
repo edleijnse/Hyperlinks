@@ -28,6 +28,18 @@ if ($_SERVER['QUERY_STRING']) {
         $arcPositions['yellow'] = $params['yellow'];
         $createColor = 'yellow';
     }
+    if (isset($params['violet'])) {
+        $arcPositions['violet'] = $params['violet'];
+        $createColor = 'violet';
+    }
+    if (isset($params['creategreen'])) {
+        $arcPositions['creategreen'] = $params['creategreen'];
+        $createColor = 'creategreen';
+    }
+    if (isset($params['createorange'])) {
+        $arcPositions['createorange'] = $params['createorange'];
+        $createColor = 'createorange';
+    }
     if (isset($params['reset'])) {
         $arcPositions['reset'] = $params['reset'];
         $createColor = 'reset';
@@ -122,6 +134,15 @@ if ($createColor == 'blue') {
 }
 if ($createColor == 'yellow') {
     johannesItenFarbkreis($image, $white, $white, $white, $white, $xBlue, $white, $white, $white, $white, $white, $xyellowBright, $white, $white);
+}
+if ($createColor == 'violet') {
+    johannesItenFarbkreis($image, $white, $white, $xRedDark, $xVioletDark, $xBlue, $white, $white, $white, $white, $white, $white, $white, $white);
+}
+if ($createColor == 'creategreen') {
+    johannesItenFarbkreis($image, $white, $white, $white, $white, $white, $white, $white, $xBlueLight, $xGreenDark, $xGreenLight, $xyellowBright, $white, $white);
+}
+if ($createColor == 'createorange') {
+    johannesItenFarbkreis($image, $white, $white, $xRedDark, $white, $white, $white, $white, $white, $white, $white, $xyellowBright, $white, $xOrangeDark);
 }
 if ($createColor == 'reset') {
     johannesItenFarbkreis($image, $white, $xRedBright, $xRedDark, $xVioletDark, $xBlue, $xBlueDark, $xBlueMedium, $xBlueLight, $xGreenDark, $xGreenLight, $xyellowBright, $xOrangeBright, $xOrangeDark);
