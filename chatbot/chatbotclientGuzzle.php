@@ -7,7 +7,8 @@
 <form method="post">
     <label class="ask" for="model_choice">using model:</label>
     <select name="model_choice" class="ask" id="model_choice">
-        <option value="gpt4" selected>GPT4</option>
+        <option value="gpt4" >GPT4</option>
+        <option value="gpt4o-mini" selected>GPT4o-mini</option>
     </select>
     <br>
     <?php
