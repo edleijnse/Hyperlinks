@@ -55,6 +55,8 @@ if (isset($_POST['submit_button'])) {
             get_openai_response($input_text, $client);
         } elseif ($selected_model === 'gpt4') {
             get_openai_response_gpt4($input_text, $client);
+        } elseif ($selected_model === 'gpt4o-mini') {
+            get_openai_response_gpt4omini($input_text, $client);
         } else {
             get_openai_response_gpt4($input_text, $client);
         }
