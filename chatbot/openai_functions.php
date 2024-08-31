@@ -67,19 +67,24 @@ function get_openai_response($input_text, $client) {
     }
 }
 
-function get_openai_response_gpt4($input_text, $client) {
+function get_openai_response_gpt4($input_text, $content_history = [], $client) {
     echo "<p>..<em>waiting..</em></p>";
     // Set up the request body
     $user = 'language teacher English, Spanish and German';
+
+    // Prepare message history by appending the current input
+    $messages = array_map(function($content) {
+        return ['role' => 'user', 'content' => $content];
+    }, $content_history);
+
+    // Add the current input to the messages.
+    $messages[] = ['role' => 'user', 'content' => $input_text];
+
     $requestBody = [
         'model' => 'gpt-4o',
-        'messages' => [
-            ['role' => 'user', 'content' => $input_text],
-        ],
-        //'temperature' => 0.0,
-        // 'max_tokens' => 2048,
-        //'user' => $user,
+        'messages' => $messages,
     ];
+
     // Make the request
     try {
         $response = $client->post('/v1/chat/completions', [
@@ -94,25 +99,30 @@ function get_openai_response_gpt4($input_text, $client) {
         echo "<p>";
         echo "<label for='output' class='large-font'>Answer:</label><br>";
         echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";
-        echo "</p";
+        echo "</p>";
     } catch (Exception $e) {
         // An error occurred, print the error message
         echo "Error occurred: " . $e->getMessage();
     }
 }
-function get_openai_response_gpt4omini($input_text, $client) {
+function get_openai_response_gpt4omini($input_text, $content_history = [], $client) {
     echo "<p>..<em>waiting..</em></p>";
     // Set up the request body
     $user = 'language teacher English, Spanish and German';
+
+    // Prepare message history by appending the current input
+    $messages = array_map(function($content) {
+        return ['role' => 'user', 'content' => $content];
+    }, $content_history);
+
+    // Add the current input to the messages.
+    $messages[] = ['role' => 'user', 'content' => $input_text];
+
     $requestBody = [
         'model' => 'gpt-4o-mini',
-        'messages' => [
-            ['role' => 'user', 'content' => $input_text],
-        ],
-        //'temperature' => 0.0,
-        // 'max_tokens' => 2048,
-        //'user' => $user,
+        'messages' => $messages,
     ];
+
     // Make the request
     try {
         $response = $client->post('/v1/chat/completions', [
@@ -127,7 +137,8 @@ function get_openai_response_gpt4omini($input_text, $client) {
         echo "<p>";
         echo "<label for='output' class='large-font'>Answer:</label><br>";
         echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";
-        echo "</p";
+        echo "</p>";
+        return $completion;
     } catch (Exception $e) {
         // An error occurred, print the error message
         echo "Error occurred: " . $e->getMessage();
