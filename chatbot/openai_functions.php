@@ -138,6 +138,15 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
         echo "<label for='output' class='large-font'>Answer:</label><br>";
         echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";
         echo "</p>";
+        // Echo the content history
+        if (!empty($content_history)) {
+            echo "<p><strong>Content History:</strong></p>";
+            echo "<ul>";
+            foreach ($content_history as $history_item) {
+                echo "<li class='medium-font'>" . htmlentities($history_item) . "</li>";
+            }
+        }
+
         return $completion;
     } catch (Exception $e) {
         // An error occurred, print the error message

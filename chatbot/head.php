@@ -51,6 +51,10 @@
             font-size: 72px;
             color: #3b5998;
         }
+        .medium-font {
+            font-size: 24px; /* Adjust this value as needed for your desired font size */
+            color: Darkblue
+        }
 
         :root {
             --mobile-font-size: 72px;

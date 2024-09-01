@@ -69,7 +69,8 @@ if (isset($_POST['submit_button'])) {
             $mycompletion = get_openai_response_gpt4($input_text, $client);
             $content_history[] = $mycompletion;
         } elseif ($selected_model === 'gpt4o-mini') {
-            $mycompletion = get_openai_response_gpt4omini($input_text, $content_history, $client);
+            $mycompletion = "Question: " . $input_text . " " . "Answer: " .  get_openai_response_gpt4omini($input_text, $content_history, $client);
+
             $content_history[] = $mycompletion;
         } else {
             $mycompletion = get_openai_response_gpt4($input_text, $client);
