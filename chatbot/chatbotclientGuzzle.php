@@ -66,14 +66,17 @@ if (isset($_POST['submit_button'])) {
         if ($selected_model === 'gpt') {
             get_openai_response($input_text, $client);
         } elseif ($selected_model === 'gpt4') {
-            $mycompletion = get_openai_response_gpt4($input_text, $client);
+            $myquestion = "QUESTION: " . $input_text;
+            $mycompletion =  "ANSWER: " . get_openai_response_gpt4($input_text, $content_history, $client);
+            $content_history[] = $myquestion;
             $content_history[] = $mycompletion;
         } elseif ($selected_model === 'gpt4o-mini') {
-            $mycompletion = "Question: " . $input_text . " " . "Answer: " .  get_openai_response_gpt4omini($input_text, $content_history, $client);
-
+            $myquestion = "QUESTION: " . $input_text;
+            $mycompletion =  "ANSWER: " . get_openai_response_gpt4omini($input_text, $content_history, $client);
+            $content_history[] = $myquestion;
             $content_history[] = $mycompletion;
         } else {
-            $mycompletion = get_openai_response_gpt4($input_text, $client);
+            $mycompletion = "Question: " . $input_text . " " . "Answer: " .  get_openai_response_gpt4($input_text, $content_history, $client);
             $content_history[] = $mycompletion;
         }
 
