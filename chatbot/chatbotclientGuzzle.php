@@ -30,7 +30,7 @@
         $_SESSION['content_history'] = []; // Clear content history
     }
     ?>
-    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo $display_text ?></textarea>
+    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo $display_text; ?></textarea>
     <br>
     <?php if (empty($display_text)): // Check if the variable is empty ?>
         <p class="blink-text">Please wait 5 secs after pressing "Ask me anything"</p> <!-- Add your text here -->
@@ -84,17 +84,23 @@ if (isset($_POST['submit_button'])) {
         $_SESSION['content_history'] = $content_history;
     }
 }
+
+// Output content history as text
+$content_history_text = implode("\n", $_SESSION['content_history']);
 ?>
+<!-- Hidden textarea for content history -->
+<textarea id="outputhistory" style="display:none;"><?php echo htmlentities($content_history_text); ?></textarea>
 <!-- Add the "Copy" button -->
 <br>
 
 <script>
     function copyOutputToClipboard() {
-        const outputText = document.getElementById("output").value;
+        const outputText = document.getElementById("outputhistory").value;
+        const output2Text = document.getElementById("output").value;
 
         // Create a temporary textarea element
         const tempTextarea = document.createElement("textarea");
-        tempTextarea.value = outputText;
+        tempTextarea.value = outputText + "\n" + output2Text;
         document.body.appendChild(tempTextarea);
 
         // Select the text inside the temporary textarea
