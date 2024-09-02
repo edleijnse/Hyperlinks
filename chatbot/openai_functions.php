@@ -143,10 +143,10 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
             echo "<p  style='font-size: 37px;'><strong>Content History:</strong></p>";
             echo "<ul>";
             foreach ($content_history as $history_item) {
-                $average_chars_per_row = 50;
+                $average_chars_per_row = 30;
                 $rows = ceil(strlen($history_item) / $average_chars_per_row);
                 $rows = $rows + 1;
-                echo "<textarea class='output' rows='{$rows}' cols='{$average_chars_per_row}'>" . htmlentities($history_item) . "</textarea>";
+                echo "<textarea class='output' rows='{$rows}' cols='50'>" . htmlentities($history_item) . "</textarea>";
                 echo "<br>";
                 // echo "<li class='medium-font'>" . htmlentities($history_item) . "</li>";
             }

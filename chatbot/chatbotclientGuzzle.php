@@ -2,7 +2,7 @@
 <html>
 <?php include 'head.php'; ?>
 <body>
-<h3 class="ask">Enter your question here</h3>
+<h3 class="ask">To chat, enter your question here, for a new chat DELETE HISTORY</h3>
 <p>
 <form method="post">
     <label class="ask" for="model_choice">using model:</label>
@@ -33,14 +33,14 @@
     <textarea name="input_text" class="input" rows="5" cols="50"><?php echo $display_text; ?></textarea>
     <br>
     <?php if (empty($display_text)): // Check if the variable is empty ?>
-        <p class="blink-text">Please wait 5 secs after pressing "Ask me anything"</p> <!-- Add your text here -->
+        <p class="blink-text">Please wait 5 secs after pressing "ASK"</p> <!-- Add your text here -->
     <?php endif; ?>
-    <input type="submit" name="submit_button" class="ask" value="Ask me anything">
-    <input type="submit" name="clean_button" class="ask" value="Clean Input">
-    <input type="submit" name="clear_history_button" class="ask" value="Clear History">
+    <input type="submit" name="submit_button" class="ask" value="      ASK      ">
+    <input type="submit" name="clean_button" class="ask" value="NEW QUESTION">
+    <input type="submit" name="clear_history_button" class="ask" value="DELETE History">
 </form>
 </p>
-<button class="copy-button" onclick="copyOutputToClipboard()" style="font-size:30px; padding:10px;">copy answer to clipboard</button>
+<button class="copy-button" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">copy answer and history to clipboard</button>
 <?php
 require 'vendor/autoload.php';
 require 'openai_functions.php';
