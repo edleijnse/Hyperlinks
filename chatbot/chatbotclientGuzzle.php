@@ -2,7 +2,7 @@
 <html>
 <?php include 'head.php'; ?>
 <body>
-<h3 class="ask">To chat, press START NEW CHAT first and enter your questions here</h3>
+<h3 class="ask">continue with ASK/CLEAR or press START NEW CHAT</h3>
 <p>
 <form method="post">
     <label class="ask" for="model_choice">using model:</label>
@@ -35,9 +35,9 @@
     <?php if (empty($display_text)): // Check if the variable is empty ?>
         <p class="blink-text">Please wait 5 secs after pressing "ASK"</p> <!-- Add your text here -->
     <?php endif; ?>
-    <input type="submit" name="clear_history_button" class="ask" value="START NEW CHAT">
     <input type="submit" name="submit_button" class="ask" value="      ASK      ">
-    <input type="submit" name="clean_button" class="ask" value="NEW QUESTION">
+    <input type="submit" name="clean_button" class="ask" value="      CLEAR      ">
+    <input type="submit" name="clear_history_button" class="ask" value="START NEW CHAT">
 
 </form>
 </p>
