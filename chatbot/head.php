@@ -12,6 +12,7 @@
         .input {
             font-size: 34px;
             color: #4054b2;
+            background-color: ghostwhite;
             text-align: start;
             padding: 10px;
             border-radius: 5px;
@@ -54,6 +55,9 @@
         .medium-font {
             font-size: 24px; /* Adjust this value as needed for your desired font size */
             color: Darkblue
+        }
+        .red-background {
+            background-color: blanchedalmond;
         }
 
         :root {

@@ -2,17 +2,20 @@
 <html>
 <?php include 'head.php'; ?>
 <body>
-<h3 class="ask">continue with ASK/CLEAR or press START NEW CHAT</h3>
+<?php echo "<ul>"; ?>
+<h3 class="ask">chat client for OpenAI</h3>
 <p>
 <form method="post">
-    <label class="ask" for="model_choice">using model:</label>
+    <!--<label class="ask" for="model_choice">using model:</label>
     <select name="model_choice" class="ask" id="model_choice">
-        <option value="gpt4">GPT4</option>
+       <option value="gpt4">GPT4</option>
         <option value="gpt4o-mini" selected>GPT4o-mini</option>
-    </select>
+    </select> -->
+
     <br>
     <?php
     session_start();
+    $_SESSION['model_choice']="gpt4o-mini";
 
     // Initialize content history session variable if not set
     if (!isset($_SESSION['content_history'])) {
@@ -33,16 +36,13 @@
     ?>
     <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
     <br>
-    <?php if (empty($display_text)): // Check if the variable is empty ?>
-        <p class="blink-text">Please wait 5 secs after pressing "ASK"</p> <!-- Add your text here -->
-    <?php endif; ?>
-    <input type="submit" name="submit_button" class="ask" value="      ASK      ">
-    <input type="submit" name="clean_button" class="ask" value="      CLEAR      ">
-    <input type="submit" name="clear_history_button" class="ask" value="START NEW CHAT">
+    <input type="submit" name="submit_button" class="ask red-background" value="      ASK      ">
+    <input type="submit" name="clean_button" class="ask" value="  NEW QUESTION  ">
+    <input type="submit" name="clear_history_button" class="ask" value=" NEW CHAT ">
 
 </form>
 </p>
-<button class="copy-button" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">copy answer and history to clipboard</button>
+<button class="copy-button" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">to clipboard</button>
 <?php
 require 'vendor/autoload.php';
 require 'openai_functions.php';
@@ -62,7 +62,8 @@ if (isset($_POST['submit_button'])) {
         $input_text = $_POST['input_text'];
 
         // Determine the selected model choice
-        $selected_model = $_POST['model_choice'];
+        // $selected_model = $_POST['model_choice'];
+        $selected_model = $_SESSION['model_choice'];
         $content_history = &$_SESSION['content_history']; // Reference to session variable
 
         if ($selected_model === 'gpt') {
