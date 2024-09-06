@@ -134,19 +134,27 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
         $responseData = json_decode($responseBody, true);
         // Access the completion text
         $completion = $responseData['choices'][0]['message']['content'];
+        $average_chars_per_row = 30;
+        $rows = ceil(strlen($input_text) / $average_chars_per_row);
+        // $rows = $rows + 1;
+
+        echo "<p>";
+        echo "<label for='output' class='large-font'>Question:</label><br>";
+        echo "<textarea id='output' class='output' rows='{$rows}' cols='40'>$input_text</textarea>";
+        echo "</p>";
+        $rows = ceil(strlen($completion) / $average_chars_per_row);
         echo "<p>";
         echo "<label for='output' class='large-font'>Answer:</label><br>";
-        echo "<textarea id='output' class='output' rows='20' cols='50'>$completion</textarea>";
+        echo "<textarea id='output' class='output' rows='{$rows}' cols='40'>$completion</textarea>";
         echo "</p>";
         // Echo the content history
         if (!empty($content_history)) {
             echo "<p  style='font-size: 37px;'><strong>Content History:</strong></p>";
-            echo "<ul>";
             foreach ($content_history as $history_item) {
-                $average_chars_per_row = 30;
+                $average_chars_per_row = 40;
                 $rows = ceil(strlen($history_item) / $average_chars_per_row);
                 $rows = $rows + 1;
-                echo "<textarea class='output' rows='{$rows}' cols='50'>" . htmlentities($history_item) . "</textarea>";
+                echo "<textarea class='output' rows='{$rows}' cols='40'>" . htmlentities($history_item) . "</textarea>";
                 echo "<br>";
                 // echo "<li class='medium-font'>" . htmlentities($history_item) . "</li>";
             }

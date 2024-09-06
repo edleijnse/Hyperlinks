@@ -29,8 +29,9 @@
     if (isset($_POST['clear_history_button'])) {
         $_SESSION['content_history'] = []; // Clear content history
     }
+    echo "<ul>";
     ?>
-    <textarea name="input_text" class="input" rows="5" cols="50"><?php echo $display_text; ?></textarea>
+    <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
     <br>
     <?php if (empty($display_text)): // Check if the variable is empty ?>
         <p class="blink-text">Please wait 5 secs after pressing "ASK"</p> <!-- Add your text here -->
