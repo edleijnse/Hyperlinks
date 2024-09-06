@@ -59,6 +59,9 @@
         .red-background {
             background-color: blanchedalmond;
         }
+        .green-background {
+            background-color: yellowgreen;
+        }
 
         :root {
             --mobile-font-size: 72px;

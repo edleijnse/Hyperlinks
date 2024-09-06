@@ -37,8 +37,8 @@
     <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
     <br>
     <input type="submit" name="submit_button" class="ask red-background" value="      ASK      ">
-    <input type="submit" name="clean_button" class="ask" value="  NEW QUESTION  ">
-    <input type="submit" name="clear_history_button" class="ask" value=" NEW CHAT ">
+    <input type="submit" name="clean_button" class="ask red-background" value="  NEW QUESTION  ">
+    <input type="submit" name="clear_history_button" class="ask green-background" value=" NEW CHAT ">
 
 </form>
 </p>
