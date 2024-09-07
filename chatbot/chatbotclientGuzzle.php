@@ -42,8 +42,10 @@
 
 </form>
 </p>
-<button class="copy-all-button" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">all to clipboard</button>
-<button class="copy-answer-button" onclick="copyAnswerToClipboard()" style="font-size:40px; padding:10px;">answer to clipboard</button>
+<span style="font-size: 40px;">copy to clipboard</span>
+<br>
+<button class="copy-all-button red-background" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">complete chat</button>
+<button class="copy-answer-button red-background" onclick="copyAnswerToClipboard()" style="font-size:40px; padding:10px;">last answer</button>
 
 <?php
 require 'vendor/autoload.php';
