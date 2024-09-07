@@ -42,7 +42,9 @@
 
 </form>
 </p>
-<button class="copy-button" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">to clipboard</button>
+<button class="copy-all-button" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">all to clipboard</button>
+<button class="copy-answer-button" onclick="copyAnswerToClipboard()" style="font-size:40px; padding:10px;">answer to clipboard</button>
+
 <?php
 require 'vendor/autoload.php';
 require 'openai_functions.php';
@@ -99,11 +101,10 @@ $content_history_text = implode("\n", $_SESSION['content_history']);
 <script>
     function copyOutputToClipboard() {
         const outputText = document.getElementById("outputhistory").value;
-        const output2Text = document.getElementById("output").value;
 
         // Create a temporary textarea element
         const tempTextarea = document.createElement("textarea");
-        tempTextarea.value = outputText + "\n" + output2Text;
+        tempTextarea.value = outputText;
         document.body.appendChild(tempTextarea);
 
         // Select the text inside the temporary textarea
@@ -118,6 +119,39 @@ $content_history_text = implode("\n", $_SESSION['content_history']);
 
         // Show an alert to indicate successful copy
         alert("Copied to clipboard: " + outputText);
+    }
+</script>
+<script>
+    function copyAnswerToClipboard() {
+        const outputText = document.getElementById("outputhistory").value;
+        var lastIndex = outputText.lastIndexOf("ANSWER: ");
+        if (lastIndex !== -1) {
+            // Calculate the start index for selection
+            var startIndex = lastIndex + "ANSWER: ".length;
+
+            // Select the text after the last occurrence of "ANSWER: "
+            var endText = outputText.substring(startIndex);
+
+            // Create a temporary textarea element
+            const tempTextarea = document.createElement("textarea");
+            tempTextarea.value = endText;
+            document.body.appendChild(tempTextarea);
+
+            // Select the text inside the temporary textarea
+            tempTextarea.select();
+            tempTextarea.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text to the clipboard
+            document.execCommand("copy");
+
+            // Clean up by removing the temporary textarea
+            document.body.removeChild(tempTextarea);
+
+            // Show an alert to indicate successful copy
+            alert("Copied to clipboard: " + endText);
+
+        }
+
     }
 </script>
 </body>
