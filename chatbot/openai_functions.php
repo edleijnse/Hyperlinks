@@ -149,7 +149,8 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
         echo "</p>";
         // Echo the content history
         if (!empty($content_history)) {
-            echo "<p  style='font-size: 37px;'><strong>Content History:</strong></p>";
+            echo "<span style='font-size: 40px;'>previous questions</span><br>";
+
             foreach ($content_history as $history_item) {
                 $average_chars_per_row = 40;
                 $rows = ceil(strlen($history_item) / $average_chars_per_row);
