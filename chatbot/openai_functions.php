@@ -34,7 +34,8 @@ function init_openai()
 }
 
 
-function get_openai_response($input_text, $client) {
+function get_openai_response($input_text, $client)
+{
 
     $prompt = $input_text;
     // Set up the request body
@@ -67,13 +68,14 @@ function get_openai_response($input_text, $client) {
     }
 }
 
-function get_openai_response_gpt4($input_text, $content_history = [], $client) {
+function get_openai_response_gpt4($input_text, $content_history = [], $client)
+{
     // echo "<p>..<em>waiting..</em></p>";
     // Set up the request body
     $user = 'language teacher English, Spanish and German';
 
     // Prepare message history by appending the current input
-    $messages = array_map(function($content) {
+    $messages = array_map(function ($content) {
         return ['role' => 'user', 'content' => $content];
     }, $content_history);
 
@@ -105,13 +107,15 @@ function get_openai_response_gpt4($input_text, $content_history = [], $client) {
         echo "Error occurred: " . $e->getMessage();
     }
 }
-function get_openai_response_gpt4omini($input_text, $content_history = [], $client) {
+
+function get_openai_response_gpt4omini($input_text, $content_history = [], $client)
+{
     // echo "<p>..<em>waiting..</em></p>";
     // Set up the request body
     $user = 'language teacher English, Spanish and German';
 
     // Prepare message history by appending the current input
-    $messages = array_map(function($content) {
+    $messages = array_map(function ($content) {
         return ['role' => 'user', 'content' => $content];
     }, $content_history);
 
@@ -140,12 +144,12 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
 
         echo "<p>";
         echo "<label for='output' class='large-font'>Question:</label><br>";
-        echo "<textarea id='output' class='output' rows='{$rows}' cols='40'>$input_text</textarea>";
+        echo "<textarea id='output textarea-no-interaction' class='output' rows='{$rows}' cols='40' readonly>$input_text</textarea>";
         echo "</p>";
         $rows = ceil(strlen($completion) / $average_chars_per_row);
         echo "<p>";
         echo "<label for='output' class='large-font'>Answer:</label><br>";
-        echo "<textarea id='output' class='output' rows='{$rows}' cols='40'>$completion</textarea>";
+        echo "<textarea id='output' class='output textarea-no-interaction'  rows='{$rows}' cols='40' readonly>$completion</textarea>";
         echo "</p>";
         // Echo the content history
         if (!empty($content_history)) {
@@ -155,7 +159,7 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
                 $average_chars_per_row = 40;
                 $rows = ceil(strlen($history_item) / $average_chars_per_row);
                 $rows = $rows + 1;
-                echo "<textarea class='output' rows='{$rows}' cols='40'>" . htmlentities($history_item) . "</textarea>";
+                echo "<textarea class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly>" . htmlentities($history_item) . "</textarea>";
                 echo "<br>";
                 // echo "<li class='medium-font'>" . htmlentities($history_item) . "</li>";
             }
@@ -166,5 +170,55 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
         // An error occurred, print the error message
         echo "Error occurred: " . $e->getMessage();
     }
+    echo "<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('output');
+    if (textarea) {
+        textarea.addEventListener('focus', function(event) {
+            textarea.blur();   // Remove focus immediately
+        });
+        textarea.addEventListener('keydown', function(event) {
+            event.preventDefault();   // Prevent any key presses
+        });
+    }
+});
+</script>";
+
+    echo "<style>
+.textarea-no-interaction {
+    pointer-events: none;        /* Disable user interaction */
+    user-select: none;           /* Disable text selection */
+    -webkit-user-select: none;   /* Safari and Chrome */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE 10+ */
 }
+</style>";
+
+    echo "<textarea id='output' class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly aria-readonly='true'>$input_text</textarea>";echo "<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var textarea = document.getElementById('output');
+    if (textarea) {
+        textarea.addEventListener('focus', function(event) {
+            textarea.blur();   // Remove focus immediately
+        });
+        textarea.addEventListener('keydown', function(event) {
+            event.preventDefault();   // Prevent any key presses
+        });
+    }
+});
+</script>";
+
+    echo "<style>
+.textarea-no-interaction {
+    pointer-events: none;        /* Disable user interaction */
+    user-select: none;           /* Disable text selection */
+    -webkit-user-select: none;   /* Safari and Chrome */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE 10+ */
+}
+</style>";
+
+    echo "<textarea id='output' class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly aria-readonly='true'>$input_text</textarea>";
+}
+
 ?>

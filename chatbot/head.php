@@ -62,7 +62,6 @@
         .green-background {
             background-color: yellowgreen;
         }
-
         :root {
             --mobile-font-size: 72px;
             --mobile-bg-color: lightblue;
