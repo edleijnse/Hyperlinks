@@ -170,19 +170,7 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
         // An error occurred, print the error message
         echo "Error occurred: " . $e->getMessage();
     }
-    echo "<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var textarea = document.getElementById('output');
-    if (textarea) {
-        textarea.addEventListener('focus', function(event) {
-            textarea.blur();   // Remove focus immediately
-        });
-        textarea.addEventListener('keydown', function(event) {
-            event.preventDefault();   // Prevent any key presses
-        });
-    }
-});
-</script>";
+
 
     echo "<style>
 .textarea-no-interaction {
@@ -193,32 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
     -ms-user-select: none;       /* IE 10+ */
 }
 </style>";
-
-    echo "<textarea id='output' class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly aria-readonly='true'>$input_text</textarea>";echo "<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var textarea = document.getElementById('output');
-    if (textarea) {
-        textarea.addEventListener('focus', function(event) {
-            textarea.blur();   // Remove focus immediately
-        });
-        textarea.addEventListener('keydown', function(event) {
-            event.preventDefault();   // Prevent any key presses
-        });
-    }
-});
-</script>";
-
-    echo "<style>
-.textarea-no-interaction {
-    pointer-events: none;        /* Disable user interaction */
-    user-select: none;           /* Disable text selection */
-    -webkit-user-select: none;   /* Safari and Chrome */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* IE 10+ */
-}
-</style>";
-
-    echo "<textarea id='output' class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly aria-readonly='true'>$input_text</textarea>";
 }
 
 ?>
