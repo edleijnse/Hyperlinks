@@ -6,17 +6,17 @@
 <h3 class="ask">chat client for OpenAI</h3>
 <p>
 <form method="post">
-    <!--<label class="ask" for="model_choice">using model:</label>
-    <select name="model_choice" class="ask" id="model_choice">
-       <option value="gpt4">GPT4</option>
-        <option value="gpt4o-mini" selected>GPT4o-mini</option>
-    </select> -->
-
+    <label class="ask" for="model_choice">I want to chat:</label>
+    <select name="model_choice_chosen" class="ask" id="model_choice_chosen">
+        <option value="gpt-4o-mini" selected>simple and fast using model gpt-4o-mini</option>
+        <option value="gpt-4o">more accurate but slower using model gpt-4o</option>
+    </select>
     <br>
     <?php
     session_start();
-    $_SESSION['model_choice']="gpt4o-mini";
-
+    if (isset($_POST['model_choice_chosen'])) {
+        $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
+    }
     // Initialize content history session variable if not set
     if (!isset($_SESSION['content_history'])) {
         $_SESSION['content_history'] = [];
@@ -69,24 +69,10 @@ if (isset($_POST['submit_button'])) {
         // $selected_model = $_POST['model_choice'];
         $selected_model = $_SESSION['model_choice'];
         $content_history = &$_SESSION['content_history']; // Reference to session variable
-
-        if ($selected_model === 'gpt') {
-            get_openai_response($input_text, $client);
-        } elseif ($selected_model === 'gpt4') {
-            $myquestion = "QUESTION: " . $input_text;
-            $mycompletion =  "ANSWER: " . get_openai_response_gpt4($input_text, $content_history, $client);
-            $content_history[] = $myquestion;
-            $content_history[] = $mycompletion;
-        } elseif ($selected_model === 'gpt4o-mini') {
-            $myquestion = "QUESTION: " . $input_text;
-            $mycompletion =  "ANSWER: " . get_openai_response_gpt4omini($input_text, $content_history, $client);
-            $content_history[] = $myquestion;
-            $content_history[] = $mycompletion;
-        } else {
-            $mycompletion = "Question: " . $input_text . " " . "Answer: " .  get_openai_response_gpt4($input_text, $content_history, $client);
-            $content_history[] = $mycompletion;
-        }
-
+        $myquestion = "QUESTION: " . $input_text;
+        $mycompletion =  "ANSWER: " . get_openai_response_gpt4omini($input_text, $selected_model, $content_history, $client);
+        $content_history[] = $myquestion;
+        $content_history[] = $mycompletion;
         // Save updated content history back to session
         $_SESSION['content_history'] = $content_history;
     }

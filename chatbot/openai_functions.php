@@ -108,7 +108,7 @@ function get_openai_response_gpt4($input_text, $content_history = [], $client)
     }
 }
 
-function get_openai_response_gpt4omini($input_text, $content_history = [], $client)
+function get_openai_response_gpt4omini($input_text, $model, $content_history = [], $client)
 {
     // echo "<p>..<em>waiting..</em></p>";
     // Set up the request body
@@ -123,7 +123,7 @@ function get_openai_response_gpt4omini($input_text, $content_history = [], $clie
     $messages[] = ['role' => 'user', 'content' => $input_text];
 
     $requestBody = [
-        'model' => 'gpt-4o-mini',
+        'model' => $model,
         'messages' => $messages,
     ];
 
