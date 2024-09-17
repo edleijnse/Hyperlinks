@@ -70,7 +70,7 @@ if (isset($_POST['submit_button'])) {
         $selected_model = $_SESSION['model_choice'];
         $content_history = &$_SESSION['content_history']; // Reference to session variable
         $myquestion = "QUESTION: " . $input_text;
-        $mycompletion =  "ANSWER: " . get_openai_response_gpt4omini($input_text, $selected_model, $content_history, $client);
+        $mycompletion =  "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $content_history, $client);
         $content_history[] = $myquestion;
         $content_history[] = $mycompletion;
         // Save updated content history back to session
