@@ -121,10 +121,42 @@ $content_history_text = implode("\n", $_SESSION['content_history']);
 
         // Clean up by removing the temporary textarea
         document.body.removeChild(tempTextarea);
-    }
 
+        // Show an alert to indicate successful copy
+        alert("Copied to clipboard: " + outputText);
+    }
+</script>
+<script>
     function copyAnswerToClipboard() {
-        // Implement function to copy the last answer to the clipboard
+        const outputText = document.getElementById("outputhistory").value;
+        var lastIndex = outputText.lastIndexOf("ANSWER: ");
+        if (lastIndex !== -1) {
+            // Calculate the start index for selection
+            var startIndex = lastIndex + "ANSWER: ".length;
+
+            // Select the text after the last occurrence of "ANSWER: "
+            var endText = outputText.substring(startIndex);
+
+            // Create a temporary textarea element
+            const tempTextarea = document.createElement("textarea");
+            tempTextarea.value = endText;
+            document.body.appendChild(tempTextarea);
+
+            // Select the text inside the temporary textarea
+            tempTextarea.select();
+            tempTextarea.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text to the clipboard
+            document.execCommand("copy");
+
+            // Clean up by removing the temporary textarea
+            document.body.removeChild(tempTextarea);
+
+            // Show an alert to indicate successful copy
+            alert("Copied to clipboard: " + endText);
+
+        }
+
     }
 </script>
 
