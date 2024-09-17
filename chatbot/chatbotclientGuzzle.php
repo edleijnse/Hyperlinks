@@ -62,8 +62,8 @@
 </p>
 <span style="font-size: 40px;">copy to clipboard</span>
 <br>
-<button class="copy-all-button red-background" onclick="copyOutputToClipboard()" style="font-size:40px; padding:10px;">complete chat</button>
-<button class="copy-answer-button red-background" onclick="copyAnswerToClipboard()" style="font-size:40px; padding:10px;">last answer</button>
+<button class="copy-all-button red-background" onclick="copyOutputToClipboard(event)" style="font-size:40px; padding:10px;">complete chat</button>
+<button class="copy-answer-button red-background" onclick="copyAnswerToClipboard(event)" style="font-size:40px; padding:10px;">last answer</button>
 
 <?php
 require 'vendor/autoload.php';
@@ -104,30 +104,18 @@ $content_history_text = implode("\n", $_SESSION['content_history']);
 <br>
 
 <script>
-    function copyOutputToClipboard() {
+    function copyOutputToClipboard(event) {
+        event.preventDefault(); // Prevent form submission
         const outputText = document.getElementById("outputhistory").value;
-
-        // Create a temporary textarea element
-        const tempTextarea = document.createElement("textarea");
-        tempTextarea.value = outputText;
-        document.body.appendChild(tempTextarea);
-
-        // Select the text inside the temporary textarea
-        tempTextarea.select();
-        tempTextarea.setSelectionRange(0, 99999); // For mobile devices
-
-        // Copy the text to the clipboard
-        document.execCommand("copy");
-
-        // Clean up by removing the temporary textarea
-        document.body.removeChild(tempTextarea);
-
-        // Show an alert to indicate successful copy
-        alert("Copied to clipboard: " + outputText);
+        navigator.clipboard.writeText(outputText).then(() => {
+            alert("Copied to clipboard: " + outputText);
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+        });
     }
-</script>
-<script>
-    function copyAnswerToClipboard() {
+
+    function copyAnswerToClipboard(event) {
+        event.preventDefault(); // Prevent form submission
         const outputText = document.getElementById("outputhistory").value;
         var lastIndex = outputText.lastIndexOf("ANSWER: ");
         if (lastIndex !== -1) {
@@ -156,7 +144,6 @@ $content_history_text = implode("\n", $_SESSION['content_history']);
             alert("Copied to clipboard: " + endText);
 
         }
-
     }
 </script>
 
