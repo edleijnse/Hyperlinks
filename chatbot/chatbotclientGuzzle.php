@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html>
-<?php include 'head.php'; ?>
+<head>
+    <?php include 'head.php'; ?>
+    <style>
+        .large-font {
+            font-size: 34px;
+        }
+    </style>
+</head>
 <body>
 <?php echo "<ul>"; ?>
 <h3 class="ask">chat client for OpenAI</h3>
 <p>
 <form method="post">
-    <label class="ask" for="model_choice">I want to chat:</label>
-    <select name="model_choice_chosen" class="ask" id="model_choice_chosen">
-        <option value="gpt-4o-mini" selected>simple and fast using model gpt-4o-mini</option>
-        <option value="gpt-4o">more accurate but slower using model gpt-4o</option>
-    </select>
-    <br>
+    <label class="ask large-font" for="model_choice">I want to chat:<br></label>
+
     <?php
     session_start();
+
+    // Check if a choice has been submitted
     if (isset($_POST['model_choice_chosen'])) {
         $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
     }
+
+    // Set selected model or default to 'gpt-4o-mini'
+    $selected_model = $_SESSION['model_choice'] ?? 'gpt-4o-mini';
+    ?>
+
+    <input type="radio" id="gpt-4o-mini" name="model_choice_chosen" value="gpt-4o-mini"
+        <?php echo $selected_model === 'gpt-4o-mini' ? 'checked' : ''; ?> class="large-font">
+    <label for="gpt-4o-mini" class="large-font">simple and fast using model gpt-4o-mini</label><br>
+
+    <input type="radio" id="gpt-4o" name="model_choice_chosen" value="gpt-4o"
+        <?php echo $selected_model === 'gpt-4o' ? 'checked' : ''; ?> class="large-font">
+    <label for="gpt-4o" class="large-font">more accurate but slower using model gpt-4o</label><br>
+
+    <?php
     // Initialize content history session variable if not set
     if (!isset($_SESSION['content_history'])) {
         $_SESSION['content_history'] = [];
@@ -39,7 +58,6 @@
     <input type="submit" name="submit_button" class="ask red-background" value="      ASK      ">
     <input type="submit" name="clean_button" class="ask red-background" value="  NEW QUESTION  ">
     <input type="submit" name="clear_history_button" class="ask green-background" value=" NEW CHAT ">
-
 </form>
 </p>
 <span style="font-size: 40px;">copy to clipboard</span>
@@ -66,8 +84,7 @@ if (isset($_POST['submit_button'])) {
         $input_text = $_POST['input_text'];
 
         // Determine the selected model choice
-        // $selected_model = $_POST['model_choice'];
-        $selected_model = $_SESSION['model_choice'];
+        $selected_model = $selected_model; // Using the session-stored model
         $content_history = &$_SESSION['content_history']; // Reference to session variable
         $myquestion = "QUESTION: " . $input_text;
         $mycompletion =  "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $content_history, $client);
@@ -104,43 +121,12 @@ $content_history_text = implode("\n", $_SESSION['content_history']);
 
         // Clean up by removing the temporary textarea
         document.body.removeChild(tempTextarea);
-
-        // Show an alert to indicate successful copy
-        alert("Copied to clipboard: " + outputText);
     }
-</script>
-<script>
+
     function copyAnswerToClipboard() {
-        const outputText = document.getElementById("outputhistory").value;
-        var lastIndex = outputText.lastIndexOf("ANSWER: ");
-        if (lastIndex !== -1) {
-            // Calculate the start index for selection
-            var startIndex = lastIndex + "ANSWER: ".length;
-
-            // Select the text after the last occurrence of "ANSWER: "
-            var endText = outputText.substring(startIndex);
-
-            // Create a temporary textarea element
-            const tempTextarea = document.createElement("textarea");
-            tempTextarea.value = endText;
-            document.body.appendChild(tempTextarea);
-
-            // Select the text inside the temporary textarea
-            tempTextarea.select();
-            tempTextarea.setSelectionRange(0, 99999); // For mobile devices
-
-            // Copy the text to the clipboard
-            document.execCommand("copy");
-
-            // Clean up by removing the temporary textarea
-            document.body.removeChild(tempTextarea);
-
-            // Show an alert to indicate successful copy
-            alert("Copied to clipboard: " + endText);
-
-        }
-
+        // Implement function to copy the last answer to the clipboard
     }
 </script>
+
 </body>
 </html>
