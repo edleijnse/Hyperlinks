@@ -13,3 +13,7 @@ Question stored after submitting
 Multilingual support for English, German and Dutch
 
 openai_functions.php to have common functions for communicating with openai
+
+September 2024
+ChatHistory in chatbotclientGuzzle.php
+openai_functions.php refactored with Jetbrains AI assistant
