@@ -2,111 +2,173 @@
 
 use GuzzleHttp\Client;
 
+/**
+ * Initialize the OpenAI client.
+ *
+ * @return array [$choice, $client]
+ */
 function init_openai()
 {
-    // Your OpenAI API key from a file
-    // Get the current working directory
-    $current_dir = getcwd();
-    // Get the directory one level above the current working directory
-    $parent_dir = dirname($current_dir);
-    // Open the file located in the parent directory
-    $file = fopen($parent_dir . '/api_key', 'r');
-    // Read the contents of the file
-    $api_key = fread($file, filesize($parent_dir . '/api_key'));
-    // Close the file
-    fclose($file);
-    // Remove the end of line characters from the contents
-    $api_key = str_replace(array("\r", "\n"), '', $api_key);
-    //Set value of $your_choice
-    $your_choice = "";
-    if (isset($_POST['your_choice'])) {
-        $your_choice = $_POST['your_choice'];
-    }
-    // Set up the client
-    $client = new Client([
-        'base_uri' => 'https://api.openai.com',
-        'headers' => [
-            "Authorization" => "Bearer $api_key",
-            'Content-Type' => 'application/json',
-        ],
-    ]);
-    return array($your_choice, $client);
+    $api_key = get_api_key();
+    $client  = create_client($api_key);
+
+    $user_choice = $_POST['your_choice'] ?? '';
+
+    return [$user_choice, $client];
 }
 
-
-function get_openai_response_for_model($input_text, $model, $content_history = [], $client)
+/**
+ * Get OpenAI API key from a file.
+ *
+ * @return string
+ */
+function get_api_key()
 {
-    // echo "<p>..<em>waiting..</em></p>";
-    // Set up the request body
-    $user = 'language teacher English, Spanish and German';
+    $api_key_path = dirname(getcwd()) . '/api_key';
+    $api_key      = trim(file_get_contents($api_key_path));
 
-    // Prepare message history by appending the current input
+    return $api_key;
+}
+
+/**
+ * Create a Guzzle HTTP client configured for OpenAI.
+ *
+ * @param string $api_key
+ * @return Client
+ */
+function create_client($api_key)
+{
+    return new Client([
+        'base_uri' => 'https://api.openai.com',
+        'headers'  => [
+            "Authorization" => "Bearer $api_key",
+            'Content-Type'  => 'application/json',
+        ],
+    ]);
+}
+
+/**
+ * Get a response from the OpenAI API using the specified model.
+ *
+ * @param string $input_text
+ * @param string $model
+ * @param array $content_history
+ * @param Client $client
+ * @return string|null
+ */
+function get_openai_response_for_model($input_text, $model, array $content_history = [], Client $client)
+{
+    $messages       = prepare_messages($input_text, $content_history);
+    $requestBody    = ['model' => $model, 'messages' => $messages];
+    $response       = make_request($client, $requestBody);
+    $completion     = $response['choices'][0]['message']['content'] ?? null;
+
+    display_interaction($input_text, $completion, $content_history);
+
+    return $completion;
+}
+
+/**
+ * Prepare message history by appending the current input.
+ *
+ * @param string $input_text
+ * @param array $content_history
+ * @return array
+ */
+function prepare_messages($input_text, array $content_history)
+{
     $messages = array_map(function ($content) {
         return ['role' => 'user', 'content' => $content];
     }, $content_history);
 
-    // Add the current input to the messages.
     $messages[] = ['role' => 'user', 'content' => $input_text];
 
-    $requestBody = [
-        'model' => $model,
-        'messages' => $messages,
-    ];
+    return $messages;
+}
 
-    // Make the request
+/**
+ * Make a request to the OpenAI API.
+ *
+ * @param Client $client
+ * @param array $requestBody
+ * @return array
+ */
+function make_request(Client $client, array $requestBody)
+{
     try {
-        $response = $client->post('/v1/chat/completions', [
-            'body' => json_encode($requestBody)
-        ]);
-        // Get the response body as a string
+        $response    = $client->post('/v1/chat/completions', ['body' => json_encode($requestBody)]);
         $responseBody = $response->getBody()->getContents();
-        // Decode the JSON response
-        $responseData = json_decode($responseBody, true);
-        // Access the completion text
-        $completion = $responseData['choices'][0]['message']['content'];
-        $average_chars_per_row = 30;
-        $rows = ceil(strlen($input_text) / $average_chars_per_row);
-        // $rows = $rows + 1;
 
-        echo "<p>";
-        echo "<label for='output' class='large-font'>Question:</label><br>";
-        echo "<textarea id='output textarea-no-interaction' class='output' rows='{$rows}' cols='40' readonly>$input_text</textarea>";
-        echo "</p>";
-        $rows = ceil(strlen($completion) / $average_chars_per_row);
-        echo "<p>";
-        echo "<label for='output' class='large-font'>Answer:</label><br>";
-        echo "<textarea id='output' class='output textarea-no-interaction'  rows='{$rows}' cols='40' readonly>$completion</textarea>";
-        echo "</p>";
-        // Echo the content history
-        if (!empty($content_history)) {
-            echo "<span style='font-size: 40px;'>previous questions</span><br>";
-
-            foreach ($content_history as $history_item) {
-                $average_chars_per_row = 40;
-                $rows = ceil(strlen($history_item) / $average_chars_per_row);
-                $rows = $rows + 1;
-                echo "<textarea class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly>" . htmlentities($history_item) . "</textarea>";
-                echo "<br>";
-                // echo "<li class='medium-font'>" . htmlentities($history_item) . "</li>";
-            }
-        }
-
-        return $completion;
+        return json_decode($responseBody, true);
     } catch (Exception $e) {
-        // An error occurred, print the error message
         echo "Error occurred: " . $e->getMessage();
+        return [];
+    }
+}
+
+/**
+ * Display the interaction and content history.
+ *
+ * @param string $input_text
+ * @param string $completion
+ * @param array $content_history
+ * @return void
+ */
+function display_interaction($input_text, $completion, array $content_history)
+{
+    $average_chars_per_row = 30;
+
+    echo generate_textarea('Question:', $input_text, $average_chars_per_row);
+
+    if ($completion) {
+        echo generate_textarea('Answer:', $completion, $average_chars_per_row);
     }
 
+    if ($content_history) {
+        echo "<span style='font-size: 40px;'>Previous questions</span><br>";
 
-    echo "<style>
-.textarea-no-interaction {
-    pointer-events: none;        /* Disable user interaction */
-    user-select: none;           /* Disable text selection */
-    -webkit-user-select: none;   /* Safari and Chrome */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* IE 10+ */
+        foreach ($content_history as $history_item) {
+            echo generate_textarea('', htmlentities($history_item), 40);
+        }
+    }
+
+    echo get_textarea_style();
 }
-</style>";
+
+/**
+ * Generate a textarea with the specified content.
+ *
+ * @param string $label
+ * @param string $content
+ * @param int $average_chars_per_row
+ * @return string
+ */
+function generate_textarea($label, $content, $average_chars_per_row)
+{
+    $rows = ceil(strlen($content) / $average_chars_per_row);
+
+    return "<p>
+                <label class='large-font'>$label</label><br>
+                <textarea class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly>$content</textarea>
+            </p>";
+}
+
+/**
+ * Get the CSS for non-interactive textareas.
+ *
+ * @return string
+ */
+function get_textarea_style()
+{
+    return "<style>
+                .textarea-no-interaction {
+                    pointer-events: none;
+                    user-select: none;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                }
+            </style>";
 }
 
 ?>
