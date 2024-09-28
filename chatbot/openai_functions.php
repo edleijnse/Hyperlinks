@@ -116,7 +116,7 @@ function make_request(Client $client, array $requestBody)
  */
 function display_interaction($input_text, $completion, array $content_history)
 {
-    $average_chars_per_row = 30;
+    $average_chars_per_row = 25;
 
     echo generate_textarea('Question:', $input_text, $average_chars_per_row);
 
@@ -128,7 +128,7 @@ function display_interaction($input_text, $completion, array $content_history)
         echo "<span style='font-size: 40px;'>Previous questions</span><br>";
 
         foreach ($content_history as $history_item) {
-            echo generate_textarea('', htmlentities($history_item), 40);
+            echo generate_textarea('', htmlentities($history_item), $average_chars_per_row);
         }
     }
 
