@@ -116,7 +116,7 @@ function make_request(Client $client, array $requestBody)
  */
 function display_interaction($input_text, $completion, array $content_history)
 {
-    $average_chars_per_row = 25;
+    $average_chars_per_row = 20;
 
     echo generate_textarea('Question:', $input_text, $average_chars_per_row);
 
