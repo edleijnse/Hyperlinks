@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
 function init_openai()
 {
     $api_key = get_api_key();
-    $client  = create_client($api_key);
+    $client = create_client($api_key);
 
     $user_choice = $_POST['your_choice'] ?? '';
 
@@ -25,7 +25,7 @@ function init_openai()
 function get_api_key()
 {
     $api_key_path = dirname(getcwd()) . '/api_key';
-    $api_key      = trim(file_get_contents($api_key_path));
+    $api_key = trim(file_get_contents($api_key_path));
 
     return $api_key;
 }
@@ -40,9 +40,9 @@ function create_client($api_key)
 {
     return new Client([
         'base_uri' => 'https://api.openai.com',
-        'headers'  => [
+        'headers' => [
             "Authorization" => "Bearer $api_key",
-            'Content-Type'  => 'application/json',
+            'Content-Type' => 'application/json',
         ],
     ]);
 }
@@ -58,10 +58,10 @@ function create_client($api_key)
  */
 function get_openai_response_for_model($input_text, $model, array $content_history = [], Client $client)
 {
-    $messages       = prepare_messages($input_text, $content_history);
-    $requestBody    = ['model' => $model, 'messages' => $messages];
-    $response       = make_request($client, $requestBody);
-    $completion     = $response['choices'][0]['message']['content'] ?? null;
+    $messages = prepare_messages($input_text, $content_history);
+    $requestBody = ['model' => $model, 'messages' => $messages];
+    $response = make_request($client, $requestBody);
+    $completion = $response['choices'][0]['message']['content'] ?? null;
 
     display_interaction($input_text, $completion, $content_history);
 
@@ -96,7 +96,7 @@ function prepare_messages($input_text, array $content_history)
 function make_request(Client $client, array $requestBody)
 {
     try {
-        $response    = $client->post('/v1/chat/completions', ['body' => json_encode($requestBody)]);
+        $response = $client->post('/v1/chat/completions', ['body' => json_encode($requestBody)]);
         $responseBody = $response->getBody()->getContents();
 
         return json_decode($responseBody, true);
