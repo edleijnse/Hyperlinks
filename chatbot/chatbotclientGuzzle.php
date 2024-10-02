@@ -159,6 +159,7 @@ function processUserInput($input_text)
     $content_history = &$_SESSION['content_history'];
 
     $myquestion = "QUESTION: " . $input_text;
+    // in openai_functions all output is generated
     $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $content_history, $client);
     $content_history[] = $myquestion;
     $content_history[] = $mycompletion;
