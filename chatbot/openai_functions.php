@@ -146,7 +146,7 @@ function display_interaction($input_text, $completion, array $content_history)
 function generate_textarea($label, $content, $average_chars_per_row)
 {
     $rows = ceil(strlen($content) / $average_chars_per_row);
-
+    // textarea-readonly removed
     return "<p>
                 <label class='large-font'>$label</label><br>
                 <textarea class='output' rows='{$rows}' cols='40'>$content</textarea>
