@@ -149,7 +149,7 @@ function generate_textarea($label, $content, $average_chars_per_row)
 
     return "<p>
                 <label class='large-font'>$label</label><br>
-                <textarea class='output textarea-no-interaction' rows='{$rows}' cols='40' readonly>$content</textarea>
+                <textarea class='output' rows='{$rows}' cols='40'>$content</textarea>
             </p>";
 }
 
