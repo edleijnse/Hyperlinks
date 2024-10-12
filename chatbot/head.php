@@ -32,6 +32,8 @@
             border-radius: 5px;
         }
         .ask {
+            height: 100px;
+            width: 250px;
             font-size: 34px;
             color: #3b5998;
         }
