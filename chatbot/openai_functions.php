@@ -118,17 +118,17 @@ function display_interaction($input_text, $completion, array $content_history)
 {
     $average_chars_per_row = 20;
 
-    echo generate_textarea('Question:', $input_text, $average_chars_per_row);
+    echo generate_textarea('Question:', $input_text, $average_chars_per_row, 'lightgrey');
 
     if ($completion) {
-        echo generate_textarea('Answer:', $completion, $average_chars_per_row);
+        echo generate_textarea('Answer:', $completion, $average_chars_per_row, 'lightgrey');
     }
 
     if ($content_history) {
         echo "<span style='font-size: 40px;'>Previous questions</span><br>";
 
         foreach ($content_history as $history_item) {
-            echo generate_textarea('', htmlentities($history_item), $average_chars_per_row);
+            echo generate_textarea('', htmlentities($history_item), $average_chars_per_row, 'lightblue' );
         }
     }
 
@@ -143,21 +143,25 @@ function display_interaction($input_text, $completion, array $content_history)
  * @param int $average_chars_per_row
  * @return string
  */
-function generate_textarea($label, $content, $average_chars_per_row)
-{
-    $rows = ceil(strlen($content) / $average_chars_per_row);
-    // textarea-readonly removed
-    return "<p>
-                <label class='large-font'>$label</label><br>
-                <textarea class='output' rows='{$rows}' cols='40'>$content</textarea>
-            </p>";
-}
-
 /**
- * Get the CSS for non-interactive textareas.
+ * Generate a textarea with the specified content.
  *
+ * @param string $label
+ * @param string $content
+ * @param int $average_chars_per_row
+ * @param string|null $background Optional background color
  * @return string
  */
+function generate_textarea($label, $content, $average_chars_per_row, $background = null)
+{
+    $rows = ceil(strlen($content) / $average_chars_per_row);
+    $style = $background ? "style='background-color: $background;'" : "";
+
+    return "<p>
+                <label class='large-font'>$label</label><br>
+                <textarea class='output' rows='{$rows}' cols='40' $style>$content</textarea>
+            </p>";
+}
 function get_textarea_style()
 {
     return "<style>
