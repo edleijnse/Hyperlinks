@@ -34,18 +34,18 @@ use GuzzleHttp\Client;
          ?>
         <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
         <br>
-        <input type="submit" name="submit_button" class="ask red-background" value="ASK">
+        <input type="submit" name="submit_button" class="ask green-background" value="ASK">
         <input type="submit" name="clean_button" class="ask red-background" value="NEXT">
-        <input type="submit" name="clear_history_button" class="ask green-background" value="NEW CHAT">
+        <input type="submit" name="clear_history_button" class="ask red-background" value="NEW CHAT">
     </form>
     </p>
 
     <span style="font-size: 40px;">Copy to clipboard</span>
     <br>
-    <button class="copy-all-button red-background" onclick="copyOutputToClipboard(event)"
+    <button class="copy red-background" onclick="copyOutputToClipboard(event)"
             style="font-size:40px; padding:10px;">Complete chat
     </button>
-    <button class="copy-answer-button red-background" onclick="copyAnswerToClipboard(event)"
+    <button class="copy red-background" onclick="copyAnswerToClipboard(event)"
             style="font-size:40px; padding:10px;">Last answer
     </button>
     <?php

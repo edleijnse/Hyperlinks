@@ -37,6 +37,12 @@
             font-size: 34px;
             color: #3b5998;
         }
+        .copy {
+            height: 100px;
+            width: 300px;
+            font-size: 34px;
+            color: #3b5998;
+        }
         .heading {
             font-size: 34px;
             font-weight: 500;
