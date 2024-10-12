@@ -118,10 +118,10 @@ function display_interaction($input_text, $completion, array $content_history)
 {
     $average_chars_per_row = 20;
 
-    echo generate_textarea('Question:', $input_text, $average_chars_per_row, 'lightgrey');
+    echo generate_textarea('Question:', $input_text, $average_chars_per_row, 'lightyellow');
 
     if ($completion) {
-        echo generate_textarea('Answer:', $completion, $average_chars_per_row, 'lightgrey');
+        echo generate_textarea('Answer:', $completion, $average_chars_per_row, 'lightyellow');
     }
 
     if ($content_history) {
