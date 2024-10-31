@@ -100,7 +100,7 @@ use GuzzleHttp\Client;
 
 <?php
 
-function handleFormSubmission()
+function handleFormSubmission(): void
 {
     if (isset($_POST['model_choice_chosen'])) {
         $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
@@ -119,7 +119,7 @@ function handleFormSubmission()
     }
 }
 
-function displayModelChoices()
+function displayModelChoices(): void
 {
     $selected_model = isset($_SESSION['model_choice']) ? $_SESSION['model_choice'] : 'gpt-4o-mini';
 
@@ -127,7 +127,7 @@ function displayModelChoices()
     echo generateRadioOption('gpt-4o', 'more accurate but slower using model gpt-4o', $selected_model);
 }
 
-function generateRadioOption($id, $label, $selected_model)
+function generateRadioOption($id, $label, $selected_model): string
 {
     $checked = $selected_model === $id ? 'checked' : '';
     return <<<HTML
@@ -136,14 +136,14 @@ function generateRadioOption($id, $label, $selected_model)
 HTML;
 }
 
-function initializeContentHistory()
+function initializeContentHistory(): void
 {
     if (!isset($_SESSION['content_history'])) {
         $_SESSION['content_history'] = [];
     }
 }
 
-function getDisplayText()
+function getDisplayText(): string
 {
     if (isset($_POST['submit_button'])) {
         return htmlentities($_POST['input_text']);
@@ -151,7 +151,7 @@ function getDisplayText()
     return '';
 }
 
-function processUserInput($input_text)
+function processUserInput($input_text): void
 {
     $openai_data = init_openai();
     $client = $openai_data[1];
@@ -167,12 +167,12 @@ function processUserInput($input_text)
     $_SESSION['content_history'] = $content_history;
 }
 
-function cleanInputText()
+function cleanInputText(): void
 {
     $_POST['input_text'] = '';
 }
 
-function clearContentHistory()
+function clearContentHistory(): void
 {
     $_SESSION['content_history'] = [];
 }
