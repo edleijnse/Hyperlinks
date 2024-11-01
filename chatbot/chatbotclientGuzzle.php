@@ -16,13 +16,33 @@ use GuzzleHttp\Client;
             .large-font {
                 font-size: 34px;
             }
+            .header-font {
+                font-size: 24px;
+            }
+            /* Add CSS here */
+            #scrollToTop {
+                position: fixed;
+                bottom: 20px;
+                left: 40px;
+                display: block; /* Always visible */
+                background-color: #000;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 5px;
+                z-index: 1000;
+            }
+
+            #scrollToTop:hover {
+                background-color: #444;
+            }
         </style>
     </head>
 
     <body>
     <?php echo "<ul>"; ?>
-    <h3 class="ask">Chat client for OpenAI</h3>
-    <p>
+
     <form method="post">
         <label class="ask large-font" for="model_choice">I want to chat:<br></label>
 
@@ -92,6 +112,17 @@ use GuzzleHttp\Client;
                 document.body.removeChild(tempTextarea);
                 alert("Copied to clipboard: " + endText);
             }
+        }
+    </script>
+    <!-- Add the button -->
+    <button id="scrollToTop" onclick="scrollToTop()" style="font-size: 40px;">Top</button>
+
+    <!-- Add JS here -->
+    <script>
+        // Scroll to the top of the page when the button is clicked
+        function scrollToTop() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
     </script>
     </body>
