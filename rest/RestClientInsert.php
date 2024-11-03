@@ -111,7 +111,7 @@ if ((empty($_POST["ID"]))
 } else {
     echo "<h2>insert row with id: ". $ID . "</h2>";
     // $url = 'http://192.168.0.54/hyperlinks/rest/Restcontroller.php/?command=insert';
-    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=insert';
+    $url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=insert';
     $url = $url . '&ID=' . $ID;
     $url = $url . '&category=' . urlencode( $category);
     $url = $url . '&group=' . urlencode ($group);

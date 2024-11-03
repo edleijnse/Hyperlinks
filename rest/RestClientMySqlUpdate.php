@@ -157,7 +157,7 @@ if ((empty($_POST["group"]))
     echo "<h2>enter missing fields</h2>";
 } else {
     echo "<h2>update row with id: ". $ID . "</h2>";
-    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=updatemysql';
+    $url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=updatemysql';
     $url = $url . '&ID=' . $ID;
     $url = $url . '&category=' . urlencode( $category);
     $url = $url . '&group=' . urlencode ($group);

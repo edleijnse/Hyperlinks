@@ -65,7 +65,7 @@ if (function_exists('test_input')) {
 echo "<h2>Searched for:</h2>";
 echo $search;
 echo "<br>";
-$url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . urlencode($search);
+$url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . urlencode($search);
 //$url = 'http://192.168.0.210/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=' . $search;
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_HTTPGET, true);

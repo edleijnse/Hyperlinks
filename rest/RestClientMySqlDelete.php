@@ -134,7 +134,7 @@ if (empty($_POST["ID"])) {
     echo "<h2>enter missing fields</h2>";
 } else {
     echo "<h2>delete row with id: ". $ID . "</h2>";
-    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=deletemysql';
+    $url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=deletemysql';
     $url = $url . '&ID=' . $ID;
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_HTTPGET, true);

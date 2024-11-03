@@ -86,7 +86,7 @@ if (empty($_POST["ID"])) {
 } else {
     echo "<h2>delete row with id: ". $ID . "</h2>";
     // $url = 'http://192.168.0.54/hyperlinks/rest/Restcontroller.php/?command=delete';
-    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=delete';
+    $url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=delete';
     $url = $url . '&ID=' . $ID;
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_HTTPGET, true);

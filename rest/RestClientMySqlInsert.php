@@ -151,7 +151,7 @@ if ((empty($_POST["confirm"]))
     echo "<h2>enter missing fields</h2>";
 } else {
     echo "<h2>insert row with id: ". $ID . "</h2>";
-    $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=insertmysql';
+    $url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=insertmysql';
     $url = $url . '&category=' . urlencode( $category);
     $url = $url . '&group=' . urlencode ($group);
     $url = $url . '&webdescription=' . urlencode($webdescription);

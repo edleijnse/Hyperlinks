@@ -106,7 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST["search"])) {
     $hyperlinks = fetchHyperlinks($url);
     if ($hyperlinks === null) {
         // retry with other URL
-        $url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
+        $url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=allmysql&count=900&from=0&search=' . urlencode($search);
         $hyperlinks = fetchHyperlinks($url);
     }
     if ($hyperlinks === null) {

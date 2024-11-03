@@ -1,5 +1,5 @@
 <?php
-//$url = 'https://leijnse.info/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=Engli';
+//$url = 'https://tagger.biz/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=Engli';
 $url = 'http://192.168.0.210/hyperlinks/rest/Restcontroller.php/?command=all&count=900&from=0&search=Museum';
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_HTTPGET, true);
