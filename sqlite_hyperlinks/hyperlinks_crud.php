@@ -1,3 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <?php include 'head.php'; ?>
+    <style>
+        .large-font {
+            font-size: 34px;
+        }
+        .header-font {
+            font-size: 24px;
+        }
+        /* Add CSS here */
+        #scrollToTop {
+            position: fixed;
+            bottom: 20px;
+            left: 40px;
+            display: block; /* Always visible */
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        #scrollToTop:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
 <?php
 
 // Database configuration
@@ -67,13 +100,13 @@ switch ($action) {
 
     echo "<h2>Search Hyperlinks</h2>";
         echo "<form method='get'>
-        <label>Webgroup: <input type='text' name='webgroup' value='" . htmlspecialchars($_GET['webgroup'] ?? '') . "'></label><br>
-        <label>Webcategory: <input type='text' name='webcategory' value='" . htmlspecialchars($_GET['webcategory'] ?? '') . "'></label><br>
-        <label>Webdescription: <input type='text' name='webdescription' value='" . htmlspecialchars($_GET['webdescription'] ?? '') . "'></label><br>
-        <label>Website: <input type='text' name='website' value='" . htmlspecialchars($_GET['website'] ?? '') . "'></label><br>
-        <input type='submit' value='Search'>
+        <label>Webgroup: <input type='text' class='input' name='webgroup' value='" . htmlspecialchars($_GET['webgroup'] ?? '') . "'></label><br>
+        <label>Webcategory: <input type='text' class='input' name='webcategory' value='" . htmlspecialchars($_GET['webcategory'] ?? '') . "'></label><br>
+        <label>Webdescription: <input type='text' class='input' name='webdescription' value='" . htmlspecialchars($_GET['webdescription'] ?? '') . "'></label><br>
+        <label>Website: <input type='text' class='input' name='website' value='" . htmlspecialchars($_GET['website'] ?? '') . "'></label><br>
+        <input type='submit' value='Search' class='ask'>
         <a href='?" . htmlspecialchars(http_build_query([])) . "'>
-            <button type='button'>Clear All</button>
+            <button type='button' class='ask'>Clear All</button>
         </a>
       </form>";
 
@@ -217,23 +250,23 @@ function displayCreateForm()
 {
     echo "<h1>Create Hyperlink</h1>";
     echo "<form method='post'>
-            <label>Webgroup: <input type='text' name='webgroup'></label><br>
-            <label>Webcategory: <input type='text' name='webcategory'></label><br>
-            <label>Webdescription: <input type='text' name='webdescription'></label><br>
-            <label>Website: <input type='url' name='website'></label><br>
-            <label>ID: <input type='text' name='ID'></label><br>
-            <input type='submit' value='Create'>
+            <label>Webgroup: <input type='text'  class='ask' name='webgroup'></label><br>
+            <label>Webcategory: <input type='text'  class='ask' name='webcategory'></label><br>
+            <label>Webdescription: <input type='text'  class='ask' name='webdescription'></label><br>
+            <label>Website: <input type='url'  class='ask' name='website'></label><br>
+            <label>ID: <input type='text'  class='ask' name='ID'></label><br>
+            <input type='submit'  class='ask' value='Create'>
           </form>";
 }
 function displayUpdateForm($link)
 {
     echo "<h1>Update Hyperlink</h1>";
     echo "<form method='post'>
-            <label>Webgroup: <input type='text' name='webgroup' value='" . htmlspecialchars($link['webgroup']) . "'></label><br>
-            <label>Webcategory: <input type='text' name='webcategory' value='" . htmlspecialchars($link['webcategory']) . "'></label><br>
-            <label>Webdescription: <input type='text' name='webdescription' value='" . htmlspecialchars($link['webdescription']) . "'></label><br>
-            <label>Website: <input type='url' name='website' value='" . htmlspecialchars($link['website']) . "'></label><br>
-            <input type='submit' value='Update'>
+            <label>Webgroup: <input type='text' name='webgroup' class='ask' value='" . htmlspecialchars($link['webgroup']) . "'></label><br>
+            <label>Webcategory: <input type='text' name='webcategory'  class='ask' value='" . htmlspecialchars($link['webcategory']) . "'></label><br>
+            <label>Webdescription: <input type='text' name='webdescription'  class='ask' value='" . htmlspecialchars($link['webdescription']) . "'></label><br>
+            <label>Website: <input type='url' name='website'  class='ask' value='" . htmlspecialchars($link['website']) . "'></label><br>
+            <input type='submit'  class='ask' value='Update'>
           </form>";
 }
 
@@ -245,3 +278,7 @@ function displayDeleteForm($id)
             <input type='submit' value='Yes, delete'>
           </form>";
 }
+?>
+</body>
+
+</html>
