@@ -72,7 +72,11 @@ switch ($action) {
         <label>Webdescription: <input type='text' name='webdescription' value='" . htmlspecialchars($_GET['webdescription'] ?? '') . "'></label><br>
         <label>Website: <input type='text' name='website' value='" . htmlspecialchars($_GET['website'] ?? '') . "'></label><br>
         <input type='submit' value='Search'>
+        <a href='?" . htmlspecialchars(http_build_query([])) . "'>
+            <button type='button'>Clear All</button>
+        </a>
       </form>";
+
         $searchCriteria = [];
         if (!empty($_GET['webgroup'])) {
             $searchCriteria['webgroup'] = htmlspecialchars($_GET['webgroup']);
@@ -138,8 +142,8 @@ function readAllHyperlinks(PDO $database, array $searchCriteria = []): array
     if (!empty($conditions)) {
         $query .= " WHERE " . implode(" AND ", $conditions);
     }
-
-    // Prepare and execute query
+    $query .= " ORDER BY webgroup, webcategory, webdescription, website";
+        // Prepare and execute quer
     $statement = $database->prepare($query);
     $statement->execute($parameters);
 
