@@ -18,9 +18,13 @@ $id = $_GET['id'] ?? null;
 switch ($action) {
     case 'create':
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
-            $url = $_POST['url'] ?? '';
-            createHyperlink($pdo, $name, $url);
+            $id = $_POST['ID'] ?? '';
+            $webgroup = $_POST['webgroup'] ?? '';
+            $webcategory = $_POST['webcategory'] ?? '';
+            $webdescription = $_POST['webdescription'] ?? '';
+            $website = $_POST['website'] ?? '';
+
+            createHyperlink($pdo, $id, $webgroup, $webcategory, $webdescription, $website);
         } else {
             displayCreateForm();
         }
@@ -38,9 +42,11 @@ switch ($action) {
 
     case 'update':
         if ($id && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = $_POST['name'] ?? '';
-            $url = $_POST['url'] ?? '';
-            updateHyperlink($pdo, $id, $name, $url);
+            $webgroup = $_POST['webgroup'] ?? '';
+            $webcategory = $_POST['webcategory'] ?? '';
+            $webdescription = $_POST['webdescription'] ?? '';
+            $website = $_POST['website'] ?? '';
+            updateHyperlink($pdo, $id, $webgroup, $webcategory, $webdescription, $website);
         } elseif ($id) {
             $link = readHyperlink($pdo, $id);
             displayUpdateForm($link);
@@ -63,19 +69,29 @@ switch ($action) {
 
 // CRUD Functions
 
-function createHyperlink($pdo, $name, $url)
+function createHyperlink($pdo, $id, $webgroup, $webcategory, $webdescription, $website): void
 {
-    $stmt = $pdo->prepare("INSERT INTO hyperlinks (name, url) VALUES (:name, :url)");
-    $stmt->execute([':name' => $name, ':url' => $url]);
+    $pdo->beginTransaction();
+
+    $stmt = $pdo->prepare("INSERT INTO hyperlinks (ID, webgroup, webcategory, webdescription, website) VALUES (:ID, :webgroup, :webcategory, :webdescription, :website)");
+    $stmt->execute([
+        ':ID' => $id,
+        ':webgroup' => $webgroup,
+        ':webcategory' => $webcategory,
+        ':webdescription' => $webdescription,
+        ':website' => $website
+    ]);
+    $pdo->commit();
     echo "Hyperlink created successfully!";
 }
 
 function readHyperlink($pdo, $id)
 {
-    $stmt = $pdo->prepare("SELECT * FROM hyperlinks WHERE id = :id");
+    $stmt = $pdo->prepare("SELECT * FROM hyperlinks WHERE ID = :id");
     $stmt->execute([':id' => $id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
 
 function readAllHyperlinks($pdo)
 {
@@ -83,17 +99,35 @@ function readAllHyperlinks($pdo)
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function updateHyperlink($pdo, $id, $name, $url)
+function updateHyperlink($pdo, $id, $webgroup, $webcategory, $webdescription, $website)
 {
-    $stmt = $pdo->prepare("UPDATE hyperlinks SET name = :name, url = :url WHERE id = :id");
-    $stmt->execute([':name' => $name, ':url' => $url, ':id' => $id]);
+    $pdo->beginTransaction();
+    $query = "UPDATE hyperlinks 
+              SET webgroup = :webgroup, 
+                  webcategory = :webcategory, 
+                  webdescription = :webdescription, 
+                  website = :website 
+              WHERE ID = :id";
+
+    $statement = $pdo->prepare($query);
+    $statement->execute([
+        ':webgroup' => $webgroup,
+        ':webcategory' => $webcategory,
+        ':webdescription' => $webdescription,
+        ':website' => $website,
+        ':id' => $id
+    ]);
+    $pdo->commit();
+
     echo "Hyperlink updated successfully!";
 }
 
 function deleteHyperlink($pdo, $id)
 {
-    $stmt = $pdo->prepare("DELETE FROM hyperlinks WHERE id = :id");
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare("DELETE FROM hyperlinks WHERE ID = :id");
     $stmt->execute([':id' => $id]);
+    $pdo->commit();
     echo "Hyperlink deleted successfully!";
 }
 
@@ -105,7 +139,8 @@ function displayHyperlinkList($links)
     echo "<a href='?action=create'>Create New Hyperlink</a>";
     echo "<ul>";
     foreach ($links as $link) {
-        echo "<li>" . htmlspecialchars($link['webgroup']) . " - <a href='" . htmlspecialchars($link['webdescription']) . "'>" . htmlspecialchars($link['website']) . "</a>";
+        echo "<li>" . htmlspecialchars($link['webgroup']) . " (" . htmlspecialchars($link['webcategory']) . ") - " . htmlspecialchars($link['webdescription']) . "<br>";
+        echo "Website: <a href='" . htmlspecialchars($link['website']) . "'>" . htmlspecialchars($link['website']) . "</a>";
         echo " [<a href='?action=read&id=" . $link['ID'] . "'>View</a>]";
         echo " [<a href='?action=update&id=" . $link['ID'] . "'>Edit</a>]";
         echo " [<a href='?action=delete&id=" . $link['ID'] . "'>Delete</a>]";
@@ -114,11 +149,15 @@ function displayHyperlinkList($links)
     echo "</ul>";
 }
 
+
 function displayHyperlink($link)
 {
     echo "<h1>Hyperlink Details</h1>";
-    echo "<p>Name: " . htmlspecialchars($link['name']) . "</p>";
-    echo "<p>URL: <a href='" . htmlspecialchars($link['url']) . "'>" . htmlspecialchars($link['url']) . "</a></p>";
+    echo "<p>Webgroup: " . htmlspecialchars($link['webgroup']) . "</p>";
+    echo "<p>Webcategory: " . htmlspecialchars($link['webcategory']) . "</p>";
+    echo "<p>Webdescription: " . htmlspecialchars($link['webdescription']) . "</p>";
+    echo "<p>Website: <a href='" . htmlspecialchars($link['website']) . "'>" . htmlspecialchars($link['website']) . "</a></p>";
+    echo "<p>ID: " . htmlspecialchars($link['ID']) . "</p>";
     echo "<a href='?'>Back to list</a>";
 }
 
@@ -126,18 +165,22 @@ function displayCreateForm()
 {
     echo "<h1>Create Hyperlink</h1>";
     echo "<form method='post'>
-            <label>Name: <input type='text' name='name'></label><br>
-            <label>URL: <input type='url' name='url'></label><br>
+            <label>Webgroup: <input type='text' name='webgroup'></label><br>
+            <label>Webcategory: <input type='text' name='webcategory'></label><br>
+            <label>Webdescription: <input type='text' name='webdescription'></label><br>
+            <label>Website: <input type='url' name='website'></label><br>
+            <label>ID: <input type='text' name='ID'></label><br>
             <input type='submit' value='Create'>
           </form>";
 }
-
 function displayUpdateForm($link)
 {
     echo "<h1>Update Hyperlink</h1>";
     echo "<form method='post'>
-            <label>Name: <input type='text' name='name' value='" . htmlspecialchars($link['name']) . "'></label><br>
-            <label>URL: <input type='url' name='url' value='" . htmlspecialchars($link['url']) . "'></label><br>
+            <label>Webgroup: <input type='text' name='webgroup' value='" . htmlspecialchars($link['webgroup']) . "'></label><br>
+            <label>Webcategory: <input type='text' name='webcategory' value='" . htmlspecialchars($link['webcategory']) . "'></label><br>
+            <label>Webdescription: <input type='text' name='webdescription' value='" . htmlspecialchars($link['webdescription']) . "'></label><br>
+            <label>Website: <input type='url' name='website' value='" . htmlspecialchars($link['website']) . "'></label><br>
             <input type='submit' value='Update'>
           </form>";
 }

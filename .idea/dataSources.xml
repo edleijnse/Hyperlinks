@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="LightroomCatalog2023-02-v13-3 Excire.sqlite" uuid="d585a698-03d7-4697-9d46-b52a57777af0">
+    <data-source source="LOCAL" name="LightroomCatalog2023-02-v13-3 Excire.sqlite" uuid="7412a398-2ab9-4f6a-9eb0-b7d052206cde">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\edlei\PhpstormProjects\Hyperlinks\sqlite_hyperlinks\LightroomCatalog2023-02-v13-3 Excire.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\xampp\htdocs\sqlite_hyperlinks\LightroomCatalog2023-02-v13-3 Excire.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
