@@ -63,8 +63,34 @@ switch ($action) {
 
     default:
         // Default action: display all links
-        $links = readAllHyperlinks($pdo);
+        // display a search form to allow users to input search filters
+
+    echo "<h2>Search Hyperlinks</h2>";
+        echo "<form method='get'>
+        <label>Webgroup: <input type='text' name='webgroup' value='" . htmlspecialchars($_GET['webgroup'] ?? '') . "'></label><br>
+        <label>Webcategory: <input type='text' name='webcategory' value='" . htmlspecialchars($_GET['webcategory'] ?? '') . "'></label><br>
+        <label>Webdescription: <input type='text' name='webdescription' value='" . htmlspecialchars($_GET['webdescription'] ?? '') . "'></label><br>
+        <label>Website: <input type='text' name='website' value='" . htmlspecialchars($_GET['website'] ?? '') . "'></label><br>
+        <input type='submit' value='Search'>
+      </form>";
+        $searchCriteria = [];
+        if (!empty($_GET['webgroup'])) {
+            $searchCriteria['webgroup'] = htmlspecialchars($_GET['webgroup']);
+        }
+        if (!empty($_GET['webcategory'])) {
+            $searchCriteria['webcategory'] = htmlspecialchars($_GET['webcategory']);
+        }
+        if (!empty($_GET['webdescription'])) {
+            $searchCriteria['webdescription'] = htmlspecialchars($_GET['webdescription']);
+        }
+        if (!empty($_GET['website'])) {
+            $searchCriteria['website'] = htmlspecialchars($_GET['website']);
+        }
+
+// Call function with user-provided criteria
+        $links = readAllHyperlinks($pdo, $searchCriteria);
         displayHyperlinkList($links);
+
 }
 
 // CRUD Functions
@@ -93,10 +119,32 @@ function readHyperlink($pdo, $id)
 }
 
 
-function readAllHyperlinks($pdo)
+function readAllHyperlinks(PDO $database, array $searchCriteria = []): array
 {
-    $stmt = $pdo->query("SELECT * FROM hyperlinks");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Base query
+    $query = "SELECT * FROM hyperlinks";
+
+    // Track WHERE conditions and parameters for binding
+    $conditions = [];
+    $parameters = [];
+
+    // Dynamically build WHERE clause based on search criteria
+    foreach ($searchCriteria as $column => $value) {
+        $conditions[] = "$column LIKE :$column";
+        $parameters[":$column"] = "%$value%"; // Use wildcards for partial matching
+    }
+
+    // Add WHERE clause if conditions exist
+    if (!empty($conditions)) {
+        $query .= " WHERE " . implode(" AND ", $conditions);
+    }
+
+    // Prepare and execute query
+    $statement = $database->prepare($query);
+    $statement->execute($parameters);
+
+    // Fetch and return all matching rows
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function updateHyperlink($pdo, $id, $webgroup, $webcategory, $webdescription, $website)
