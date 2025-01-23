@@ -1,0 +1,473 @@
+<Project version="22.8.0.18" edition="pro" localizationFileName="C:\Program Files (x86)\SQL Maestro Group\SQLite PHP Generator Professional\lang.en.php" phpDriver="0" outputPath="D:\sqlite_hyperlinks_generated" copySystemFiles="true" generateModifiedDataOnly="true" outputFilesExtension="php" colorSchemeName="darkly-compact">
+  <ConnectionOptions host="" port="0" login="" password="" database="D:\sqlite_hyperlinks\hyperlinks.sqlite" client_encoding="" all_fields_unicode="true" extensions="" initial_foreign_key_mode="1" use_binary_guids="false" date_time_storage_format="0" date_storage_format="0" time_storage_format="0" database_key="" database_encryption_algorithm="0" open_in_read_only_mode="false">
+    <ssh_secure secure="false" port="22" authentication_mode="0"/>
+    <http_tunnel tunneling="false" url="">
+      <http_proxy_server use_proxy="false" port="8080"/>
+      <http_authentication/>
+    </http_tunnel>
+    <auto_attached_databases/>
+  </ConnectionOptions>
+  <ScriptConnectionOptions host="" port="0" login="" password="" database="D:\sqlite_hyperlinks\hyperlinks.sqlite" client_encoding="" all_fields_unicode="true" extensions="" initial_foreign_key_mode="1" use_binary_guids="false" date_time_storage_format="0" date_storage_format="0" time_storage_format="0" database_key="" database_encryption_algorithm="0" open_in_read_only_mode="false">
+    <ssh_secure secure="false" port="22" authentication_mode="0"/>
+    <http_tunnel tunneling="false" url="">
+      <http_proxy_server use_proxy="false" port="8080"/>
+      <http_authentication/>
+    </http_tunnel>
+    <auto_attached_databases/>
+  </ScriptConnectionOptions>
+  <DataSources>
+    <DataSource name="hyperlinks"/>
+    <DataSource name="groupnames"/>
+    <DataSource name="chats"/>
+  </DataSources>
+  <Presentation disableMagicQuotesRuntime="false" showEnvironmentVariables="false" showExecutedQueries="false" showPHPErrorsAndWarnings="false">
+    <Pages>
+      <Page type="table" tableName="hyperlinks" numberByDataSource="0" fileName="hyperlinks" caption="Hyperlinks" shortCaption="Hyperlinks" addSeparator="false" horizontalFilterCondition="" recordsPerPage="20" NavigatorPosition="3" insertAbilityMode="1" deleteAbilityMode="3" deleteSelectedAbilityMode="3" contentEncoding="UTF-8" exportAllRecordsAvailable="31" exportSelectedRecordsAvailable="31" exportSingleRecordFromGridAvailable="0" exportRecordFromViewFormAvailable="31" printAvailable="13" useActionImages="true" showKeyColumnsImagesInGridHeader="false">
+        <BeforeGridText/>
+        <DetailedDescription/>
+        <ColumnPresentations>
+          <ColumnPresentation fieldName="ID" caption="ID" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1573119">
+            <ViewProperties type="text">
+              <Format type="number" thousandSeparator=","/>
+            </ViewProperties>
+            <EditProperties type="textBox" maxLength="0"/>
+          </ColumnPresentation>
+          <ColumnPresentation fieldName="webgroup" caption="Webgroup" canSetNull="true" selectedFilterOperators="1589247">
+            <Lookup tableName="groupnames" linkFieldName="groupname" displayFieldName="groupname" lookupFilter="" useLookupOrdering="true" lookupOrdering="0" allowAddNewItemsOnTheFly="true" displayLookupRecord="true">
+              <OnTheFlyInsertPage numberByDataSource="0" fileName="groupnames" caption="Groupnames" shortCaption="Groupnames" addSeparator="false" horizontalFilterCondition="" isOnTheFlyInsertPage="true" recordsPerPage="20" NavigatorPosition="3" insertAbilityMode="1" deleteAbilityMode="3" deleteSelectedAbilityMode="3" contentEncoding="UTF-8" exportAllRecordsAvailable="31" exportSelectedRecordsAvailable="31" exportSingleRecordFromGridAvailable="0" exportRecordFromViewFormAvailable="31" printAvailable="13" useActionImages="true" showKeyColumnsImagesInGridHeader="false">
+                <BeforeGridText/>
+                <DetailedDescription/>
+                <ColumnPresentations>
+                  <ColumnPresentation fieldName="groupname" caption="Groupname" showColumnFilter="false" selectedFilterOperators="1589247">
+                    <ViewProperties type="text" maxLength="75"/>
+                    <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+                  </ColumnPresentation>
+                </ColumnPresentations>
+                <Columns>
+                  <List>
+                    <Column fieldName="groupname"/>
+                  </List>
+                  <View>
+                    <Column fieldName="groupname"/>
+                  </View>
+                  <Edit>
+                    <Column fieldName="groupname"/>
+                  </Edit>
+                  <Insert>
+                    <Column fieldName="groupname"/>
+                  </Insert>
+                  <QuickFilter>
+                    <Column fieldName="groupname"/>
+                  </QuickFilter>
+                  <FilterBuilder>
+                    <Column fieldName="groupname"/>
+                  </FilterBuilder>
+                  <Print>
+                    <Column fieldName="groupname"/>
+                  </Print>
+                  <Export>
+                    <Column fieldName="groupname"/>
+                  </Export>
+                  <Compare>
+                    <Column fieldName="groupname"/>
+                  </Compare>
+                  <MultiEdit>
+                    <Column fieldName="groupname" visible="false"/>
+                  </MultiEdit>
+                </Columns>
+                <Details/>
+              </OnTheFlyInsertPage>
+              <LookupRecordViewForm numberByDataSource="0" fileName="groupnames" caption="Groupnames" shortCaption="Groupnames" addSeparator="false" horizontalFilterCondition="" isLookupRecordViewForm="true" recordsPerPage="20" NavigatorPosition="3" insertAbilityMode="1" deleteAbilityMode="3" deleteSelectedAbilityMode="3" contentEncoding="UTF-8" exportAllRecordsAvailable="31" exportSelectedRecordsAvailable="31" exportSingleRecordFromGridAvailable="0" exportRecordFromViewFormAvailable="31" printAvailable="13" useActionImages="true" showKeyColumnsImagesInGridHeader="false">
+                <BeforeGridText/>
+                <DetailedDescription/>
+                <ColumnPresentations>
+                  <ColumnPresentation fieldName="groupname" caption="Groupname" showColumnFilter="false" selectedFilterOperators="1589247">
+                    <ViewProperties type="text" maxLength="75"/>
+                    <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+                  </ColumnPresentation>
+                </ColumnPresentations>
+                <Columns>
+                  <List>
+                    <Column fieldName="groupname"/>
+                  </List>
+                  <View>
+                    <Column fieldName="groupname"/>
+                  </View>
+                  <Edit>
+                    <Column fieldName="groupname"/>
+                  </Edit>
+                  <Insert>
+                    <Column fieldName="groupname"/>
+                  </Insert>
+                  <QuickFilter>
+                    <Column fieldName="groupname"/>
+                  </QuickFilter>
+                  <FilterBuilder>
+                    <Column fieldName="groupname"/>
+                  </FilterBuilder>
+                  <Print>
+                    <Column fieldName="groupname"/>
+                  </Print>
+                  <Export>
+                    <Column fieldName="groupname"/>
+                  </Export>
+                  <Compare>
+                    <Column fieldName="groupname"/>
+                  </Compare>
+                  <MultiEdit>
+                    <Column fieldName="groupname" visible="false"/>
+                  </MultiEdit>
+                </Columns>
+                <Details/>
+              </LookupRecordViewForm>
+            </Lookup>
+            <ViewProperties type="text" maxLength="75"/>
+            <EditProperties type="dynamicCombobox"/>
+          </ColumnPresentation>
+          <ColumnPresentation fieldName="webcategory" caption="Webcategory" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+            <ViewProperties type="text" maxLength="75"/>
+            <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+          </ColumnPresentation>
+          <ColumnPresentation fieldName="webdescription" caption="Webdescription" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+            <ViewProperties type="text" maxLength="75"/>
+            <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+          </ColumnPresentation>
+          <ColumnPresentation fieldName="website" caption="Website" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+            <ViewProperties type="text" maxLength="75"/>
+            <Hyperlink template="%website%" target="_top"/>
+            <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+          </ColumnPresentation>
+        </ColumnPresentations>
+        <Columns>
+          <List>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </List>
+          <View>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </View>
+          <Edit>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </Edit>
+          <Insert>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </Insert>
+          <QuickFilter>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </QuickFilter>
+          <FilterBuilder>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </FilterBuilder>
+          <Print>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </Print>
+          <Export>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </Export>
+          <Compare>
+            <Column fieldName="ID"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </Compare>
+          <MultiEdit>
+            <Column fieldName="ID" visible="false"/>
+            <Column fieldName="webgroup"/>
+            <Column fieldName="webcategory"/>
+            <Column fieldName="webdescription"/>
+            <Column fieldName="website"/>
+          </MultiEdit>
+        </Columns>
+        <Details/>
+        <PartitionNavigators>
+          <PartitionNavigator type="userDefined" name="partition" caption="webgroup" navigationStyle="1" allowViewAllRecords="true">
+            <OnGetPartitions>
+$tmp = array();
+
+  $this-&gt;GetConnection()-&gt;ExecQueryToArray(&quot;
+
+    SELECT DISTINCT
+
+      groupname 
+
+    FROM groupnames g
+
+    ORDER BY groupname&quot;, $tmp
+
+  );
+
+  foreach($tmp as $groupname) {
+
+    $partitions[$groupname['groupname']] = $groupname['groupname']; 
+
+  }            </OnGetPartitions>
+            <OnGetPartitionConditionHandler>
+$condition = &quot;groupname = '$partitionKey'&quot;;            </OnGetPartitionConditionHandler>
+          </PartitionNavigator>
+        </PartitionNavigators>
+      </Page>
+      <Page type="table" tableName="groupnames" numberByDataSource="0" fileName="groupnames" caption="Groupnames" shortCaption="Groupnames" addSeparator="false" horizontalFilterCondition="" recordsPerPage="20" NavigatorPosition="3" insertAbilityMode="1" deleteAbilityMode="3" deleteSelectedAbilityMode="3" contentEncoding="UTF-8" exportAllRecordsAvailable="31" exportSelectedRecordsAvailable="31" exportSingleRecordFromGridAvailable="0" exportRecordFromViewFormAvailable="31" printAvailable="13" useActionImages="true" showKeyColumnsImagesInGridHeader="false">
+        <BeforeGridText/>
+        <DetailedDescription/>
+        <ColumnPresentations>
+          <ColumnPresentation fieldName="groupname" caption="Groupname" showColumnFilter="false" selectedFilterOperators="1589247">
+            <ViewProperties type="text" maxLength="75"/>
+            <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+          </ColumnPresentation>
+        </ColumnPresentations>
+        <Columns>
+          <List>
+            <Column fieldName="groupname"/>
+          </List>
+          <View>
+            <Column fieldName="groupname"/>
+          </View>
+          <Edit>
+            <Column fieldName="groupname"/>
+          </Edit>
+          <Insert>
+            <Column fieldName="groupname"/>
+          </Insert>
+          <QuickFilter>
+            <Column fieldName="groupname"/>
+          </QuickFilter>
+          <FilterBuilder>
+            <Column fieldName="groupname"/>
+          </FilterBuilder>
+          <Print>
+            <Column fieldName="groupname"/>
+          </Print>
+          <Export>
+            <Column fieldName="groupname"/>
+          </Export>
+          <Compare>
+            <Column fieldName="groupname"/>
+          </Compare>
+          <MultiEdit>
+            <Column fieldName="groupname" visible="false"/>
+          </MultiEdit>
+        </Columns>
+        <Details>
+          <Detail caption="Hyperlinks">
+            <Page type="table" tableName="hyperlinks" numberByDataSource="0" fileName="" caption="Hyperlinks" shortCaption="Hyperlinks" addSeparator="false" horizontalFilterCondition="" recordsPerPage="20" NavigatorPosition="3" insertAbilityMode="1" deleteAbilityMode="3" deleteSelectedAbilityMode="3" contentEncoding="UTF-8" exportAllRecordsAvailable="31" exportSelectedRecordsAvailable="31" exportSingleRecordFromGridAvailable="0" exportRecordFromViewFormAvailable="31" printAvailable="13" useActionImages="true" showKeyColumnsImagesInGridHeader="false">
+              <BeforeGridText/>
+              <DetailedDescription/>
+              <ColumnPresentations>
+                <ColumnPresentation fieldName="ID" caption="ID" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1573119">
+                  <ViewProperties type="text">
+                    <Format type="number" thousandSeparator=","/>
+                  </ViewProperties>
+                  <EditProperties type="textBox" maxLength="0"/>
+                </ColumnPresentation>
+                <ColumnPresentation fieldName="webgroup" caption="Webgroup" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+                  <ViewProperties type="text" maxLength="75"/>
+                  <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+                </ColumnPresentation>
+                <ColumnPresentation fieldName="webcategory" caption="Webcategory" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+                  <ViewProperties type="text" maxLength="75"/>
+                  <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+                </ColumnPresentation>
+                <ColumnPresentation fieldName="webdescription" caption="Webdescription" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+                  <ViewProperties type="text" maxLength="75"/>
+                  <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+                </ColumnPresentation>
+                <ColumnPresentation fieldName="website" caption="Website" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+                  <ViewProperties type="text" maxLength="75"/>
+                  <Hyperlink template="%website%" target=""/>
+                  <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+                </ColumnPresentation>
+              </ColumnPresentations>
+              <Columns>
+                <List>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </List>
+                <View>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </View>
+                <Edit>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </Edit>
+                <Insert>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </Insert>
+                <QuickFilter>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </QuickFilter>
+                <FilterBuilder>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </FilterBuilder>
+                <Print>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </Print>
+                <Export>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </Export>
+                <Compare>
+                  <Column fieldName="ID"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </Compare>
+                <MultiEdit>
+                  <Column fieldName="ID" visible="false"/>
+                  <Column fieldName="webgroup"/>
+                  <Column fieldName="webcategory"/>
+                  <Column fieldName="webdescription"/>
+                  <Column fieldName="website"/>
+                </MultiEdit>
+              </Columns>
+              <Details/>
+            </Page>
+            <MasterForeignKeyColumnMap>
+              <FieldMap masterColumnName="groupname" foreginColumnName="webgroup"/>
+            </MasterForeignKeyColumnMap>
+          </Detail>
+        </Details>
+      </Page>
+      <Page type="table" tableName="chats" numberByDataSource="0" fileName="chats" caption="Chats" shortCaption="Chats" addSeparator="false" horizontalFilterCondition="" recordsPerPage="20" NavigatorPosition="3" insertAbilityMode="1" deleteAbilityMode="3" deleteSelectedAbilityMode="3" contentEncoding="UTF-8" exportAllRecordsAvailable="31" exportSelectedRecordsAvailable="31" exportSingleRecordFromGridAvailable="0" exportRecordFromViewFormAvailable="31" printAvailable="13" useActionImages="true" showKeyColumnsImagesInGridHeader="false">
+        <BeforeGridText/>
+        <DetailedDescription/>
+        <ColumnPresentations>
+          <ColumnPresentation fieldName="ID" caption="ID" showColumnFilter="false" selectedFilterOperators="1573119">
+            <ViewProperties type="text">
+              <Format type="number" thousandSeparator=","/>
+            </ViewProperties>
+            <EditProperties type="textBox" maxLength="0"/>
+          </ColumnPresentation>
+          <ColumnPresentation fieldName="chat" caption="Chat" showColumnFilter="false" canSetNull="true" selectedFilterOperators="1589247">
+            <ViewProperties type="text" maxLength="75"/>
+            <EditProperties type="textArea" columnCount="50" rowCount="8" placeholder=""/>
+          </ColumnPresentation>
+        </ColumnPresentations>
+        <Columns>
+          <List>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </List>
+          <View>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </View>
+          <Edit>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </Edit>
+          <Insert>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </Insert>
+          <QuickFilter>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </QuickFilter>
+          <FilterBuilder>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </FilterBuilder>
+          <Print>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </Print>
+          <Export>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </Export>
+          <Compare>
+            <Column fieldName="ID"/>
+            <Column fieldName="chat"/>
+          </Compare>
+          <MultiEdit>
+            <Column fieldName="ID" visible="false"/>
+            <Column fieldName="chat"/>
+          </MultiEdit>
+        </Columns>
+        <Details/>
+        <EventHandlers>
+          <OnEditFormLoaded enabled="true">
+echo &quot;Edit Form Loaded&quot;          </OnEditFormLoaded>
+        </EventHandlers>
+      </Page>
+    </Pages>
+    <UserAuthorization/>
+    <UserGrants/>
+    <Header/>
+    <Footer/>
+    <PHPOptions/>
+    <Groups>
+      <Group caption="No group"/>
+    </Groups>
+    <outgoingMailSettings mailer="0" fromEmail="" fromName=""/>
+  </Presentation>
+  <UserCSS/>
+  <PdfUserStyles/>
+  <PrintUserStyles/>
+  <UserJS/>
+  <ExcludedPaths/>
+  <DefaultPageProperties recordsPerPage="20" NavigatorPosition="3" insertAbilityMode="1" deleteAbilityMode="3" deleteSelectedAbilityMode="3" contentEncoding="UTF-8" exportAllRecordsAvailable="31" exportSelectedRecordsAvailable="31" exportSingleRecordFromGridAvailable="0" exportRecordFromViewFormAvailable="31" printAvailable="13" useActionImages="true" showKeyColumnsImagesInGridHeader="false"/>
+  <DefaultDataFormats numberAfterDecimal="4" DecimalSeparator="." ThousandSeparator="," DateTimeFormat="Y-m-d H:i:s" DateFormat="Y-m-d" firstDayOfWeek="0"/>
+</Project>
