@@ -16,9 +16,11 @@ use GuzzleHttp\Client;
             .large-font {
                 font-size: 34px;
             }
+
             .header-font {
                 font-size: 24px;
             }
+
             /* Add CSS here */
             #scrollToTop {
                 position: fixed;
@@ -50,22 +52,18 @@ use GuzzleHttp\Client;
         displayModelChoices();
         ?>
         <?php
-           $display_text = getDisplayText();
-         ?>
-        <textarea name="input_text" rows="3" cols="40"><?php echo $display_text; ?></textarea>
+        $display_text = getDisplayText();
+        ?>
+        <textarea name="input_text" style="width: 100%;"><?php echo $display_text; ?></textarea>
         <br>
         <input type="submit" name="submit_button" value="ASK">
-        <input type="submit" name="clean_button"  value="NEXT">
+        <input type="submit" name="clean_button" value="NEXT">
         <input type="submit" name="clear_history_button" value="NEW CHAT">
     </form>
     </p>
 
-    <span>Copy to clipboard</span>
     <br>
-    <button  onclick="copyOutputToClipboard(event)">Complete chat
-    </button>
-    <button onclick="copyAnswerToClipboard(event)">Last answer
-    </button>
+
     <?php
 
     // Process form submission

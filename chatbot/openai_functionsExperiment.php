@@ -116,7 +116,7 @@ function make_request(Client $client, array $requestBody)
  */
 function display_interaction($input_text, $completion, array $content_history)
 {
-    $average_chars_per_row = 20;
+    $average_chars_per_row = 50;
 
     echo generate_textarea('Question:', $input_text, $average_chars_per_row, 'lightyellow');
 
@@ -159,7 +159,7 @@ function generate_textarea($label, $content, $average_chars_per_row, $background
 
     return "<p>
                 <label>$label</label><br>
-                <textarea rows='{$rows}' cols='40' $style>$content</textarea>
+                <textarea  style='width: 100%;' cols=width rows='{$rows}'  $style>$content</textarea>
             </p>";
 }
 function get_textarea_style()
