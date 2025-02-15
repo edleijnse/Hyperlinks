@@ -159,7 +159,7 @@ function generate_textarea($label, $content, $average_chars_per_row, $background
 
     return "<p>
                 <label>$label</label><br>
-                <textarea  style='width: 100%;' cols=width rows='{$rows}'  $style>$content</textarea>
+                <textarea  class='medium-font' style='width: 90%;' cols=width rows='{$rows}'  $style>$content</textarea>
             </p>";
 }
 function get_textarea_style()

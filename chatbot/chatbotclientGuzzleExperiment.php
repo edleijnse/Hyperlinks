@@ -21,6 +21,10 @@ use GuzzleHttp\Client;
                 font-size: 24px;
             }
 
+            .medium-font {
+                font-size: 24px;
+            }
+
             /* Add CSS here */
             #scrollToTop {
                 position: fixed;
@@ -46,7 +50,7 @@ use GuzzleHttp\Client;
     <?php echo "<ul>"; ?>
 
     <form method="post">
-        <label for="model_choice">I want to chat:<br></label>
+        <label class='medium-font' for="model_choice">I want to chat:<br></label>
 
         <?php
         displayModelChoices();
@@ -54,13 +58,21 @@ use GuzzleHttp\Client;
         <?php
         $display_text = getDisplayText();
         ?>
-        <textarea name="input_text" style="width: 100%;"><?php echo $display_text; ?></textarea>
+        <textarea name="input_text" class='medium-font' style="width: 90%;"><?php echo $display_text; ?></textarea>
         <br>
-        <input type="submit" name="submit_button" value="ASK">
-        <input type="submit" name="clean_button" value="NEXT">
-        <input type="submit" name="clear_history_button" value="NEW CHAT">
+        <input type="submit" class='medium-font' name="submit_button" value="ASK">
+        <input type="submit" class='medium-font' name="clean_button" value="NEXT">
+        <input type="submit" class='medium-font' name="clear_history_button" value="NEW CHAT">
     </form>
     </p>
+    <span style="font-size: 24px;">Copy to clipboard</span>
+    <br>
+    <button onclick="copyOutputToClipboard(event)"
+            style="font-size:24px;">Complete chat
+    </button>
+    <button onclick="copyAnswerToClipboard(event)"
+            style="font-size:24px;">Last answer
+    </button>
 
     <br>
 
@@ -150,8 +162,8 @@ function displayModelChoices(): void
 {
     $selected_model = isset($_SESSION['model_choice']) ? $_SESSION['model_choice'] : 'gpt-4o-mini';
     echo "<br>";
-    echo generateRadioOption('gpt-4o-mini', 'simple and fast using model gpt-4o-mini', $selected_model);
-    echo generateRadioOption('gpt-4o', 'more accurate but slower using model gpt-4o', $selected_model);
+    echo generateRadioOption('gpt-4o-mini', 'fast', $selected_model);
+    echo generateRadioOption('gpt-4o', 'more precise', $selected_model);
 }
 
 function generateRadioOption($id, $label, $selected_model): string
@@ -159,7 +171,7 @@ function generateRadioOption($id, $label, $selected_model): string
     $checked = $selected_model === $id ? 'checked' : '';
     return <<<HTML
     <input type="radio" id="$id" name="model_choice_chosen" value="$id" $checked>
-    <label for="$id">$label</label><br>
+    <label class='medium-font' for="$id">$label</label><br>
 HTML;
 }
 
