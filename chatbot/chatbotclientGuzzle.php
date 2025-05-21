@@ -152,8 +152,12 @@ function handleFormSubmission(): void
 
 function displayModelChoices(): void
 {
-    $selected_model = isset($_SESSION['model_choice']) ? $_SESSION['model_choice'] : 'gpt-4o-mini';
-
+    // Check POST first, then fallback to SESSION, then default value
+    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-4o-mini';
+    // Store the selected model in session
+    $_SESSION['model_choice'] = $selected_model;
+    
+    echo "<br>" . $selected_model . "<br>";
     echo generateRadioOption('gpt-4o-mini', 'simple and fast using model gpt-4o-mini', $selected_model);
     echo generateRadioOption('gpt-4o', 'more accurate but slower using model gpt-4o', $selected_model);
 }
