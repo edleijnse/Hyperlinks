@@ -160,10 +160,10 @@ function handleFormSubmission(): void
 
 function displayModelChoices(): void
 {
-    $selected_model = isset($_SESSION['model_choice']) ? $_SESSION['model_choice'] : 'gpt-4.1-mini';
+    $selected_model = isset($_SESSION['model_choice']) ? $_SESSION['model_choice'] : 'gpt-5-mini';
     echo "<br>";
-    echo generateRadioOption('gpt-4.1-mini', 'fast', $selected_model);
-    echo generateRadioOption('gpt-4.1', 'more precise', $selected_model);
+    echo generateRadioOption('gpt-5-mini', 'fast', $selected_model);
+    echo generateRadioOption('gpt-5', 'more precise', $selected_model);
 }
 
 function generateRadioOption($id, $label, $selected_model): string
@@ -194,7 +194,7 @@ function processUserInput($input_text): void
 {
     $openai_data = init_openai();
     $client = $openai_data[1];
-    $selected_model = $_SESSION['model_choice'] ?: 'gpt-4.1-mini';
+    $selected_model = $_SESSION['model_choice'] ?: 'gpt-5-mini';
     $content_history = &$_SESSION['content_history'];
 
     $myquestion = "QUESTION: " . $input_text;

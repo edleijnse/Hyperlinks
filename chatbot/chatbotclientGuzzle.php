@@ -153,13 +153,13 @@ function handleFormSubmission(): void
 function displayModelChoices(): void
 {
     // Check POST first, then fallback to SESSION, then default value
-    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-4.1-mini';
+    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-5-mini';
     // Store the selected model in session
     $_SESSION['model_choice'] = $selected_model;
     
     // echo "<br>" . $selected_model . "<br>";
-    echo generateRadioOption('gpt-4.1-mini', 'simple and fast using model gpt-4.1-mini', $selected_model);
-    echo generateRadioOption('gpt-4.1', 'more accurate but slower using model gpt-4.1', $selected_model);
+    echo generateRadioOption('gpt-5-mini', 'simple and fast using model gpt-5-mini', $selected_model);
+    echo generateRadioOption('gpt-5', 'more accurate but slower using model gpt-5', $selected_model);
 }
 
 function generateRadioOption($id, $label, $selected_model): string
@@ -190,7 +190,7 @@ function processUserInput($input_text): void
 {
     $openai_data = init_openai();
     $client = $openai_data[1];
-    $selected_model = $_SESSION['model_choice'] ?: 'gpt-4.1-mini';
+    $selected_model = $_SESSION['model_choice'] ?: 'gpt-5-mini';
     $content_history = &$_SESSION['content_history'];
 
     $myquestion = "QUESTION: " . $input_text;
