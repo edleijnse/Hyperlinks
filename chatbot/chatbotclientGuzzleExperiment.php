@@ -199,7 +199,7 @@ function processUserInput($input_text): void
 
     $myquestion = "QUESTION: " . $input_text;
     // in openai_functions all output is generated
-    $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $content_history, $client);
+    $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $client, $content_history);
     $content_history[] = $myquestion;
     $content_history[] = $mycompletion;
 

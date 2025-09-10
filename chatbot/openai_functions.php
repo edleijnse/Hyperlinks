@@ -56,7 +56,7 @@ function create_client($api_key)
  * @param Client $client
  * @return string|null
  */
-function get_openai_response_for_model($input_text, $model, array $content_history = [], Client $client)
+function get_openai_response_for_model($input_text, $model, Client $client, array $content_history = [])
 {
     $messages = prepare_messages($input_text, $content_history);
     $requestBody = ['model' => $model, 'messages' => $messages];
