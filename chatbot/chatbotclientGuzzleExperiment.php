@@ -158,8 +158,8 @@ function displayModelChoices(): void
     $_SESSION['model_choice'] = $selected_model;
     
     // echo "<br>" . $selected_model . "<br>";
-    echo generateRadioOption('gpt-5-mini', 'simple and fast using model gpt-5-mini', $selected_model);
-    echo generateRadioOption('gpt-5', 'more accurate but slower using model gpt-5', $selected_model);
+    echo generateRadioOption('gpt-5-mini', 'simple and fast', $selected_model);
+    echo generateRadioOption('gpt-5', 'more accurate but slower', $selected_model);
 }
 
 function generateRadioOption($id, $label, $selected_model): string
