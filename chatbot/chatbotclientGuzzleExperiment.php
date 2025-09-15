@@ -1,7 +1,7 @@
 <?php
-// session_start();
+session_start();
 require 'vendor/autoload.php';
-require 'openai_functionsExperiment.php';
+require 'openai_functions.php';
 
 use GuzzleHttp\Client;
 
@@ -16,15 +16,9 @@ use GuzzleHttp\Client;
             .large-font {
                 font-size: 34px;
             }
-
             .header-font {
                 font-size: 24px;
             }
-
-            .medium-font {
-                font-size: 24px;
-            }
-
             /* Add CSS here */
             #scrollToTop {
                 position: fixed;
@@ -50,32 +44,30 @@ use GuzzleHttp\Client;
     <?php echo "<ul>"; ?>
 
     <form method="post">
-        <label class='medium-font' for="model_choice">I want to chat:<br></label>
+        <label class="ask large-font" for="model_choice">I want to chat:<br></label>
 
         <?php
         displayModelChoices();
         ?>
         <?php
-        $display_text = getDisplayText();
-        ?>
-        <textarea name="input_text" class='medium-font' style="width: 90%;"><?php echo $display_text; ?></textarea>
+           $display_text = getDisplayText();
+         ?>
+        <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
         <br>
-        <input type="submit" class='medium-font' name="submit_button" value="ASK">
-        <input type="submit" class='medium-font' name="clean_button" value="NEXT">
-        <input type="submit" class='medium-font' name="clear_history_button" value="NEW CHAT">
+        <input type="submit" name="submit_button" class="ask green-background" value="ASK">
+        <input type="submit" name="clean_button" class="ask red-background" value="NEXT">
+        <input type="submit" name="clear_history_button" class="ask red-background" value="NEW CHAT">
     </form>
     </p>
-    <span style="font-size: 24px;">Copy to clipboard</span>
-    <br>
-    <button onclick="copyOutputToClipboard(event)"
-            style="font-size:24px;">Complete chat
-    </button>
-    <button onclick="copyAnswerToClipboard(event)"
-            style="font-size:24px;">Last answer
-    </button>
 
+    <span style="font-size: 40px;">Copy to clipboard</span>
     <br>
-
+    <button class="copy red-background" onclick="copyOutputToClipboard(event)"
+            style="font-size:40px; padding:10px;">Complete chat
+    </button>
+    <button class="copy red-background" onclick="copyAnswerToClipboard(event)"
+            style="font-size:40px; padding:10px;">Last answer
+    </button>
     <?php
 
     // Process form submission
@@ -123,7 +115,7 @@ use GuzzleHttp\Client;
         }
     </script>
     <!-- Add the button -->
-    <button id="scrollToTop" onclick="scrollToTop()">Top</button>
+    <button id="scrollToTop" onclick="scrollToTop()" style="font-size: 40px;">Top</button>
 
     <!-- Add JS here -->
     <script>
@@ -160,18 +152,22 @@ function handleFormSubmission(): void
 
 function displayModelChoices(): void
 {
-    $selected_model = isset($_SESSION['model_choice']) ? $_SESSION['model_choice'] : 'gpt-5-mini';
-    echo "<br>";
-    echo generateRadioOption('gpt-5-mini', 'fast', $selected_model);
-    echo generateRadioOption('gpt-5', 'more precise', $selected_model);
+    // Check POST first, then fallback to SESSION, then default value
+    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-5-mini';
+    // Store the selected model in session
+    $_SESSION['model_choice'] = $selected_model;
+    
+    // echo "<br>" . $selected_model . "<br>";
+    echo generateRadioOption('gpt-5-mini', 'simple and fast using model gpt-5-mini', $selected_model);
+    echo generateRadioOption('gpt-5', 'more accurate but slower using model gpt-5', $selected_model);
 }
 
 function generateRadioOption($id, $label, $selected_model): string
 {
     $checked = $selected_model === $id ? 'checked' : '';
     return <<<HTML
-    <input type="radio" id="$id" name="model_choice_chosen" value="$id" $checked>
-    <label class='medium-font' for="$id">$label</label><br>
+    <input type="radio" id="$id" name="model_choice_chosen" value="$id" $checked class="large-font">
+    <label for="$id" class="large-font">$label</label><br>
 HTML;
 }
 

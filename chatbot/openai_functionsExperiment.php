@@ -56,7 +56,7 @@ function create_client($api_key)
  * @param Client $client
  * @return string|null
  */
-function get_openai_response_for_model($input_text, $model, array $content_history = [], Client $client)
+function get_openai_response_for_model($input_text, $model, Client $client, array $content_history = [])
 {
     $messages = prepare_messages($input_text, $content_history);
     $requestBody = ['model' => $model, 'messages' => $messages];
@@ -116,7 +116,7 @@ function make_request(Client $client, array $requestBody)
  */
 function display_interaction($input_text, $completion, array $content_history)
 {
-    $average_chars_per_row = 50;
+    $average_chars_per_row = 20;
 
     echo generate_textarea('Question:', $input_text, $average_chars_per_row, 'lightyellow');
 
@@ -125,7 +125,7 @@ function display_interaction($input_text, $completion, array $content_history)
     }
 
     if ($content_history) {
-        echo "<span>Previous questions</span><br>";
+        echo "<span style='font-size: 40px;'>Previous questions</span><br>";
 
         foreach ($content_history as $history_item) {
             echo generate_textarea('', htmlentities($history_item), $average_chars_per_row, 'lightblue' );
@@ -158,8 +158,8 @@ function generate_textarea($label, $content, $average_chars_per_row, $background
     $style = $background ? "style='background-color: $background;'" : "";
 
     return "<p>
-                <label>$label</label><br>
-                <textarea  class='medium-font' style='width: 90%;' cols=width rows='{$rows}'  $style>$content</textarea>
+                <label class='large-font'>$label</label><br>
+                <textarea class='output' rows='{$rows}' cols='40' $style>$content</textarea>
             </p>";
 }
 function get_textarea_style()
