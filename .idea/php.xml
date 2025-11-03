@@ -37,7 +37,7 @@
   </component>
   <component name="PhpProjectServersManager">
     <servers>
-      <server host="http://RaspberryPi" id="51136616-c99a-432a-ad17-2355bbaf3fab" name="RaspberryPi" use_path_mappings="true">
+      <server host="http://RaspberryPi" id="51136616-c99a-432a-ad17-2355bbaf3fab" name="RaspberryPi" port="8080" use_path_mappings="true">
         <path_mappings>
           <mapping local-root="$PROJECT_DIR$/chatbot" remote-root="/var/www/html/chatbot" />
         </path_mappings>

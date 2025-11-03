@@ -54,11 +54,12 @@ function create_client($api_key)
  * @param string $model
  * @param array $content_history
  * @param Client $client
+ * @param string|null $image_data_url Optional data URL for an image to include with the user's message
  * @return string|null
  */
-function get_openai_response_for_model($input_text, $model, Client $client, array $content_history = [])
+function get_openai_response_for_model($input_text, $model, Client $client, array $content_history = [], $image_data_url = null)
 {
-    $messages = prepare_messages($input_text, $content_history);
+    $messages = prepare_messages($input_text, $content_history, $image_data_url);
     $requestBody = ['model' => $model, 'messages' => $messages];
     $response = make_request($client, $requestBody);
     $completion = $response['choices'][0]['message']['content'] ?? null;
@@ -75,13 +76,32 @@ function get_openai_response_for_model($input_text, $model, Client $client, arra
  * @param array $content_history
  * @return array
  */
-function prepare_messages($input_text, array $content_history)
+/**
+ * Prepare message history by appending the current input (and optional image).
+ *
+ * @param string $input_text
+ * @param array $content_history
+ * @param string|null $image_data_url data URL like "data:image/png;base64,..."
+ * @return array
+ */
+function prepare_messages($input_text, array $content_history, $image_data_url = null)
 {
+    // Map previous plain text history as simple user messages (kept for backwards compatibility)
     $messages = array_map(function ($content) {
         return ['role' => 'user', 'content' => $content];
     }, $content_history);
 
-    $messages[] = ['role' => 'user', 'content' => $input_text];
+    // Build the current user message, optionally as a multimodal (text + image) content array
+    if ($image_data_url) {
+        $current_content = [
+            ['type' => 'text', 'text' => $input_text],
+            ['type' => 'image_url', 'image_url' => ['url' => $image_data_url]],
+        ];
+    } else {
+        $current_content = $input_text;
+    }
+
+    $messages[] = ['role' => 'user', 'content' => $current_content];
 
     return $messages;
 }

@@ -20,14 +20,6 @@ use GuzzleHttp\Client;
                 font-size: 24px;
             }
             /* Add CSS here */
-            
-            /* Ensure the file input (Choose File / No file chosen) matches the large label size */
-            #image_file,
-            input[type="file"] {
-                font-size: 34px;
-                line-height: 1.2em;
-            }
-            
             #scrollToTop {
                 position: fixed;
                 bottom: 20px;
@@ -51,7 +43,7 @@ use GuzzleHttp\Client;
     <body>
     <?php echo "<ul>"; ?>
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post">
         <label class="ask large-font" for="model_choice">I want to chat:<br></label>
 
         <?php
@@ -62,10 +54,6 @@ use GuzzleHttp\Client;
          ?>
         <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
         <br>
-        <label class="ask large-font" for="image_file" style="margin-left: 2ch; ">Attach image (optional):</label>
-        <br>
-        <input type="file" name="image_file" id="image_file" accept="image/*" style="margin-left: 2ch;">
-        <br><br><br>
         <input type="submit" name="submit_button" class="ask green-background" value="ASK">
         <input type="submit" name="clean_button" class="ask red-background" value="NEXT">
         <input type="submit" name="clear_history_button" class="ask red-background" value="NEW CHAT">
@@ -149,8 +137,8 @@ function handleFormSubmission(): void
         $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
     }
 
-    if (isset($_POST['submit_button']) && (!empty($_POST['input_text']) || (isset($_FILES['image_file']) && isset($_FILES['image_file']['error']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK))) {
-        processUserInput($_POST['input_text'] ?? '');
+    if (isset($_POST['submit_button']) && !empty($_POST['input_text'])) {
+        processUserInput($_POST['input_text']);
     }
 
     if (isset($_POST['clean_button'])) {
@@ -205,32 +193,9 @@ function processUserInput($input_text): void
     $selected_model = $_SESSION['model_choice'] ?: 'gpt-5-mini';
     $content_history = &$_SESSION['content_history'];
 
-    // Handle optional image upload
-    $image_data_url = null;
-    if (isset($_FILES['image_file']) && isset($_FILES['image_file']['error']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) {
-        $tmpName = $_FILES['image_file']['tmp_name'];
-        $mime = $_FILES['image_file']['type'] ?: null;
-        if (!$mime && function_exists('finfo_open')) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            if ($finfo) {
-                $mime = finfo_file($finfo, $tmpName);
-                finfo_close($finfo);
-            }
-        }
-        // Accept only common image MIME types
-        $allowed = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
-        if ($mime && in_array($mime, $allowed, true)) {
-            $bytes = @file_get_contents($tmpName);
-            if ($bytes !== false) {
-                $base64 = base64_encode($bytes);
-                $image_data_url = "data:$mime;base64,$base64";
-            }
-        }
-    }
-
-    $myquestion = "QUESTION: " . $input_text . ($image_data_url ? " [image attached]" : "");
+    $myquestion = "QUESTION: " . $input_text;
     // in openai_functions all output is generated
-    $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $client, $content_history, $image_data_url);
+    $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $client, $content_history);
     $content_history[] = $myquestion;
     $content_history[] = $mycompletion;
 
