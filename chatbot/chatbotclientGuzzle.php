@@ -45,6 +45,10 @@ use GuzzleHttp\Client;
             #scrollToTop:hover {
                 background-color: #444;
             }
+            /* Hourglass cursor when waiting */
+            body.waiting, body.waiting * {
+                cursor: wait !important;
+            }
         </style>
     </head>
 
@@ -136,6 +140,29 @@ use GuzzleHttp\Client;
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
+
+        // Change mouse pointer to hourglass when ASK is pressed or submitted
+        window.addEventListener('DOMContentLoaded', function () {
+            var askBtn = document.querySelector('input[name="submit_button"]');
+            var form = document.querySelector('form');
+
+            // Click on ASK button
+            if (askBtn) {
+                askBtn.addEventListener('click', function () {
+                    document.body.classList.add('waiting');
+                });
+            }
+
+            // Keyboard submit (Enter) or any submit; only apply if ASK was the submitter
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    var submitter = e.submitter; // modern browsers
+                    if (submitter && submitter.name === 'submit_button') {
+                        document.body.classList.add('waiting');
+                    }
+                });
+            }
+        });
     </script>
     </body>
 
