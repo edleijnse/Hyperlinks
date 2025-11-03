@@ -22,11 +22,22 @@
       <path value="$PROJECT_DIR$/chatbot/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/chatbot/vendor/chillerlan/php-qrcode" />
       <path value="$PROJECT_DIR$/chatbot/vendor/chillerlan/php-settings-container" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/composer" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/chillerlan/php-qrcode" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/chillerlan/php-settings-container" />
+      <path value="$PROJECT_DIR$/dockerlocalwebserver/vendor/guzzlehttp/promises" />
     </include_path>
   </component>
   <component name="PhpProjectServersManager">
     <servers>
-      <server host="http://172.19.0.2/" id="51136616-c99a-432a-ad17-2355bbaf3fab" name="172.19.0.2" use_path_mappings="true">
+      <server host="http://RaspberryPi" id="51136616-c99a-432a-ad17-2355bbaf3fab" name="RaspberryPi" use_path_mappings="true">
         <path_mappings>
           <mapping local-root="$PROJECT_DIR$/chatbot" remote-root="/var/www/html/chatbot" />
         </path_mappings>
