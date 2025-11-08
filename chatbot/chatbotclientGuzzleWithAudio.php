@@ -123,9 +123,11 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
     <button class="copy red-background" onclick="copyAnswerToClipboard(event)"
             style="font-size:40px; padding:10px;">Last answer
     </button>
-    
+    <br>
     <!-- Text-to-Speech controls -->
-    <button id="playAudioBtn" class="copy green-background" onclick="playAnswerAudio(event)"
+    <span style="font-size: 40px;">Audio</span>
+    <br>
+    <button id="playAudioBtn" class="copy red-background" onclick="playAnswerAudio(event)"
             style="font-size:40px; padding:10px;">Play Audio</button>
     <button id="stopAudioBtn" class="copy red-background" onclick="stopAnswerAudio(event)" disabled
             style="font-size:40px; padding:10px;">Stop</button>
