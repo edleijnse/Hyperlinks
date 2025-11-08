@@ -100,6 +100,72 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
         <label class="ask large-font" for="image_file" style="margin-left: 2ch; ">Attach image (optional):</label>
         <br>
         <input type="file" name="image_file" id="image_file" accept="image/*" style="margin-left: 2ch;">
+        <div id="imagePreviewWrapper" style="margin-left: 2ch; margin-top: 10px; display: none;">
+            <img id="imagePreview" alt="Selected image preview" style="max-width: 90vw; max-height: 50vh; border: 1px solid #ccc; border-radius: 6px;">
+        </div>
+        <script>
+            (function(){
+                var input = document.getElementById('image_file');
+                var wrapper = document.getElementById('imagePreviewWrapper');
+                var img = document.getElementById('imagePreview');
+                var currentObjectUrl = null;
+                var STORAGE_KEY = 'chatbot_image_preview_dataurl';
+
+                function clearPreview(){
+                    if (currentObjectUrl) {
+                        try { URL.revokeObjectURL(currentObjectUrl); } catch(e) {}
+                        currentObjectUrl = null;
+                    }
+                    img.removeAttribute('src');
+                    wrapper.style.display = 'none';
+                }
+                function showPreviewFromDataUrl(dataUrl){
+                    if (!dataUrl) { clearPreview(); return; }
+                    img.src = dataUrl;
+                    wrapper.style.display = 'block';
+                }
+                function showPreview(file){
+                    if (!file || !file.type || !/^image\//i.test(file.type)) {
+                        clearPreview();
+                        try { sessionStorage.removeItem(STORAGE_KEY); } catch(e) {}
+                        return;
+                    }
+                    // Immediate preview using a blob URL
+                    clearPreview();
+                    currentObjectUrl = URL.createObjectURL(file);
+                    img.onload = function(){
+                        try { URL.revokeObjectURL(currentObjectUrl); } catch(e) {}
+                        currentObjectUrl = null;
+                    };
+                    img.src = currentObjectUrl;
+                    wrapper.style.display = 'block';
+
+                    // Persist across reloads using a Data URL
+                    try {
+                        var reader = new FileReader();
+                        reader.onload = function(){
+                            try { sessionStorage.setItem(STORAGE_KEY, reader.result); } catch(e) { /* storage may be full or blocked */ }
+                        };
+                        reader.readAsDataURL(file);
+                    } catch(e) { /* FileReader not available */ }
+                }
+
+                // Restore persisted preview on load (after a submit reload)
+                try {
+                    var saved = sessionStorage.getItem(STORAGE_KEY);
+                    if (saved) {
+                        showPreviewFromDataUrl(saved);
+                    }
+                } catch(e) {}
+
+                if (input) {
+                    input.addEventListener('change', function(){
+                        var file = this.files && this.files[0];
+                        if (file) showPreview(file); else { clearPreview(); try { sessionStorage.removeItem(STORAGE_KEY); } catch(e) {} }
+                    });
+                }
+            })();
+        </script>
         <br><br><br>
         <input type="submit" name="submit_button" class="ask green-background" value="ASK">
         <input type="submit" name="clean_button" class="ask red-background" value="NEXT">
@@ -346,7 +412,12 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
                 nextBtn.addEventListener('click', onClickFactory(function(){ nextClicked = true; askClicked = newChatClicked = false; }, nextBtn, 'Loading next…', 'Next…'));
             }
             if (newChatBtn) {
-                newChatBtn.addEventListener('click', onClickFactory(function(){ newChatClicked = true; askClicked = nextClicked = false; }, newChatBtn, 'Starting new chat…', 'Starting…'));
+                newChatBtn.addEventListener('click', function(){
+                    newChatClicked = true; askClicked = nextClicked = false;
+                    // Clear persisted image preview when starting a new chat
+                    try { sessionStorage.removeItem('chatbot_image_preview_dataurl'); } catch(e) {}
+                    onClickFactory(function(){}, newChatBtn, 'Starting new chat…', 'Starting…')();
+                });
             }
 
             if (form) {
