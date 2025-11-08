@@ -123,14 +123,6 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
     <button class="copy red-background" onclick="copyAnswerToClipboard(event)"
             style="font-size:40px; padding:10px;">Last answer
     </button>
-    <br>
-    <!-- Text-to-Speech controls -->
-    <span style="font-size: 40px;">Audio</span>
-    <br>
-    <button id="playAudioBtn" class="copy red-background" onclick="playAnswerAudio(event)"
-            style="font-size:40px; padding:10px;">Play Audio</button>
-    <button id="stopAudioBtn" class="copy red-background" onclick="stopAnswerAudio(event)" disabled
-            style="font-size:40px; padding:10px;">Stop</button>
     <?php
 
     // Ensure content history is initialized before any processing
@@ -177,86 +169,6 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
                 alert("Copied to clipboard: " + endText);
             }
         }
-
-        // ===== Text-to-Speech (TTS) for last ANSWER =====
-        (function(){
-            var currentUtterance = null;
-            var isSpeaking = false;
-
-            function getLastAnswerText() {
-                var outputText = document.getElementById('outputhistory').value || '';
-                var lastIndex = outputText.lastIndexOf('ANSWER: ');
-                if (lastIndex === -1) return '';
-                return outputText.substring(lastIndex + 'ANSWER: '.length).trim();
-            }
-
-            function setPlaying(playing) {
-                isSpeaking = !!playing;
-                var playBtn = document.getElementById('playAudioBtn');
-                var stopBtn = document.getElementById('stopAudioBtn');
-                if (playBtn) playBtn.disabled = playing; // disable Play while speaking
-                if (stopBtn) stopBtn.disabled = !playing; // enable Stop while speaking
-            }
-
-            window.playAnswerAudio = function(event){
-                if (event && event.preventDefault) event.preventDefault();
-                if (!('speechSynthesis' in window)) {
-                    alert('Text-to-Speech is not supported in this browser.');
-                    return;
-                }
-                // If already speaking, ignore or restart
-                if (window.speechSynthesis.speaking) {
-                    try { window.speechSynthesis.cancel(); } catch(e) {}
-                }
-
-                var text = getLastAnswerText();
-                if (!text) {
-                    alert('No answer to play yet.');
-                    return;
-                }
-                currentUtterance = new SpeechSynthesisUtterance(text);
-                // Optional voice selection: prefer an English voice if available
-                try {
-                    var voices = window.speechSynthesis.getVoices();
-                    if (voices && voices.length) {
-                        var preferred = voices.find(v => /en(-|_|\b)/i.test(v.lang)) || voices[0];
-                        currentUtterance.voice = preferred;
-                    }
-                } catch (e) {}
-                currentUtterance.rate = 1.0; // 0.1 — 10
-                currentUtterance.pitch = 1.0; // 0 — 2
-                currentUtterance.onstart = function(){ setPlaying(true); };
-                currentUtterance.onend = function(){ setPlaying(false); currentUtterance = null; };
-                currentUtterance.onerror = function(){ setPlaying(false); currentUtterance = null; };
-
-                try {
-                    window.speechSynthesis.speak(currentUtterance);
-                } catch (e) {
-                    console.error('TTS speak failed:', e);
-                    alert('Could not start speech.');
-                    setPlaying(false);
-                }
-            };
-
-            window.stopAnswerAudio = function(event){
-                if (event && event.preventDefault) event.preventDefault();
-                try {
-                    if ('speechSynthesis' in window) {
-                        window.speechSynthesis.cancel();
-                    }
-                } catch (e) {}
-                setPlaying(false);
-                currentUtterance = null;
-            };
-
-            // In case page restores with speech ongoing, ensure button states
-            document.addEventListener('visibilitychange', function(){
-                if (!document.hidden) {
-                    setPlaying(window.speechSynthesis && window.speechSynthesis.speaking);
-                }
-            });
-            window.addEventListener('load', function(){ setPlaying(false); });
-        })();
     </script>
     <!-- Add the button -->
     <button id="scrollToTop" onclick="scrollToTop()" style="font-size: 40px;">Top</button>
