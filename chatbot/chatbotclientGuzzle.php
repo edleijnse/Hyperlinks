@@ -9,6 +9,54 @@ use GuzzleHttp\Client;
 if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history'])) {
     $_SESSION['content_history'] = [];
 }
+
+// ---- Request size & upload error detection (before HTML output) ----
+$flash_error = null;
+
+// Helper: convert php.ini size values like "50M" to bytes
+function _to_bytes($val){
+    $val = trim((string)$val);
+    $last = strtolower(substr($val, -1));
+    $num = (int)$val;
+    switch($last){
+        case 'g': return $num * 1024 * 1024 * 1024;
+        case 'm': return $num * 1024 * 1024;
+        case 'k': return $num * 1024;
+        default: return (int)$val;
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Detect if post_max_size was exceeded: PHP leaves $_POST/$_FILES empty
+    $contentLength = isset($_SERVER['CONTENT_LENGTH']) ? (int)$_SERVER['CONTENT_LENGTH'] : 0;
+    $postMax = _to_bytes(ini_get('post_max_size'));
+    if ($contentLength > 0 && $postMax > 0 && $contentLength > $postMax && empty($_POST) && empty($_FILES)) {
+        $flash_error = sprintf('The request is too large (%0.1f MB). Maximum allowed is %0.1f MB. Please choose a smaller image or increase server limits.', $contentLength / 1048576, $postMax / 1048576);
+    }
+    // If PHP accepted the POST, still check for per-file upload errors
+    if (isset($_FILES['image_file']) && isset($_FILES['image_file']['error'])) {
+        $err = (int)$_FILES['image_file']['error'];
+        if ($err !== UPLOAD_ERR_OK && $err !== UPLOAD_ERR_NO_FILE) {
+            switch ($err) {
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    $uMax = _to_bytes(ini_get('upload_max_filesize'));
+                    $flash_error = sprintf('The selected image exceeds the upload limit of %0.1f MB. Please choose a smaller image.', $uMax / 1048576);
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $flash_error = 'The image upload was incomplete. Please try again.';
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                case UPLOAD_ERR_CANT_WRITE:
+                case UPLOAD_ERR_EXTENSION:
+                    $flash_error = 'The server could not store the uploaded file. Please try again later or contact support.';
+                    break;
+                default:
+                    $flash_error = 'An unexpected upload error occurred. Please try again.';
+            }
+        }
+    }
+}
 ?>
 
     <!DOCTYPE html>
@@ -86,6 +134,14 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
     <body>
     <?php echo "<ul>"; ?>
 
+    <?php if (!empty($flash_error)): ?>
+        <div class="upload-error" role="alert" aria-live="assertive" style="
+            margin: 1rem 2ch; padding: 12px 16px; border-radius: 6px;
+            background: #ffeaea; color: #8a1f1f; border: 1px solid #f5c2c7; font-size: 20px;">
+            <?php echo htmlspecialchars($flash_error); ?>
+        </div>
+    <?php endif; ?>
+
     <form method="post" enctype="multipart/form-data">
         <label class="ask large-font" for="model_choice">I want to chat:<br></label>
 
@@ -102,14 +158,37 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
         <input type="file" name="image_file" id="image_file" accept="image/*" style="margin-left: 2ch;">
         <div id="imagePreviewWrapper" style="margin-left: 2ch; margin-top: 10px; display: none;">
             <img id="imagePreview" alt="Selected image preview" style="max-width: 90vw; max-height: 50vh; border: 1px solid #ccc; border-radius: 6px;">
+            <div id="imagePreviewNote" style="font-size:16px; color:#555; margin-top:6px; display:none;"></div>
         </div>
         <script>
             (function(){
                 var input = document.getElementById('image_file');
                 var wrapper = document.getElementById('imagePreviewWrapper');
                 var img = document.getElementById('imagePreview');
+                var note = document.getElementById('imagePreviewNote');
                 var currentObjectUrl = null;
                 var STORAGE_KEY = 'chatbot_image_preview_dataurl';
+                var TEXT_KEY = 'chatbot_textarea_value';
+                var FILENAME_KEY = 'chatbot_image_preview_filename';
+                // Rough per-origin sessionStorage limit is ~5MB; keep preview tiny
+                var MAX_PREVIEW_DIM = 1280; // pixels max width/height for preview
+                var PREVIEW_QUALITY = 0.7;  // JPEG/WebP quality
+
+                function humanReadableSize(bytes){
+                    try {
+                        if (!isFinite(bytes) || bytes < 0) return '';
+                        var units = ['B','KB','MB','GB','TB'];
+                        var i = 0; var num = bytes;
+                        while (num >= 1024 && i < units.length - 1) { num /= 1024; i++; }
+                        return num.toFixed(num >= 10 || i === 0 ? 0 : 1) + ' ' + units[i];
+                    } catch(e) { return ''; }
+                }
+
+                function setNote(text){
+                    if (!note) return;
+                    if (text) { note.textContent = text; note.style.display = 'block'; }
+                    else { note.textContent = ''; note.style.display = 'none'; }
+                }
 
                 function clearPreview(){
                     if (currentObjectUrl) {
@@ -118,16 +197,45 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
                     }
                     img.removeAttribute('src');
                     wrapper.style.display = 'none';
+                    setNote('');
                 }
                 function showPreviewFromDataUrl(dataUrl){
                     if (!dataUrl) { clearPreview(); return; }
                     img.src = dataUrl;
                     wrapper.style.display = 'block';
                 }
+                function makeCanvasPreview(file, cb){
+                    try {
+                        var reader = new FileReader();
+                        reader.onload = function(){
+                            var imgEl = new Image();
+                            imgEl.onload = function(){
+                                var w = imgEl.naturalWidth || imgEl.width;
+                                var h = imgEl.naturalHeight || imgEl.height;
+                                var scale = Math.min(1, MAX_PREVIEW_DIM / Math.max(w, h));
+                                var tw = Math.max(1, Math.round(w * scale));
+                                var th = Math.max(1, Math.round(h * scale));
+                                var canvas = document.createElement('canvas');
+                                canvas.width = tw; canvas.height = th;
+                                var ctx = canvas.getContext('2d');
+                                ctx.drawImage(imgEl, 0, 0, tw, th);
+                                var type = (/png$/i.test(file.type)) ? 'image/png' : (window.HTMLCanvasElement && canvas.toDataURL('image/webp', PREVIEW_QUALITY) ? 'image/webp' : 'image/jpeg');
+                                var dataUrl;
+                                try { dataUrl = canvas.toDataURL(type, PREVIEW_QUALITY); } catch(e) { dataUrl = canvas.toDataURL('image/jpeg', PREVIEW_QUALITY); }
+                                cb(null, dataUrl);
+                            };
+                            imgEl.onerror = function(){ cb(new Error('preview-load-failed')); };
+                            imgEl.src = reader.result;
+                        };
+                        reader.onerror = function(){ cb(new Error('file-read-failed')); };
+                        reader.readAsDataURL(file);
+                    } catch(e) { cb(e); }
+                }
                 function showPreview(file){
                     if (!file || !file.type || !/^image\//i.test(file.type)) {
                         clearPreview();
                         try { sessionStorage.removeItem(STORAGE_KEY); } catch(e) {}
+                        try { sessionStorage.removeItem(FILENAME_KEY); } catch(e) {}
                         return;
                     }
                     // Immediate preview using a blob URL
@@ -140,28 +248,61 @@ if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history
                     img.src = currentObjectUrl;
                     wrapper.style.display = 'block';
 
-                    // Persist across reloads using a Data URL
-                    try {
-                        var reader = new FileReader();
-                        reader.onload = function(){
-                            try { sessionStorage.setItem(STORAGE_KEY, reader.result); } catch(e) { /* storage may be full or blocked */ }
-                        };
-                        reader.readAsDataURL(file);
-                    } catch(e) { /* FileReader not available */ }
+                    // Create a tiny, compressed preview for sessionStorage restore after reload
+                    makeCanvasPreview(file, function(err, dataUrl){
+                        if (err) { setNote(file && file.name ? file.name : 'Preview may not persist after submit.'); return; }
+                        try {
+                            // Persist tiny preview and filename for restore after submit
+                            sessionStorage.setItem(STORAGE_KEY, dataUrl);
+                            try { sessionStorage.setItem(FILENAME_KEY, file.name || ''); } catch(e2) {}
+                            setNote(file && file.name ? file.name : '');
+                        } catch(e) {
+                            // Storage likely exceeded (~5MB); warn user but keep working
+                            setNote((file && file.name ? file.name + ' — ' : '') + 'Preview cannot persist after submit due to browser limits. The image will still be uploaded.');
+                        }
+                    });
                 }
 
-                // Restore persisted preview on load (after a submit reload)
+                // Restore persisted preview and textarea on load (after a submit reload)
                 try {
                     var saved = sessionStorage.getItem(STORAGE_KEY);
                     if (saved) {
                         showPreviewFromDataUrl(saved);
+                        var fname = '';
+                        try { fname = sessionStorage.getItem(FILENAME_KEY) || ''; } catch(e2) {}
+                        if (fname) setNote(fname);
+                        else setNote('Restored preview.');
+                    }
+                } catch(e) {}
+
+                // Save/restore textarea value as an extra safeguard
+                try {
+                    var textarea = document.querySelector('textarea[name="input_text"]');
+                    if (textarea) {
+                        // On load, prefill if server didn't
+                        if (!textarea.value) {
+                            var savedText = sessionStorage.getItem(TEXT_KEY);
+                            if (savedText) textarea.value = savedText;
+                        }
+                        textarea.addEventListener('input', function(){
+                            try { sessionStorage.setItem(TEXT_KEY, textarea.value); } catch(e) {}
+                        });
                     }
                 } catch(e) {}
 
                 if (input) {
                     input.addEventListener('change', function(){
                         var file = this.files && this.files[0];
-                        if (file) showPreview(file); else { clearPreview(); try { sessionStorage.removeItem(STORAGE_KEY); } catch(e) {} }
+                        if (file) {
+                            // Soft client-side warning if image is very large
+                            if (file.size > 19 * 1024 * 1024) {
+                                alert('Selected image is larger than 19 MB. Your server may reject it. Consider choosing a smaller image.');
+                            }
+                            showPreview(file);
+                        } else {
+                            clearPreview();
+                            try { sessionStorage.removeItem(STORAGE_KEY); } catch(e) {}
+                        }
                     });
                 }
             })();
