@@ -57,6 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+$answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_button']));
 ?>
 
     <!DOCTYPE html>
@@ -606,6 +608,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
     </script>
+<?php if (!empty($answeringOnLoad)): ?>
+    <script>
+        // Show brief "answering" overlay as soon as the DOM is ready (or immediately if it already is)
+        (function(){
+            function showAnswering(){
+                try {
+                    var overlay = document.getElementById('loadingOverlay');
+                    var attempts = 0;
+                    function doShow(ov){
+                        document.body.classList.add('waiting');
+                        document.body.setAttribute('aria-busy', 'true');
+                        var overlayLabel = ov ? ov.querySelector('.label') : null;
+                        if (overlayLabel) overlayLabel.textContent = 'answering';
+                        if (ov) ov.classList.add('show');
+                        // Let the browser paint the new content, then hide overlay shortly after
+                        requestAnimationFrame(function(){
+                            setTimeout(function(){
+                                document.body.classList.remove('waiting');
+                                document.body.removeAttribute('aria-busy');
+                                if (ov) ov.classList.remove('show');
+                            }, 600);
+                        });
+                    }
+                    if (!overlay) {
+                        // If the overlay isn't in the DOM yet, retry briefly
+                        (function retry(){
+                            attempts++;
+                            var ov = document.getElementById('loadingOverlay');
+                            if (ov || attempts > 10) {
+                                doShow(ov);
+                                return;
+                            }
+                            requestAnimationFrame(retry);
+                        })();
+                        return;
+                    }
+                    doShow(overlay);
+                } catch(e) {}
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showAnswering);
+            } else {
+                // DOM is already parsed; run immediately
+                showAnswering();
+            }
+        })();
+    </script>
+<?php endif; ?>
     </body>
 
     </html>

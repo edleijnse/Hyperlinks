@@ -38,13 +38,50 @@ function get_api_key()
  */
 function create_client($api_key)
 {
-    return new Client([
+    // Allow optional environment toggles for troubleshooting TLS/HTTP2 issues
+    $forceHttp11 = getenv('OPENAI_FORCE_HTTP1_1') ?: '1'; // default on
+    $disableCompression = getenv('OPENAI_DISABLE_COMPRESSION') ?: '1'; // default on
+    $verifyCA = getenv('OPENAI_SSL_VERIFY'); // null means use default (true)
+
+    $headers = [
+        'Authorization' => "Bearer $api_key",
+        'Content-Type' => 'application/json',
+    ];
+    if ($disableCompression === '1' || strtolower($disableCompression) === 'true') {
+        // Some middleboxes and certain curl/OpenSSL combos mis-handle compressed responses
+        $headers['Accept-Encoding'] = 'identity';
+    }
+    // Avoid "Expect: 100-continue" which sometimes trips up proxies/middleboxes
+    $headers['Expect'] = '';
+
+    $config = [
         'base_uri' => 'https://api.openai.com',
-        'headers' => [
-            "Authorization" => "Bearer $api_key",
-            'Content-Type' => 'application/json',
-        ],
-    ]);
+        'headers' => $headers,
+        // Conservative timeouts
+        'timeout' => 60,
+        'connect_timeout' => 15,
+        // Ensure errors throw exceptions so we can retry selectively
+        'http_errors' => true,
+    ];
+
+    // Force HTTP/1.1 if requested (helps with certain HTTP/2/TLS stacks)
+    if ($forceHttp11 === '1' || strtolower($forceHttp11) === 'true') {
+        $config['curl'] = [
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        ];
+        // Also set default request version for non-curl handlers
+        $config['version'] = 1.1;
+    }
+
+    if ($verifyCA !== false && $verifyCA !== null && $verifyCA !== '') {
+        // If a specific CA bundle path is provided via env, use it
+        $config['verify'] = $verifyCA;
+    } elseif ($verifyCA === '0' || strtolower((string)$verifyCA) === 'false') {
+        // Not recommended, but can be toggled for diagnostics
+        $config['verify'] = false;
+    }
+
+    return new Client($config);
 }
 
 /**
