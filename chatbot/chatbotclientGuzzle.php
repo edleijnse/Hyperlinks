@@ -550,13 +550,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 askBtn.addEventListener('click', onClickFactory(function(){ askClicked = true; nextClicked = newChatClicked = false; }, askBtn, 'Asking…', 'Asking…'));
             }
             if (nextBtn) {
-                nextBtn.addEventListener('click', onClickFactory(function(){ nextClicked = true; askClicked = newChatClicked = false; }, nextBtn, 'Loading next…', 'Next…'));
+                nextBtn.addEventListener('click', function(){
+                    nextClicked = true; askClicked = newChatClicked = false;
+                    // Ensure the question field initializes clean for NEXT
+                    try { sessionStorage.removeItem('chatbot_textarea_value'); } catch(e) {}
+                    try {
+                        var ta = document.querySelector('textarea[name="input_text"]');
+                        if (ta) { ta.value = ''; }
+                    } catch(e) {}
+                    onClickFactory(function(){}, nextBtn, 'Loading next…', 'Next…')();
+                });
             }
             if (newChatBtn) {
                 newChatBtn.addEventListener('click', function(){
                     newChatClicked = true; askClicked = nextClicked = false;
-                    // Clear persisted image preview when starting a new chat
+                    // Clear persisted image preview and textarea when starting a new chat
                     try { sessionStorage.removeItem('chatbot_image_preview_dataurl'); } catch(e) {}
+                    try { sessionStorage.removeItem('chatbot_textarea_value'); } catch(e) {}
+                    try {
+                        var ta2 = document.querySelector('textarea[name="input_text"]');
+                        if (ta2) { ta2.value = ''; }
+                    } catch(e) {}
                     onClickFactory(function(){}, newChatBtn, 'Starting new chat…', 'Starting…')();
                 });
             }
@@ -571,6 +585,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         if (askClicked) name = 'submit_button';
                         else if (nextClicked) name = 'clean_button';
                         else if (newChatClicked) name = 'clear_history_button';
+                    }
+
+                    // For NEXT and NEW CHAT, ensure the question field does not get restored
+                    if (name === 'clean_button' || name === 'clear_history_button') {
+                        try { sessionStorage.removeItem('chatbot_textarea_value'); } catch(e) {}
                     }
 
                     if (name === 'submit_button') {
