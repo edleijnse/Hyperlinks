@@ -138,7 +138,7 @@ function prepare_messages($input_text, array $content_history, $image_data_url =
         $current_content = $input_text;
     }
 
-    $messages[] = ['role' => 'user', 'content' => $current_content];
+    $messages[] = ['role' => 'user', 'content' => $current_content, 'reasoning' => [ 'effort' => 'high' ]];
 
     return $messages;
 }
