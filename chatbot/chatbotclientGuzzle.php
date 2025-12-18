@@ -58,14 +58,182 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Define functions before using them
+function processUserInput($input_text): void
+{
+    $openai_data = init_openai();
+    $client = $openai_data[1];
+    $selected_model = $_SESSION['model_choice'] ?: 'gpt-5-mini';
+    $content_history = &$_SESSION['content_history'];
+
+    // Handle optional image upload
+    $image_data_url = null;
+    if (isset($_FILES['image_file']) && isset($_FILES['image_file']['error']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) {
+        $tmpName = $_FILES['image_file']['tmp_name'];
+        $mime = $_FILES['image_file']['type'] ?: null;
+        if (!$mime && function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            if ($finfo) {
+                $mime = finfo_file($finfo, $tmpName);
+                finfo_close($finfo);
+            }
+        }
+        // Accept only common image MIME types
+        $allowed = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+        if ($mime && in_array($mime, $allowed, true)) {
+            $bytes = @file_get_contents($tmpName);
+            if ($bytes !== false) {
+                $base64 = base64_encode($bytes);
+                $image_data_url = "data:$mime;base64,$base64";
+            }
+        }
+    }
+
+    $myquestion = "QUESTION: " . $input_text . ($image_data_url ? " [image attached]" : "");
+    // in openai_functions all output is generated
+    $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $client, $content_history, $image_data_url);
+    $content_history[] = $myquestion;
+    $content_history[] = $mycompletion;
+
+    $_SESSION['content_history'] = $content_history;
+
+    // Clear input_text after completion is filled
+    $_POST['input_text'] = '';
+}
+
 $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_button']));
+
+// Ensure content history is initialized before any processing
+if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history'])) {
+    $_SESSION['content_history'] = [];
+}
+
+// Process form submission BEFORE rendering HTML
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['model_choice_chosen'])) {
+        $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
+    }
+
+    if (isset($_POST['submit_button']) && (!empty($_POST['input_text']) || (isset($_FILES['image_file']) && isset($_FILES['image_file']['error']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK))) {
+        processUserInput($_POST['input_text'] ?? '');
+    }
+
+    if (isset($_POST['clear_history_button'])) {
+        $_SESSION['content_history'] = [];
+    }
+}
 ?>
 
     <!DOCTYPE html>
     <html>
 
     <head>
-        <?php include 'head.php'; ?>
+        <title>ChatGPT client</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #f7f7f7;
+                color: #444444;
+                margin: 0;
+                padding: 0;
+            }
+            .input {
+                font-size: 34px;
+                color: #4054b2;
+                background-color: ghostwhite;
+                text-align: start;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .list {
+                font-size: 34px;
+                color: #d4af37;
+                margin-top: 20px;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .output {
+                background-color: #f7f7f7;
+                color: #707070;
+                font-size: 34px;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .ask {
+                height: 100px;
+                width: 250px;
+                font-size: 34px;
+                color: #3b5998;
+            }
+            .copy {
+                height: 100px;
+                width: 300px;
+                font-size: 34px;
+                color: #3b5998;
+            }
+            .heading {
+                font-size: 34px;
+                font-weight: 500;
+                color: #3b5998;
+            }
+            .error-message {
+                color: #ff6161;
+                background-color: #ffe6e6;
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 24px;
+                margin: 20px 0;
+            }
+            .large-font {
+                font-size: 72px;
+                color: #3b5998;
+            }
+            .medium-font {
+                font-size: 24px;
+                color: Darkblue
+            }
+            .red-background {
+                background-color: blanchedalmond;
+            }
+            .green-background {
+                background-color: yellowgreen;
+            }
+            :root {
+                --mobile-font-size: 72px;
+                --mobile-bg-color: lightblue;
+                --mobile-width: 100%;
+                --mobile-padding: 8px;
+                --mobile-margin-top: 20px;
+            }
+
+            @media screen and (max-width: 1000px) {
+                body {
+                    font-size: var(--mobile-font-size);
+                    background-color: var(--mobile-bg-color);
+                }
+
+                table {
+                    width: var(--mobile-width);
+                }
+
+                td, th {
+                    padding: var(--mobile-padding);
+                }
+
+                form {
+                    margin-top: var(--mobile-margin-top);
+                }
+            }
+            @keyframes blink {
+                0% {opacity: 1;}
+                50% {opacity: 0.4;}
+                100% {opacity: 1;}
+            }
+            .blink-text {
+                animation: blink 1s infinite;
+            }
+        </style>
         <style>
             .large-font {
                 font-size: 34px;
@@ -134,7 +302,6 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
     </head>
 
     <body>
-    <?php echo "<ul>"; ?>
 
     <?php if (!empty($flash_error)): ?>
         <div class="upload-error" role="alert" aria-live="assertive" style="
@@ -311,10 +478,8 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
         </script>
         <br><br><br>
         <input type="submit" name="submit_button" class="ask green-background" value="ASK">
-        <input type="submit" name="clean_button" class="ask red-background" value="NEXT">
         <input type="submit" name="clear_history_button" class="ask red-background" value="NEW CHAT">
     </form>
-    </p>
 
     <!-- Cross-platform loading overlay (shown during actions) -->
     <div id="loadingOverlay" aria-live="polite" role="status" aria-busy="true">
@@ -341,18 +506,40 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
     <button id="stopAudioBtn" class="copy red-background" onclick="stopAnswerAudio(event)" disabled
             style="font-size:40px; padding:10px;">Stop</button>
     <?php
-
-    // Ensure content history is initialized before any processing
-    initializeContentHistory();
-
-    // Process form submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        handleFormSubmission();
-    }
-
+    // Form submission already processed before HTML rendering
     ?>
-    <?php
 
+    <!-- Display latest QUESTION and ANSWER -->
+    <?php
+    if (!empty($_SESSION['content_history'])) {
+        $history_count = count($_SESSION['content_history']);
+        // Get the last two entries (question and answer)
+        if ($history_count >= 2) {
+            $last_question = $_SESSION['content_history'][$history_count - 2];
+            $last_answer = $_SESSION['content_history'][$history_count - 1];
+
+            echo '<div style="margin: 20px 2ch; padding: 20px; border: 2px solid #4CAF50; border-radius: 6px; background: #e8f5e9;">';
+            echo '<div style="font-size: 24px; font-weight: bold; margin-bottom: 10px; white-space: pre-wrap;">' . htmlspecialchars($last_question) . '</div>';
+            echo '<div style="font-size: 24px; white-space: pre-wrap; margin-top: 15px;">' . htmlspecialchars($last_answer) . '</div>';
+            echo '</div>';
+        }
+    }
+    ?>
+
+    <!-- Visible chat history display -->
+    <div id="chatHistory" style="margin: 20px 2ch; padding: 20px; border: 1px solid #ccc; border-radius: 6px; background: #f9f9f9; font-size: 20px; white-space: pre-wrap; font-family: monospace;">
+    <?php
+    if (!empty($_SESSION['content_history'])) {
+        foreach ($_SESSION['content_history'] as $entry) {
+            echo htmlspecialchars($entry) . "\n\n";
+        }
+    } else {
+        echo "No chat history yet. Start by asking a question above.";
+    }
+    ?>
+    </div>
+
+    <?php
     // Output content history as text
     $content_history_text = implode("\n", $_SESSION['content_history']);
     ?>
@@ -478,17 +665,16 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         }
 
-        // Show cross-platform loading overlay for ASK, NEXT, and NEW CHAT
+        // Show cross-platform loading overlay for ASK and NEW CHAT
         window.addEventListener('DOMContentLoaded', function () {
             var askBtn = document.querySelector('input[name="submit_button"]');
-            var nextBtn = document.querySelector('input[name="clean_button"]');
             var newChatBtn = document.querySelector('input[name="clear_history_button"]');
             var form = document.querySelector('form');
             var overlay = document.getElementById('loadingOverlay');
             var overlayLabel = overlay ? overlay.querySelector('.label') : null;
 
             // Legacy fallback flags for browsers without e.submitter
-            var askClicked = false, nextClicked = false, newChatClicked = false;
+            var askClicked = false, newChatClicked = false;
 
             // Track the button we disabled to restore on failsafe
             var activeButton = null;
@@ -538,7 +724,7 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
                     clearTimeout(failsafeTimer);
                     failsafeTimer = null;
                 }
-                askClicked = nextClicked = newChatClicked = false;
+                askClicked = newChatClicked = false;
             }
 
             function onClickFactory(flagSetter, button, overlayText, buttonText) {
@@ -549,23 +735,16 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
             }
 
             if (askBtn) {
-                askBtn.addEventListener('click', onClickFactory(function(){ askClicked = true; nextClicked = newChatClicked = false; }, askBtn, 'Asking…', 'Asking…'));
-            }
-            if (nextBtn) {
-                nextBtn.addEventListener('click', function(){
-                    nextClicked = true; askClicked = newChatClicked = false;
-                    // Ensure the question field initializes clean for NEXT
+                askBtn.addEventListener('click', function(){
+                    askClicked = true; newChatClicked = false;
+                    // Clear sessionStorage for textarea after ASK to ensure clean state after answer
                     try { sessionStorage.removeItem('chatbot_textarea_value'); } catch(e) {}
-                    try {
-                        var ta = document.querySelector('textarea[name="input_text"]');
-                        if (ta) { ta.value = ''; }
-                    } catch(e) {}
-                    onClickFactory(function(){}, nextBtn, 'Loading next…', 'Next…')();
+                    onClickFactory(function(){}, askBtn, 'Asking…', 'Asking…')();
                 });
             }
             if (newChatBtn) {
                 newChatBtn.addEventListener('click', function(){
-                    newChatClicked = true; askClicked = nextClicked = false;
+                    newChatClicked = true; askClicked = false;
                     // Clear persisted image preview and textarea when starting a new chat
                     try { sessionStorage.removeItem('chatbot_image_preview_dataurl'); } catch(e) {}
                     try { sessionStorage.removeItem('chatbot_textarea_value'); } catch(e) {}
@@ -585,19 +764,16 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
                     if (!name) {
                         // Fallback to flags when e.submitter is unavailable
                         if (askClicked) name = 'submit_button';
-                        else if (nextClicked) name = 'clean_button';
                         else if (newChatClicked) name = 'clear_history_button';
                     }
 
-                    // For NEXT and NEW CHAT, ensure the question field does not get restored
-                    if (name === 'clean_button' || name === 'clear_history_button') {
+                    // For NEW CHAT, ensure the question field does not get restored
+                    if (name === 'clear_history_button') {
                         try { sessionStorage.removeItem('chatbot_textarea_value'); } catch(e) {}
                     }
 
                     if (name === 'submit_button') {
                         showLoadingFor(askBtn, 'Asking…', 'Asking…');
-                    } else if (name === 'clean_button') {
-                        showLoadingFor(nextBtn, 'Loading next…', 'Next…');
                     } else if (name === 'clear_history_button') {
                         showLoadingFor(newChatBtn, 'Starting new chat…', 'Starting…');
                     } else {
@@ -662,32 +838,13 @@ $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submi
 
 <?php
 
-function handleFormSubmission(): void
-{
-    if (isset($_POST['model_choice_chosen'])) {
-        $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
-    }
-
-    if (isset($_POST['submit_button']) && (!empty($_POST['input_text']) || (isset($_FILES['image_file']) && isset($_FILES['image_file']['error']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK))) {
-        processUserInput($_POST['input_text'] ?? '');
-    }
-
-    if (isset($_POST['clean_button'])) {
-        cleanInputText();
-    }
-
-    if (isset($_POST['clear_history_button'])) {
-        clearContentHistory();
-    }
-}
-
 function displayModelChoices(): void
 {
     // Check POST first, then fallback to SESSION, then default value
     $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-5-mini';
     // Store the selected model in session
     $_SESSION['model_choice'] = $selected_model;
-    
+
     // echo "<br>" . $selected_model . "<br>";
     echo generateRadioOption('gpt-5-mini', 'simple and fast using model gpt-5-mini', $selected_model);
     echo generateRadioOption('gpt-5.2', 'more accurate but slower using model gpt-5.2', $selected_model);
@@ -702,68 +859,12 @@ function generateRadioOption($id, $label, $selected_model): string
 HTML;
 }
 
-function initializeContentHistory(): void
-{
-    if (!isset($_SESSION['content_history'])) {
-        $_SESSION['content_history'] = [];
-    }
-}
-
 function getDisplayText(): string
 {
-    if (isset($_POST['submit_button'])) {
+    if (isset($_POST['submit_button']) && isset($_POST['input_text'])) {
         return htmlentities($_POST['input_text']);
     }
     return '';
-}
-
-function processUserInput($input_text): void
-{
-    $openai_data = init_openai();
-    $client = $openai_data[1];
-    $selected_model = $_SESSION['model_choice'] ?: 'gpt-5-mini';
-    $content_history = &$_SESSION['content_history'];
-
-    // Handle optional image upload
-    $image_data_url = null;
-    if (isset($_FILES['image_file']) && isset($_FILES['image_file']['error']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK) {
-        $tmpName = $_FILES['image_file']['tmp_name'];
-        $mime = $_FILES['image_file']['type'] ?: null;
-        if (!$mime && function_exists('finfo_open')) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            if ($finfo) {
-                $mime = finfo_file($finfo, $tmpName);
-                finfo_close($finfo);
-            }
-        }
-        // Accept only common image MIME types
-        $allowed = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
-        if ($mime && in_array($mime, $allowed, true)) {
-            $bytes = @file_get_contents($tmpName);
-            if ($bytes !== false) {
-                $base64 = base64_encode($bytes);
-                $image_data_url = "data:$mime;base64,$base64";
-            }
-        }
-    }
-
-    $myquestion = "QUESTION: " . $input_text . ($image_data_url ? " [image attached]" : "");
-    // in openai_functions all output is generated
-    $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $client, $content_history, $image_data_url);
-    $content_history[] = $myquestion;
-    $content_history[] = $mycompletion;
-
-    $_SESSION['content_history'] = $content_history;
-}
-
-function cleanInputText(): void
-{
-    $_POST['input_text'] = '';
-}
-
-function clearContentHistory(): void
-{
-    $_SESSION['content_history'] = [];
 }
 
 ?>

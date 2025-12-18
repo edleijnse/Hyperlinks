@@ -101,7 +101,8 @@ function get_openai_response_for_model($input_text, $model, Client $client, arra
     $response = make_request($client, $requestBody);
     $completion = $response['choices'][0]['message']['content'] ?? null;
 
-    display_interaction($input_text, $completion, $content_history);
+    // Commented out to prevent HTML output before DOCTYPE
+    // display_interaction($input_text, $completion, $content_history);
 
     return $completion;
 }
