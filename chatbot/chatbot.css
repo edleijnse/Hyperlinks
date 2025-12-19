@@ -158,7 +158,7 @@ input[type="file"] {
 
 .chat-bubble {
     display: inline-block;
-    max-width: 70%;
+    max-width: 100%;
     padding: 15px;
     border-radius: 18px;
     text-align: left;
