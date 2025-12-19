@@ -527,14 +527,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
 
     <!-- Visible chat history display -->
-    <div id="chatHistory" style="margin: 20px 2ch; padding: 20px; border: 1px solid #ccc; border-radius: 6px; background: #f9f9f9; font-size: 20px; white-space: pre-wrap; font-family: monospace;">
+    <div id="chatHistory" style="margin: 20px 2ch; padding: 20px; border: 1px solid #ccc; border-radius: 6px; background: #ffffff; font-size: 20px;">
     <?php
     if (!empty($_SESSION['content_history'])) {
         foreach ($_SESSION['content_history'] as $entry) {
-            echo htmlspecialchars($entry) . "\n\n";
+            // Check if it's a question or answer
+            if (strpos($entry, 'QUESTION: ') === 0) {
+                // User question - align right with blue background
+                $text = htmlspecialchars(substr($entry, 10)); // Remove "QUESTION: " prefix
+                echo '<div style="margin: 10px 0; text-align: right;">';
+                echo '<div style="display: inline-block; max-width: 70%; padding: 15px; background: #e3f2fd; border-radius: 18px; text-align: left; word-wrap: break-word; white-space: pre-wrap;">';
+                echo $text;
+                echo '</div></div>';
+            } elseif (strpos($entry, 'ANSWER: ') === 0) {
+                // AI answer - align left with gray background
+                $text = htmlspecialchars(substr($entry, 8)); // Remove "ANSWER: " prefix
+                echo '<div style="margin: 10px 0; text-align: left;">';
+                echo '<div style="display: inline-block; max-width: 70%; padding: 15px; background: #f5f5f5; border-radius: 18px; text-align: left; word-wrap: break-word; white-space: pre-wrap;">';
+                echo $text;
+                echo '</div></div>';
+            }
         }
     } else {
-        echo "No chat history yet. Start by asking a question above.";
+        echo '<div style="text-align: center; color: #999; padding: 20px;">No chat history yet. Start by asking a question above.</div>';
     }
     ?>
     </div>
