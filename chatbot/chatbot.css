@@ -123,6 +123,7 @@ input[type="file"] {
 
 .controls-section {
     margin: 20px 2ch;
+    padding-left: 2ch;
 }
 
 .section-title {
@@ -137,7 +138,8 @@ input[type="file"] {
     flex-wrap: wrap;
 }
 
-.button-group .copy {
+.button-group .copy,
+.button-group .ask {
     font-size: 40px;
     padding: 10px;
 }

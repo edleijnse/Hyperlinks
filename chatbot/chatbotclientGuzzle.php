@@ -150,23 +150,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="post" enctype="multipart/form-data">
-        <label class="ask large-font" for="model_choice">I want to chat:<br></label>
-
-        <?php displayModelChoices(); ?>
-        
-        <?php $display_text = getDisplayText(); ?>
-        <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
-        <br>
-        <label class="ask large-font" for="image_file" class="ml-2">Attach image (optional):</label>
-        <br>
-        <input type="file" name="image_file" id="image_file" accept="image/*" class="ml-2">
-        <div id="imagePreviewWrapper" class="ml-2 mt-2 hidden">
-            <img id="imagePreview" alt="Selected image preview">
-            <div id="imagePreviewNote" class="preview-note"></div>
+        <div class="controls-section">
+            <span class="section-title">I want to chat:</span>
+            <?php displayModelChoices(); ?>
+            
+            <?php $display_text = getDisplayText(); ?>
+            <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
         </div>
-        <br><br><br>
-        <input type="submit" name="submit_button" class="ask green-background" value="ASK">
-        <input type="submit" name="clear_history_button" class="ask red-background" value="NEW CHAT">
+
+        <div class="controls-section">
+            <span class="section-title">Attach image (optional):</span>
+            <input type="file" name="image_file" id="image_file" accept="image/*">
+            <div id="imagePreviewWrapper" class="mt-2 hidden">
+                <img id="imagePreview" alt="Selected image preview">
+                <div id="imagePreviewNote" class="preview-note"></div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="button-group">
+                <input type="submit" name="submit_button" class="ask green-background" value="ASK">
+                <input type="submit" name="clear_history_button" class="ask red-background" value="NEW CHAT">
+            </div>
+        </div>
     </form>
 
     <div id="loadingOverlay" aria-live="polite" role="status" aria-busy="true">
