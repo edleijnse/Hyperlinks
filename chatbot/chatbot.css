@@ -159,11 +159,14 @@ input[type="file"] {
 .chat-bubble {
     display: inline-block;
     max-width: 100%;
-    padding: 15px;
-    border-radius: 18px;
     text-align: left;
     word-wrap: break-word;
     white-space: pre-wrap;
+    margin: 20px 2ch;
+    padding: 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 6px;
+    background: #e8f5e9;
 }
 
 .chat-bubble.user {
