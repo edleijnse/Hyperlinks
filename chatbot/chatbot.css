@@ -1,0 +1,306 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+    color: #444444;
+    margin: 0;
+    padding: 0;
+}
+.input {
+    font-size: 34px;
+    color: #4054b2;
+    background-color: ghostwhite;
+    text-align: start;
+    padding: 10px;
+    border-radius: 5px;
+}
+.list {
+    font-size: 34px;
+    color: #d4af37;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+}
+.output {
+    background-color: #f7f7f7;
+    color: #707070;
+    font-size: 34px;
+    padding: 10px;
+    border-radius: 5px;
+}
+.ask {
+    height: 100px;
+    width: 250px;
+    font-size: 34px;
+    color: #3b5998;
+}
+.copy {
+    height: 100px;
+    width: 300px;
+    font-size: 34px;
+    color: #3b5998;
+}
+.heading {
+    font-size: 34px;
+    font-weight: 500;
+    color: #3b5998;
+}
+.error-message {
+    color: #ff6161;
+    background-color: #ffe6e6;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 24px;
+    margin: 20px 0;
+}
+.large-font {
+    font-size: 72px;
+    color: #3b5998;
+}
+.medium-font {
+    font-size: 24px;
+    color: Darkblue
+}
+.red-background {
+    background-color: blanchedalmond;
+}
+.green-background {
+    background-color: yellowgreen;
+}
+:root {
+    --mobile-font-size: 72px;
+    --mobile-bg-color: lightblue;
+    --mobile-width: 100%;
+    --mobile-padding: 8px;
+    --mobile-margin-top: 20px;
+}
+
+@media screen and (max-width: 1000px) {
+    body {
+        font-size: var(--mobile-font-size);
+        background-color: var(--mobile-bg-color);
+    }
+
+    table {
+        width: var(--mobile-width);
+    }
+
+    td, th {
+        padding: var(--mobile-padding);
+    }
+
+    form {
+        margin-top: var(--mobile-margin-top);
+    }
+}
+@keyframes blink {
+    0% {opacity: 1;}
+    50% {opacity: 0.4;}
+    100% {opacity: 1;}
+}
+.blink-text {
+    animation: blink 1s infinite;
+}
+
+.large-font {
+    font-size: 34px;
+}
+.header-font {
+    font-size: 24px;
+}
+
+/* Ensure the file input (Choose File / No file chosen) matches the large label size */
+#image_file,
+input[type="file"] {
+    font-size: 34px;
+    line-height: 1.2em;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls-section {
+    margin: 20px 2ch;
+}
+
+.section-title {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.button-group .copy {
+    font-size: 40px;
+    padding: 10px;
+}
+
+.chat-bubble-container {
+    margin: 10px 0;
+}
+
+.chat-bubble-container.user {
+    text-align: right;
+}
+
+.chat-bubble-container.ai {
+    text-align: left;
+}
+
+.chat-bubble {
+    display: inline-block;
+    max-width: 70%;
+    padding: 15px;
+    border-radius: 18px;
+    text-align: left;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.chat-bubble.user {
+    background: #e3f2fd;
+}
+
+.chat-bubble.ai {
+    background: #f5f5f5;
+}
+
+.latest-interaction {
+    margin: 20px 2ch;
+    padding: 20px;
+    border: 2px solid #4CAF50;
+    border-radius: 6px;
+    background: #e8f5e9;
+}
+
+.latest-interaction .question {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+}
+
+.latest-interaction .answer {
+    font-size: 24px;
+    white-space: pre-wrap;
+    margin-top: 15px;
+}
+
+#chatHistory {
+    margin: 20px 2ch;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 20px;
+}
+
+.no-history {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}
+
+.ml-2 {
+    margin-left: 2ch;
+}
+
+.mt-2 {
+    margin-top: 10px;
+}
+
+.hidden {
+    display: none;
+}
+
+#imagePreview {
+    max-width: 90vw;
+    max-height: 50vh;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.preview-note {
+    font-size: 16px;
+    color: #555;
+    margin-top: 6px;
+    display: none;
+}
+
+#scrollToTop {
+    position: fixed;
+    bottom: 20px;
+    left: 40px;
+    display: block; /* Always visible */
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+    font-size: 40px;
+}
+
+#scrollToTop:hover {
+    background-color: #444;
+}
+
+/* Hourglass cursor when waiting */
+body.waiting, body.waiting * {
+    cursor: wait !important;
+}
+
+/* Fullscreen loading overlay for mobile/desktop */
+#loadingOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: none; /* hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+#loadingOverlay.show {
+    display: flex;
+}
+
+#loadingOverlay .loader {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 8px solid #ffffff;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+#loadingOverlay .label {
+    color: #ffffff;
+    font-size: 34px;
+    margin-top: 16px;
+    text-align: center;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.upload-error {
+    margin: 1rem 2ch;
+    padding: 12px 16px;
+    border-radius: 6px;
+    background: #ffeaea;
+    color: #8a1f1f;
+    border: 1px solid #f5c2c7;
+    font-size: 20px;
+}
