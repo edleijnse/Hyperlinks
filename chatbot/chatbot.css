@@ -28,9 +28,8 @@ body {
     border-radius: 5px;
 }
 .ask {
-    height: 50px;
-    width: 125px;
-    font-size: 8.5px;
+    font-size: 40px;
+    padding: 10px;
     color: #ffffff;
     border: none;
     border-radius: 25px;
@@ -48,9 +47,8 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .copy {
-    height: 50px;
-    width: 150px;
-    font-size: 8.5px;
+    font-size: 40px;
+    padding: 10px;
     color: #ffffff;
     border: none;
     border-radius: 25px;
@@ -89,16 +87,16 @@ body {
     color: Darkblue
 }
 .red-background {
-    background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
+    background: darkblue;
 }
 .red-background:hover {
-    background: linear-gradient(135deg, #90d894 0%, #76cc7a 100%);
+    background: #0000cd;
 }
 .green-background {
-    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+    background: darkblue;
 }
 .green-background:hover {
-    background: linear-gradient(135deg, #63d77a 0%, #47c05d 100%);
+    background: #0000cd;
 }
 :root {
     --mobile-font-size: 72px;
@@ -168,13 +166,13 @@ input[type="file"] {
 
 .button-group {
     display: flex;
-    gap: 10px;
+    gap: 50px;
     flex-wrap: wrap;
 }
 
 .button-group .copy,
 .button-group .ask {
-    font-size: 17px;
+    font-size: 40px;
     padding: 10px;
 }
 

@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="controls-section">
         <span class="section-title">Copy to clipboard</span>
         <div class="button-group">
-            <button class="copy red-background" onclick="copyOutputToClipboard(event)">Complete chat</button>
+            <button class="copy red-background" onclick="copyOutputToClipboard(event)">Chat</button>
             <button class="copy red-background" onclick="copyAnswerToClipboard(event)">Last answer</button>
         </div>
     </div>
