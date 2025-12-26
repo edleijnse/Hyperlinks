@@ -263,6 +263,114 @@ function copyAnswerToClipboard(event) {
     window.addEventListener('load', function(){ setPlaying(false); });
 })();
 
+(function(){
+    var voiceBtn = document.getElementById('voiceInputBtn');
+    var voiceProcessBtn = document.getElementById('voiceProcessBtn');
+    var voiceStatus = document.getElementById('voiceStatus');
+    var textArea = document.getElementById('input_text');
+    var recognition = null;
+    var isRecording = false;
+
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        if (voiceBtn) voiceBtn.style.display = 'none';
+        if (voiceProcessBtn) voiceProcessBtn.style.display = 'none';
+        return;
+    }
+
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US'; // Default, can be adjusted or made dynamic if needed
+
+    recognition.onstart = function() {
+        isRecording = true;
+        if (voiceBtn) {
+            voiceBtn.classList.add('recording');
+            voiceBtn.textContent = '🛑';
+        }
+        if (voiceStatus) {
+            voiceStatus.classList.remove('hidden');
+        }
+    };
+
+    recognition.onresult = function(event) {
+        var transcript = event.results[0][0].transcript;
+        if (textArea) {
+            var currentVal = textArea.value.trim();
+            textArea.value = (currentVal ? currentVal + ' ' : '') + transcript;
+            // Trigger input event to save to sessionStorage (existing logic in chatbot.js)
+            textArea.dispatchEvent(new Event('input'));
+        }
+        if (voiceProcessBtn) {
+            voiceProcessBtn.classList.remove('hidden');
+        }
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error', event.error);
+        if (event.error === 'not-allowed') {
+            alert('Microphone access denied. Please allow microphone access in your browser settings.');
+        } else if (event.error === 'no-speech') {
+            alert('No speech detected. Please try again.');
+        } else {
+            alert('Speech recognition error: ' + event.error);
+        }
+        stopRecording();
+    };
+
+    recognition.onend = function() {
+        if (isRecording) {
+            stopRecording();
+        }
+        if (voiceStatus) {
+            voiceStatus.classList.add('hidden');
+        }
+    };
+
+    function stopRecording() {
+        isRecording = false;
+        if (voiceBtn) {
+            voiceBtn.classList.remove('recording');
+            voiceBtn.textContent = '🎤';
+        }
+        try { recognition.stop(); } catch(e) {}
+    }
+
+    function startRecording() {
+        if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+            alert('Speech recognition often requires a secure connection (HTTPS). Please check your connection.');
+        }
+        try {
+            recognition.start();
+        } catch(e) {
+            console.error('Speech recognition start failed', e);
+            alert('Could not start speech recognition: ' + e.message);
+        }
+    }
+
+    if (voiceBtn) {
+        voiceBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+    }
+
+    if (voiceProcessBtn) {
+        voiceProcessBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var askBtn = document.querySelector('input[name="submit_button"]');
+            if (askBtn) {
+                askBtn.click();
+            }
+        });
+    }
+})();
+
 function scrollToTop() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;

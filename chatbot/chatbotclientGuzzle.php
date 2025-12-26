@@ -155,7 +155,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php displayModelChoices(); ?>
             
             <?php $display_text = getDisplayText(); ?>
-            <textarea name="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
+            <div class="input-container">
+                <textarea name="input_text" id="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
+                <div class="voice-controls">
+                    <button type="button" id="voiceInputBtn" class="voice-btn" title="Speak into microphone">🎤</button>
+                    <button type="button" id="voiceProcessBtn" class="voice-process-btn hidden" title="Process spoken text">Process</button>
+                </div>
+            </div>
+            <div id="voiceStatus" class="voice-status hidden">Microphone ready...</div>
         </div>
 
         <div class="controls-section">
