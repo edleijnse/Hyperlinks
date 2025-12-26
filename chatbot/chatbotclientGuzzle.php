@@ -158,10 +158,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="input-container">
                 <textarea name="input_text" id="input_text" class="input" rows="3" cols="40" style="width: 100%; box-sizing: border-box;"><?php echo $display_text; ?></textarea>
                 <div class="voice-controls">
-                    <span class="microphone-icon" title="Voice Input">🎤</span>
-                    <button type="button" id="voiceInputBtn" class="voice-btn" title="Speak into microphone (English)">🇺🇸</button>
-                    <button type="button" id="voiceInputBtnDe" class="voice-btn" title="Auf Deutsch sprechen">🇩🇪</button>
-                    <button type="button" id="voiceInputBtnEs" class="voice-btn" title="Hablar en español">🇪🇸</button>
+                    <span class="microphone-icon" title="Voice Input">
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" style="vertical-align: middle;"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                    </span>
+                    <button type="button" id="voiceInputBtn" class="voice-btn" title="Speak into microphone (English)">
+                        <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#bd3d44" d="M0 0h640v480H0z"/><path fill="#fff" d="M0 0h640v44.3H0m0 88.6h640v44.3H0m0 88.6h640v44.3H0m0 88.6h640v44.3H0m0 88.6h640v44.3H0"/><path fill="#192f5d" d="M0 0h256v242.3H0z"/><path fill="#fff" d="M22.5 13.5l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm-182.8 38l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm-182.8 38l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm-182.8 38.1l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm-182.8 38l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2zm45.7 0l3.8 11.6h12.2l-9.9 7.2 3.8 11.6-9.9-7.2-9.9 7.2 3.8-11.6-9.9-7.2h12.2z"/></svg>
+                        <span class="stop-icon hidden"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6 6h12v12H6z"/></svg></span>
+                    </button>
+                    <button type="button" id="voiceInputBtnDe" class="voice-btn" title="Auf Deutsch sprechen">
+                        <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#ffce00" d="M0 320h640v160H0z"/><path d="M0 0h640v160H0z"/><path fill="#d00" d="M0 160h640v160H0z"/></svg>
+                        <span class="stop-icon hidden"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6 6h12v12H6z"/></svg></span>
+                    </button>
+                    <button type="button" id="voiceInputBtnEs" class="voice-btn" title="Hablar en español">
+                        <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#c60b1e" d="M0 0h640v120H0zm0 360h640v120H0z"/><path fill="#ffc400" d="M0 120h640v240H0z"/></svg>
+                        <span class="stop-icon hidden"><svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6 6h12v12H6z"/></svg></span>
+                    </button>
                     <button type="button" id="voiceProcessBtn" class="voice-process-btn hidden" title="Process spoken text">Process</button>
                 </div>
             </div>

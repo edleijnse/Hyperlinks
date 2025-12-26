@@ -381,14 +381,33 @@ body.waiting, body.waiting * {
     color: white;
     border: none;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    overflow: hidden;
+}
+
+.flag-icon {
+    width: 40px;
+    height: auto;
+    display: block;
+}
+
+.stop-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stop-icon svg {
+    width: 30px;
+    height: 30px;
 }
 
 .voice-btn:hover {
