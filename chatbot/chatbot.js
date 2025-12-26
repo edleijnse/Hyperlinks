@@ -290,10 +290,6 @@ function copyAnswerToClipboard(event) {
         isRecording = true;
         if (currentActiveBtn) {
             currentActiveBtn.classList.add('recording');
-            var flag = currentActiveBtn.querySelector('.flag-icon');
-            var stop = currentActiveBtn.querySelector('.stop-icon');
-            if (flag) flag.classList.add('hidden');
-            if (stop) stop.classList.remove('hidden');
         }
         if (voiceStatus) {
             voiceStatus.classList.remove('hidden');
@@ -337,10 +333,6 @@ function copyAnswerToClipboard(event) {
         isRecording = false;
         if (currentActiveBtn) {
             currentActiveBtn.classList.remove('recording');
-            var flag = currentActiveBtn.querySelector('.flag-icon');
-            var stop = currentActiveBtn.querySelector('.stop-icon');
-            if (flag) flag.classList.remove('hidden');
-            if (stop) stop.classList.add('hidden');
         }
         currentActiveBtn = null;
         try { recognition.stop(); } catch(e) {}
