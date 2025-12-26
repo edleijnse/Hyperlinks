@@ -264,16 +264,20 @@ function copyAnswerToClipboard(event) {
 })();
 
 (function(){
-    var voiceBtn = document.getElementById('voiceInputBtn');
+    var voiceBtnEn = document.getElementById('voiceInputBtn');
+    var voiceBtnDe = document.getElementById('voiceInputBtnDe');
+    var voiceBtnEs = document.getElementById('voiceInputBtnEs');
     var voiceProcessBtn = document.getElementById('voiceProcessBtn');
     var voiceStatus = document.getElementById('voiceStatus');
     var textArea = document.getElementById('input_text');
     var recognition = null;
     var isRecording = false;
+    var currentActiveBtn = null;
 
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        if (voiceBtn) voiceBtn.style.display = 'none';
-        if (voiceProcessBtn) voiceProcessBtn.style.display = 'none';
+        [voiceBtnEn, voiceBtnDe, voiceBtnEs, voiceProcessBtn].forEach(btn => {
+            if (btn) btn.style.display = 'none';
+        });
         return;
     }
 
@@ -281,13 +285,13 @@ function copyAnswerToClipboard(event) {
     recognition = new SpeechRecognition();
     recognition.continuous = false;
     recognition.interimResults = false;
-    recognition.lang = 'en-US'; // Default, can be adjusted or made dynamic if needed
 
     recognition.onstart = function() {
         isRecording = true;
-        if (voiceBtn) {
-            voiceBtn.classList.add('recording');
-            voiceBtn.textContent = '🛑';
+        if (currentActiveBtn) {
+            currentActiveBtn.classList.add('recording');
+            currentActiveBtn.dataset.originalText = currentActiveBtn.textContent;
+            currentActiveBtn.textContent = '🛑';
         }
         if (voiceStatus) {
             voiceStatus.classList.remove('hidden');
@@ -299,7 +303,6 @@ function copyAnswerToClipboard(event) {
         if (textArea) {
             var currentVal = textArea.value.trim();
             textArea.value = (currentVal ? currentVal + ' ' : '') + transcript;
-            // Trigger input event to save to sessionStorage (existing logic in chatbot.js)
             textArea.dispatchEvent(new Event('input'));
         }
         if (voiceProcessBtn) {
@@ -330,33 +333,54 @@ function copyAnswerToClipboard(event) {
 
     function stopRecording() {
         isRecording = false;
-        if (voiceBtn) {
-            voiceBtn.classList.remove('recording');
-            voiceBtn.textContent = '🎤';
+        if (currentActiveBtn) {
+            currentActiveBtn.classList.remove('recording');
+            if (currentActiveBtn.dataset.originalText) {
+                currentActiveBtn.textContent = currentActiveBtn.dataset.originalText;
+            }
         }
+        currentActiveBtn = null;
         try { recognition.stop(); } catch(e) {}
     }
 
-    function startRecording() {
+    function startRecording(btn, lang) {
+        if (isRecording) {
+            stopRecording();
+            return;
+        }
+
         if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
             alert('Speech recognition often requires a secure connection (HTTPS). Please check your connection.');
         }
+
+        currentActiveBtn = btn;
+        recognition.lang = lang;
+
         try {
             recognition.start();
         } catch(e) {
             console.error('Speech recognition start failed', e);
             alert('Could not start speech recognition: ' + e.message);
+            currentActiveBtn = null;
         }
     }
 
-    if (voiceBtn) {
-        voiceBtn.addEventListener('click', function(e) {
+    if (voiceBtnEn) {
+        voiceBtnEn.addEventListener('click', function(e) {
             e.preventDefault();
-            if (isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
+            startRecording(voiceBtnEn, 'en-US');
+        });
+    }
+    if (voiceBtnDe) {
+        voiceBtnDe.addEventListener('click', function(e) {
+            e.preventDefault();
+            startRecording(voiceBtnDe, 'de-DE');
+        });
+    }
+    if (voiceBtnEs) {
+        voiceBtnEs.addEventListener('click', function(e) {
+            e.preventDefault();
+            startRecording(voiceBtnEs, 'es-ES');
         });
     }
 

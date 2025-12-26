@@ -156,9 +156,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <?php $display_text = getDisplayText(); ?>
             <div class="input-container">
-                <textarea name="input_text" id="input_text" class="input" rows="3" cols="40"><?php echo $display_text; ?></textarea>
+                <textarea name="input_text" id="input_text" class="input" rows="3" cols="40" style="width: 100%; box-sizing: border-box;"><?php echo $display_text; ?></textarea>
                 <div class="voice-controls">
-                    <button type="button" id="voiceInputBtn" class="voice-btn" title="Speak into microphone">🎤</button>
+                    <span class="microphone-icon" title="Voice Input">🎤</span>
+                    <button type="button" id="voiceInputBtn" class="voice-btn" title="Speak into microphone (English)">🇺🇸</button>
+                    <button type="button" id="voiceInputBtnDe" class="voice-btn" title="Auf Deutsch sprechen">🇩🇪</button>
+                    <button type="button" id="voiceInputBtnEs" class="voice-btn" title="Hablar en español">🇪🇸</button>
                     <button type="button" id="voiceProcessBtn" class="voice-process-btn hidden" title="Process spoken text">Process</button>
                 </div>
             </div>
