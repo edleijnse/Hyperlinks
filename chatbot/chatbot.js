@@ -235,16 +235,28 @@ function copyAnswerToClipboard(event) {
             return;
         }
         currentUtterance = new SpeechSynthesisUtterance(text);
+        
+        // Set the requested language immediately
+        var requestedLang = lang || 'en-US';
+        currentUtterance.lang = requestedLang;
+
         try {
             var voices = window.speechSynthesis.getVoices();
             if (voices && voices.length) {
-                var voiceLang = lang || 'en-US';
-                var preferred = voices.find(v => v.lang.toLowerCase() === voiceLang.toLowerCase()) || 
-                                voices.find(v => v.lang.toLowerCase().startsWith(voiceLang.toLowerCase().split('-')[0])) ||
-                                voices.find(v => /en(-|_|\b)/i.test(v.lang)) || 
-                                voices[0];
-                currentUtterance.voice = preferred;
-                currentUtterance.lang = preferred.lang;
+                var preferred = voices.find(v => v.lang.toLowerCase() === requestedLang.toLowerCase()) || 
+                                voices.find(v => v.lang.toLowerCase().startsWith(requestedLang.toLowerCase().split('-')[0]));
+                
+                if (preferred) {
+                    currentUtterance.voice = preferred;
+                    currentUtterance.lang = preferred.lang;
+                } else {
+                    // Fallback to English only if we couldn't find ANY match for requested language
+                    var englishFallback = voices.find(v => /en(-|_|\b)/i.test(v.lang));
+                    if (englishFallback && requestedLang.toLowerCase().startsWith('en')) {
+                        currentUtterance.voice = englishFallback;
+                        currentUtterance.lang = englishFallback.lang;
+                    }
+                }
             }
         } catch (e) {}
         currentUtterance.rate = 1.0;
@@ -544,5 +556,15 @@ window.addEventListener('DOMContentLoaded', function () {
                 hideLoading();
             }
         });
+    }
+
+    // Warm up speech synthesis voices
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+        if (window.speechSynthesis.onvoiceschanged !== undefined) {
+            window.speechSynthesis.onvoiceschanged = function() {
+                window.speechSynthesis.getVoices();
+            };
+        }
     }
 });
