@@ -124,10 +124,24 @@ function get_openai_response_for_model($input_text, $model, Client $client, arra
  */
 function prepare_messages($input_text, array $content_history, $image_data_url = null)
 {
-    // Map previous plain text history as simple user messages (kept for backwards compatibility)
-    $messages = array_map(function ($content) {
-        return ['role' => 'user', 'content' => $content];
-    }, $content_history);
+    $messages = [];
+    
+    // Add a system prompt to ensure the AI stays in the same language as the user
+    $messages[] = [
+        'role' => 'system',
+        'content' => 'You are a helpful assistant. Always respond in the same language as the user\'s last message. If the user asks in French, respond in French. If they ask in English, respond in English.'
+    ];
+
+    foreach ($content_history as $entry) {
+        if (strpos($entry, 'QUESTION: ') === 0) {
+            $messages[] = ['role' => 'user', 'content' => substr($entry, 10)];
+        } elseif (strpos($entry, 'ANSWER: ') === 0) {
+            $messages[] = ['role' => 'assistant', 'content' => substr($entry, 8)];
+        } else {
+            // Fallback for any entries without prefix
+            $messages[] = ['role' => 'user', 'content' => $entry];
+        }
+    }
 
     // Build the current user message, optionally as a multimodal (text + image) content array
     if ($image_data_url) {
@@ -139,7 +153,7 @@ function prepare_messages($input_text, array $content_history, $image_data_url =
         $current_content = $input_text;
     }
 
-    $messages[] = ['role' => 'user', 'content' => $current_content, 'reasoning' => [ 'effort' => 'high' ]];
+    $messages[] = ['role' => 'user', 'content' => $current_content];
 
     return $messages;
 }

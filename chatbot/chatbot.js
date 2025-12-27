@@ -162,28 +162,63 @@ window.showAnswering = function() {
 function copyOutputToClipboard(event) {
     event.preventDefault();
     const outputText = document.getElementById("outputhistory").value;
-    navigator.clipboard.writeText(outputText).then(() => {
-        alert("Copied to clipboard: " + outputText);
-    }).catch(err => {
-        console.error('Could not copy text: ', err);
-    });
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(outputText).then(() => {
+            alert("Copied to clipboard: " + outputText);
+        }).catch(err => {
+            console.error('Could not copy text with navigator.clipboard: ', err);
+            fallbackCopyTextToClipboard(outputText);
+        });
+    } else {
+        fallbackCopyTextToClipboard(outputText);
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const tempTextarea = document.createElement("textarea");
+    tempTextarea.value = text;
+    // Ensure it is not visible and doesn't scroll the page
+    tempTextarea.style.position = "fixed";
+    tempTextarea.style.left = "-9999px";
+    tempTextarea.style.top = "0";
+    document.body.appendChild(tempTextarea);
+    tempTextarea.select();
+    tempTextarea.setSelectionRange(0, 99999);
+    try {
+        const successful = document.execCommand("copy");
+        if (successful) {
+            alert("Copied to clipboard: " + text);
+        } else {
+            console.warn("Fallback copy was unsuccessful");
+        }
+    } catch (err) {
+        console.error("Fallback copy failed: ", err);
+    }
+    document.body.removeChild(tempTextarea);
 }
 
 function copyAnswerToClipboard(event) {
     event.preventDefault();
-    const outputText = document.getElementById("outputhistory").value;
-    var lastIndex = outputText.lastIndexOf("ANSWER: ");
+    const outputHistory = document.getElementById("outputhistory").value;
+    var lastIndex = outputHistory.lastIndexOf("ANSWER: ");
     if (lastIndex !== -1) {
         var startIndex = lastIndex + "ANSWER: ".length;
-        var endText = outputText.substring(startIndex);
-        const tempTextarea = document.createElement("textarea");
-        tempTextarea.value = endText;
-        document.body.appendChild(tempTextarea);
-        tempTextarea.select();
-        tempTextarea.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        document.body.removeChild(tempTextarea);
-        alert("Copied to clipboard: " + endText);
+        var endText = outputHistory.substring(startIndex).trim();
+        var nextQuestion = endText.indexOf("QUESTION: ");
+        if (nextQuestion !== -1) {
+            endText = endText.substring(0, nextQuestion).trim();
+        }
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(endText).then(() => {
+                alert("Copied to clipboard: " + endText);
+            }).catch(err => {
+                console.error('Could not copy answer with navigator.clipboard: ', err);
+                fallbackCopyTextToClipboard(endText);
+            });
+        } else {
+            fallbackCopyTextToClipboard(endText);
+        }
     }
 }
 
@@ -195,7 +230,12 @@ function copyAnswerToClipboard(event) {
         var outputText = document.getElementById('outputhistory').value || '';
         var lastIndex = outputText.lastIndexOf('ANSWER: ');
         if (lastIndex === -1) return '';
-        return outputText.substring(lastIndex + 'ANSWER: '.length).trim();
+        var text = outputText.substring(lastIndex + 8).trim();
+        var nextQuestion = text.indexOf('QUESTION: ');
+        if (nextQuestion !== -1) {
+            text = text.substring(0, nextQuestion).trim();
+        }
+        return text;
     }
 
     function setPlaying(playing) {
@@ -221,19 +261,40 @@ function copyAnswerToClipboard(event) {
 
     window.playAnswerAudio = function(event, lang){
         if (event && event.preventDefault) event.preventDefault();
+        console.log('playAnswerAudio called for lang:', lang);
+
         if (!('speechSynthesis' in window)) {
             alert('Text-to-Speech is not supported in this browser.');
             return;
         }
+
+        // On some mobile browsers (especially Android Chrome), the speech synthesis engine 
+        // can get stuck in a paused state. Calling resume() before speak() can help.
+        try {
+            if (window.speechSynthesis.paused) {
+                console.log('SpeechSynthesis was paused, resuming...');
+                window.speechSynthesis.resume();
+            }
+        } catch (e) {
+            console.error('Error resuming SpeechSynthesis:', e);
+        }
+
         if (window.speechSynthesis.speaking) {
-            try { window.speechSynthesis.cancel(); } catch(e) {}
+            console.log('Already speaking, cancelling...');
+            try { 
+                window.speechSynthesis.cancel(); 
+            } catch(e) {
+                console.error('Error cancelling SpeechSynthesis:', e);
+            }
         }
 
         var text = getLastAnswerText();
         if (!text) {
+            console.warn('No text found to play');
             alert('No answer to play yet.');
             return;
         }
+        console.log('Text to play:', text.substring(0, 50) + '...');
         currentUtterance = new SpeechSynthesisUtterance(text);
         
         // Set the requested language immediately
@@ -242,28 +303,53 @@ function copyAnswerToClipboard(event) {
 
         try {
             var voices = window.speechSynthesis.getVoices();
+            console.log('Available voices count:', voices.length);
             if (voices && voices.length) {
                 var preferred = voices.find(v => v.lang.toLowerCase() === requestedLang.toLowerCase()) || 
                                 voices.find(v => v.lang.toLowerCase().startsWith(requestedLang.toLowerCase().split('-')[0]));
                 
                 if (preferred) {
+                    console.log('Selected voice:', preferred.name, preferred.lang);
                     currentUtterance.voice = preferred;
                     currentUtterance.lang = preferred.lang;
                 } else {
-                    // Fallback to English only if we couldn't find ANY match for requested language
-                    var englishFallback = voices.find(v => /en(-|_|\b)/i.test(v.lang));
-                    if (englishFallback && requestedLang.toLowerCase().startsWith('en')) {
-                        currentUtterance.voice = englishFallback;
-                        currentUtterance.lang = englishFallback.lang;
+                    console.warn('No voice found for language:', requestedLang);
+                    // Alert if no voice found for requested language (except English which often works anyway)
+                    if (!requestedLang.toLowerCase().startsWith('en')) {
+                        console.warn('Falling back to system default for ' + requestedLang);
+                    }
+                    
+                    // Fallback to English ONLY if the requested language was English and we found an English voice
+                    if (requestedLang.toLowerCase().startsWith('en')) {
+                        var englishFallback = voices.find(v => /en(-|_|\b)/i.test(v.lang));
+                        if (englishFallback) {
+                            currentUtterance.voice = englishFallback;
+                            currentUtterance.lang = englishFallback.lang;
+                        }
                     }
                 }
             }
-        } catch (e) {}
+        } catch (e) {
+            console.error('Error during voice selection:', e);
+        }
+        
         currentUtterance.rate = 1.0;
         currentUtterance.pitch = 1.0;
-        currentUtterance.onstart = function(){ setPlaying(true); };
-        currentUtterance.onend = function(){ setPlaying(false); currentUtterance = null; };
-        currentUtterance.onerror = function(){ setPlaying(false); currentUtterance = null; };
+        
+        currentUtterance.onstart = function(){ 
+            console.log('Speech started');
+            setPlaying(true); 
+        };
+        currentUtterance.onend = function(){ 
+            console.log('Speech ended');
+            setPlaying(false); 
+            currentUtterance = null; 
+        };
+        currentUtterance.onerror = function(err){ 
+            console.error('Speech error:', err);
+            setPlaying(false); 
+            currentUtterance = null; 
+        };
 
         try {
             window.speechSynthesis.speak(currentUtterance);

@@ -259,8 +259,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $last_answer = $_SESSION['content_history'][$history_count - 1];
             ?>
             <div class="latest-interaction">
-                <div class="question"><?php echo htmlspecialchars($last_question); ?></div>
-                <div class="answer"><?php echo htmlspecialchars($last_answer); ?></div>
+                <?php
+                $display_question = (strpos($last_question, 'QUESTION: ') === 0) ? substr($last_question, 10) : $last_question;
+                $display_answer = (strpos($last_answer, 'ANSWER: ') === 0) ? substr($last_answer, 8) : $last_answer;
+                ?>
+                <div class="question"><?php echo htmlspecialchars($display_question); ?></div>
+                <div class="answer"><?php echo htmlspecialchars($display_answer); ?></div>
             </div>
             <?php
         }
