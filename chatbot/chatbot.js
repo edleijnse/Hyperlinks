@@ -201,12 +201,25 @@ function copyAnswerToClipboard(event) {
     function setPlaying(playing) {
         isSpeaking = !!playing;
         var playBtn = document.getElementById('playAudioBtn');
+        var playBtnDe = document.getElementById('playAudioBtnDe');
+        var playBtnEs = document.getElementById('playAudioBtnEs');
         var stopBtn = document.getElementById('stopAudioBtn');
-        if (playBtn) playBtn.disabled = playing;
+        if (playBtn) {
+            playBtn.disabled = playing;
+            playBtn.style.opacity = playing ? '0.5' : '1';
+        }
+        if (playBtnDe) {
+            playBtnDe.disabled = playing;
+            playBtnDe.style.opacity = playing ? '0.5' : '1';
+        }
+        if (playBtnEs) {
+            playBtnEs.disabled = playing;
+            playBtnEs.style.opacity = playing ? '0.5' : '1';
+        }
         if (stopBtn) stopBtn.disabled = !playing;
     }
 
-    window.playAnswerAudio = function(event){
+    window.playAnswerAudio = function(event, lang){
         if (event && event.preventDefault) event.preventDefault();
         if (!('speechSynthesis' in window)) {
             alert('Text-to-Speech is not supported in this browser.');
@@ -225,8 +238,13 @@ function copyAnswerToClipboard(event) {
         try {
             var voices = window.speechSynthesis.getVoices();
             if (voices && voices.length) {
-                var preferred = voices.find(v => /en(-|_|\b)/i.test(v.lang)) || voices[0];
+                var voiceLang = lang || 'en-US';
+                var preferred = voices.find(v => v.lang.toLowerCase() === voiceLang.toLowerCase()) || 
+                                voices.find(v => v.lang.toLowerCase().startsWith(voiceLang.toLowerCase().split('-')[0])) ||
+                                voices.find(v => /en(-|_|\b)/i.test(v.lang)) || 
+                                voices[0];
                 currentUtterance.voice = preferred;
+                currentUtterance.lang = preferred.lang;
             }
         } catch (e) {}
         currentUtterance.rate = 1.0;
