@@ -203,19 +203,19 @@ function copyAnswerToClipboard(event) {
         var playBtn = document.getElementById('playAudioBtn');
         var playBtnDe = document.getElementById('playAudioBtnDe');
         var playBtnEs = document.getElementById('playAudioBtnEs');
+        var playBtnFr = document.getElementById('playAudioBtnFr');
+        var playBtnIt = document.getElementById('playAudioBtnIt');
+        var playBtnNl = document.getElementById('playAudioBtnNl');
+        var playBtnEl = document.getElementById('playAudioBtnEl');
         var stopBtn = document.getElementById('stopAudioBtn');
-        if (playBtn) {
-            playBtn.disabled = playing;
-            playBtn.style.opacity = playing ? '0.5' : '1';
-        }
-        if (playBtnDe) {
-            playBtnDe.disabled = playing;
-            playBtnDe.style.opacity = playing ? '0.5' : '1';
-        }
-        if (playBtnEs) {
-            playBtnEs.disabled = playing;
-            playBtnEs.style.opacity = playing ? '0.5' : '1';
-        }
+        
+        const playBtns = [playBtn, playBtnDe, playBtnEs, playBtnFr, playBtnIt, playBtnNl, playBtnEl];
+        playBtns.forEach(btn => {
+            if (btn) {
+                btn.disabled = playing;
+                btn.style.opacity = playing ? '0.5' : '1';
+            }
+        });
         if (stopBtn) stopBtn.disabled = !playing;
     }
 
@@ -285,6 +285,10 @@ function copyAnswerToClipboard(event) {
     var voiceBtnEn = document.getElementById('voiceInputBtn');
     var voiceBtnDe = document.getElementById('voiceInputBtnDe');
     var voiceBtnEs = document.getElementById('voiceInputBtnEs');
+    var voiceBtnFr = document.getElementById('voiceInputBtnFr');
+    var voiceBtnIt = document.getElementById('voiceInputBtnIt');
+    var voiceBtnNl = document.getElementById('voiceInputBtnNl');
+    var voiceBtnEl = document.getElementById('voiceInputBtnEl');
     var voiceProcessBtn = document.getElementById('voiceProcessBtn');
     var voiceStatus = document.getElementById('voiceStatus');
     var textArea = document.getElementById('input_text');
@@ -293,7 +297,7 @@ function copyAnswerToClipboard(event) {
     var currentActiveBtn = null;
 
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        [voiceBtnEn, voiceBtnDe, voiceBtnEs, voiceProcessBtn].forEach(btn => {
+        [voiceBtnEn, voiceBtnDe, voiceBtnEs, voiceBtnFr, voiceBtnIt, voiceBtnNl, voiceBtnEl, voiceProcessBtn].forEach(btn => {
             if (btn) btn.style.display = 'none';
         });
         return;
@@ -394,6 +398,30 @@ function copyAnswerToClipboard(event) {
         voiceBtnEs.addEventListener('click', function(e) {
             e.preventDefault();
             startRecording(voiceBtnEs, 'es-ES');
+        });
+    }
+    if (voiceBtnFr) {
+        voiceBtnFr.addEventListener('click', function(e) {
+            e.preventDefault();
+            startRecording(voiceBtnFr, 'fr-FR');
+        });
+    }
+    if (voiceBtnIt) {
+        voiceBtnIt.addEventListener('click', function(e) {
+            e.preventDefault();
+            startRecording(voiceBtnIt, 'it-IT');
+        });
+    }
+    if (voiceBtnNl) {
+        voiceBtnNl.addEventListener('click', function(e) {
+            e.preventDefault();
+            startRecording(voiceBtnNl, 'nl-NL');
+        });
+    }
+    if (voiceBtnEl) {
+        voiceBtnEl.addEventListener('click', function(e) {
+            e.preventDefault();
+            startRecording(voiceBtnEl, 'el-GR');
         });
     }
 

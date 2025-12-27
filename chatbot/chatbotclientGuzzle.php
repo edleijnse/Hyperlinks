@@ -170,6 +170,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="button" id="voiceInputBtnEs" class="voice-btn" title="Hablar en español">
                         <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#c60b1e" d="M0 0h640v120H0zm0 360h640v120H0z"/><path fill="#ffc400" d="M0 120h640v240H0z"/></svg>
                     </button>
+                    <button type="button" id="voiceInputBtnFr" class="voice-btn" title="Parler en français">
+                        <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#ed2939" d="M426.7 0H640v480H426.7z"/><path fill="#fff" d="M213.3 0h213.4v480H213.3z"/><path fill="#002395" d="M0 0h213.3v480H0z"/></svg>
+                    </button>
+                    <button type="button" id="voiceInputBtnIt" class="voice-btn" title="Parlare in italiano">
+                        <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#009246" d="M0 0h213.3v480H0z"/><path fill="#fff" d="M213.3 0h213.4v480H213.3z"/><path fill="#ce2b37" d="M426.7 0H640v480H426.7z"/></svg>
+                    </button>
+                    <button type="button" id="voiceInputBtnNl" class="voice-btn" title="In het Nederlands spreken">
+                        <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#21468b" d="M0 320h640v160H0z"/><path fill="#fff" d="M0 160h640v160H0z"/><path fill="#ae1c28" d="M0 0h640v160H0z"/></svg>
+                    </button>
+                    <button type="button" id="voiceInputBtnEl" class="voice-btn" title="Μιλήστε στα ελληνικά">
+                        <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#005bae" d="M0 0h640v480H0z"/><path fill="#fff" d="M0 53.3h640v53.4H0M0 160h640v53.3H0M0 266.7h640v53.3H0M0 373.3h640v53.4H0"/><path fill="#005bae" d="M0 0h266.7v266.7H0z"/><path fill="#fff" d="M106.7 0h53.3v266.7h-53.3zM0 106.7h266.7v53.3H0z"/></svg>
+                    </button>
                     <button type="button" id="voiceProcessBtn" class="voice-process-btn hidden" title="Process spoken text">Process</button>
                 </div>
             </div>
@@ -219,6 +231,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
             <button type="button" id="playAudioBtnEs" class="voice-btn" title="Reproducir en español" onclick="playAnswerAudio(event, 'es-ES')">
                 <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#c60b1e" d="M0 0h640v120H0zm0 360h640v120H0z"/><path fill="#ffc400" d="M0 120h640v240H0z"/></svg>
+            </button>
+            <button type="button" id="playAudioBtnFr" class="voice-btn" title="Jouer en français" onclick="playAnswerAudio(event, 'fr-FR')">
+                <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#ed2939" d="M426.7 0H640v480H426.7z"/><path fill="#fff" d="M213.3 0h213.4v480H213.3z"/><path fill="#002395" d="M0 0h213.3v480H0z"/></svg>
+            </button>
+            <button type="button" id="playAudioBtnIt" class="voice-btn" title="Riproduci in italiano" onclick="playAnswerAudio(event, 'it-IT')">
+                <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#009246" d="M0 0h213.3v480H0z"/><path fill="#fff" d="M213.3 0h213.4v480H213.3z"/><path fill="#ce2b37" d="M426.7 0H640v480H426.7z"/></svg>
+            </button>
+            <button type="button" id="playAudioBtnNl" class="voice-btn" title="Afspelen in het Nederlands" onclick="playAnswerAudio(event, 'nl-NL')">
+                <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#21468b" d="M0 320h640v160H0z"/><path fill="#fff" d="M0 160h640v160H0z"/><path fill="#ae1c28" d="M0 0h640v160H0z"/></svg>
+            </button>
+            <button type="button" id="playAudioBtnEl" class="voice-btn" title="Αναπαραγωγή στα ελληνικά" onclick="playAnswerAudio(event, 'el-GR')">
+                <svg class="flag-icon" viewBox="0 0 640 480"><path fill="#005bae" d="M0 0h640v480H0z"/><path fill="#fff" d="M0 53.3h640v53.4H0M0 160h640v53.3H0M0 266.7h640v53.3H0M0 373.3h640v53.4H0"/><path fill="#005bae" d="M0 0h266.7v266.7H0z"/><path fill="#fff" d="M106.7 0h53.3v266.7h-53.3zM0 106.7h266.7v53.3H0z"/></svg>
             </button>
             <button id="stopAudioBtn" class="copy red-background" onclick="stopAnswerAudio(event)" disabled>Stop</button>
         </div>
