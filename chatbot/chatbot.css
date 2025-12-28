@@ -166,7 +166,7 @@ input[type="file"] {
 
 .button-group {
     display: flex;
-    gap: 50px;
+    gap: 40px;
     flex-wrap: wrap;
 }
 
@@ -343,11 +343,12 @@ body.waiting, body.waiting * {
 .voice-controls {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 40px;
     align-items: center;
 }
 
-.microphone-icon {
+.microphone-icon,
+.play-icon {
     font-size: 30px;
 }
 
