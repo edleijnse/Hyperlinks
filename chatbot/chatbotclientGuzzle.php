@@ -102,14 +102,23 @@ function processUserInput($input_text): void {
     $selected_model = $_SESSION['model_choice'] ?? 'gpt-5-mini';
     $content_history = &$_SESSION['content_history'];
 
+    $generate_image = isset($_POST['generate_image']);
+    $image_url = null;
+    if ($generate_image && !empty($input_text)) {
+        $image_url = generate_openai_image($input_text, $client);
+    }
+
     $image_data_url = handleImageUpload();
     $myquestion = "QUESTION: " . $input_text . ($image_data_url ? " [image attached]" : "");
     $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $client, $content_history, $image_data_url);
     
+    if ($image_url) {
+        $mycompletion .= " [GENERATED_IMAGE: " . $image_url . "]";
+    }
+
     $content_history[] = $myquestion;
     $content_history[] = $mycompletion;
     $_SESSION['content_history'] = $content_history;
-    $_POST['input_text'] = '';
 }
 
 // Main logic
@@ -153,6 +162,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="controls-section">
             <span class="section-title">I want to chat:</span>
             <?php displayModelChoices(); ?>
+            <div style="margin-top: 10px;">
+                <label class="large-font">
+                    <input type="checkbox" name="generate_image" id="generate_image" class="large-font">
+                    Generate an image with DALL-E 3
+                </label>
+            </div>
             
             <?php $display_text = getDisplayText(); ?>
             <div class="input-container">
@@ -265,8 +280,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php
                 $display_question = (strpos($last_question, 'QUESTION: ') === 0) ? substr($last_question, 10) : $last_question;
                 $display_answer = (strpos($last_answer, 'ANSWER: ') === 0) ? substr($last_answer, 8) : $last_answer;
+
+                $gen_image_url = null;
+                if (preg_match('/\[GENERATED_IMAGE: (https?:\/\/[^\]]+)\]/', $display_answer, $matches)) {
+                    $gen_image_url = $matches[1];
+                    $display_answer = str_replace($matches[0], '', $display_answer);
+                }
                 ?>
                 <div class="question"><?php echo htmlspecialchars($display_question); ?></div>
+                <?php if ($gen_image_url): ?>
+                    <div class="generated-image">
+                        <img src="<?php echo htmlspecialchars($gen_image_url); ?>" alt="Generated image" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                    </div>
+                <?php endif; ?>
                 <div class="answer"><?php echo htmlspecialchars($display_answer); ?></div>
             </div>
             <?php
@@ -287,9 +313,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php
             } elseif (strpos($entry, 'ANSWER: ') === 0) {
                 $text = htmlspecialchars(substr($entry, 8));
+                $gen_image_url = null;
+                if (preg_match('/\[GENERATED_IMAGE: (https?:\/\/[^\]]+)\]/', $text, $matches)) {
+                    $gen_image_url = $matches[1];
+                    $text = str_replace($matches[0], '', $text);
+                }
                 ?>
                 <div class="chat-bubble-container ai">
-                    <div class="chat-bubble ai"><?php echo $text; ?></div>
+                    <div class="chat-bubble ai">
+                        <?php if ($gen_image_url): ?>
+                            <div class="generated-image">
+                                <img src="<?php echo htmlspecialchars($gen_image_url); ?>" alt="Generated image" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                            </div>
+                        <?php endif; ?>
+                        <?php echo $text; ?>
+                    </div>
                 </div>
                 <?php
             }

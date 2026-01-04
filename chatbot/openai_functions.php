@@ -159,6 +159,34 @@ function prepare_messages($input_text, array $content_history, $image_data_url =
 }
 
 /**
+ * Generate an image using OpenAI's DALL-E model.
+ *
+ * @param string $prompt
+ * @param Client $client
+ * @param string $model
+ * @return string|null The URL of the generated image
+ */
+function generate_openai_image($prompt, Client $client, $model = 'dall-e-3')
+{
+    $requestBody = [
+        'model' => $model,
+        'prompt' => $prompt,
+        'n' => 1,
+        'size' => '1024x1024',
+    ];
+
+    try {
+        $response = $client->post('/v1/images/generations', ['body' => json_encode($requestBody)]);
+        $responseBody = json_decode($response->getBody()->getContents(), true);
+
+        return $responseBody['data'][0]['url'] ?? null;
+    } catch (Exception $e) {
+        // Log error or handle as needed
+        return null;
+    }
+}
+
+/**
  * Make a request to the OpenAI API.
  *
  * @param Client $client
