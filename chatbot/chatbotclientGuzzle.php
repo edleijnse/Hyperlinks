@@ -386,9 +386,6 @@ HTML;
 
 function getDisplayText(): string
 {
-    if (isset($_POST['submit_button']) && isset($_POST['input_text'])) {
-        return htmlentities($_POST['input_text']);
-    }
     return '';
 }
 
