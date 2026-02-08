@@ -200,15 +200,11 @@ function fallbackCopyTextToClipboard(text) {
 function copyAnswerToClipboard(event) {
     event.preventDefault();
     const outputHistory = document.getElementById("outputhistory").value;
-    var lastIndex = outputHistory.lastIndexOf("ANSWER: ");
+    var lastIndex = outputHistory.lastIndexOf("QUESTION: ");
     if (lastIndex !== -1) {
-        var startIndex = lastIndex + "ANSWER: ".length;
+        var startIndex = lastIndex;
         var endText = outputHistory.substring(startIndex).trim();
-        var nextQuestion = endText.indexOf("QUESTION: ");
-        if (nextQuestion !== -1) {
-            endText = endText.substring(0, nextQuestion).trim();
-        }
-        
+
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(endText).then(() => {
                 alert("Copied to clipboard: " + endText);
