@@ -366,13 +366,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function displayModelChoices(): void
 {
     // Check POST first, then fallback to SESSION, then default value
-    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-5-mini';
+    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-5.4-mini';
     // Store the selected model in session
     $_SESSION['model_choice'] = $selected_model;
 
     // echo "<br>" . $selected_model . "<br>";
-    echo generateRadioOption('gpt-5-mini', 'simple and fast using model gpt-5-mini', $selected_model);
-    echo generateRadioOption('gpt-5.2', 'more accurate but slower using model gpt-5.2', $selected_model);
+    echo generateRadioOption('gpt-5.4-mini', 'simple and fast using model gpt-5.4-mini', $selected_model);
+    echo generateRadioOption('gpt-5.4', 'more accurate but slower using model gpt-5.4', $selected_model);
 }
 
 function generateRadioOption($id, $label, $selected_model): string
