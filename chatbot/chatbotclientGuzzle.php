@@ -372,7 +372,7 @@ function displayModelChoices(): void
 
     // echo "<br>" . $selected_model . "<br>";
     echo generateRadioOption('gpt-5.4-mini', 'simple and fast using model gpt-5.4-mini', $selected_model);
-    echo generateRadioOption('gpt-5.4', 'more accurate but slower using model gpt-5.4', $selected_model);
+    echo generateRadioOption('gpt-5.5', 'more accurate but slower using model gpt-5.5', $selected_model);
 }
 
 function generateRadioOption($id, $label, $selected_model): string
