@@ -18,10 +18,10 @@
         <fileTransfer mountedRoot="C:\Users\edlei\dockerlocalwebserver" accessType="MOUNT" port="0" />
       </webServer>
       <webServer id="df745112-84d8-4f1f-b547-4c63f9f87cd9" name="raspberry8080" url="http://raspberrypi:8080/chatbot">
-        <fileTransfer mountedRoot="$USER_HOME$/H:\dockerlocalwebserver" accessType="MOUNT" port="0" />
+        <fileTransfer mountedRoot="H:\dockerlocalwebserver" accessType="MOUNT" port="0" />
       </webServer>
       <webServer id="8c273c75-7ef2-4ea5-a740-54588b7e0cf3" name="raspberry8080_2" url="http://raspberrypi:8080/chatbot">
-        <fileTransfer mountedRoot="$USER_HOME$/dockerlocalwebserver" accessType="MOUNT" port="0" />
+        <fileTransfer mountedRoot="C:\Users\edlei\dockerlocalwebserver" accessType="MOUNT" port="0" />
       </webServer>
     </option>
   </component>
