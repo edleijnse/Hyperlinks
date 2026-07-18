@@ -110,10 +110,21 @@ function processUserInput($input_text): void {
 
     $image_data_url = handleImageUpload();
     $myquestion = "QUESTION: " . $input_text . ($image_data_url ? " [image attached]" : "");
-    $mycompletion = "ANSWER: " . get_openai_response_for_model($input_text, $selected_model, $client, $content_history, $image_data_url);
-    
-    if ($image_url) {
-        $mycompletion .= " [GENERATED_IMAGE: " . $image_url . "]";
+
+    if ($generate_image) {
+        // Image generation is a complete operation. Do not follow it with a
+        // Chat Completions request, which may not be permitted for this key.
+        $mycompletion = $image_url
+            ? "ANSWER: [GENERATED_IMAGE: " . $image_url . "]"
+            : "ANSWER: Image generation failed. Check the server error log.";
+    } else {
+        $mycompletion = "ANSWER: " . get_openai_response_for_model(
+            $input_text,
+            $selected_model,
+            $client,
+            $content_history,
+            $image_data_url
+        );
     }
 
     $content_history[] = $myquestion;
@@ -165,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div style="margin-top: 10px;">
                 <label class="large-font">
                     <input type="checkbox" name="generate_image" id="generate_image" class="large-font">
-                    Generate an image with DALL-E 3
+                    Generate an image
                 </label>
             </div>
             
