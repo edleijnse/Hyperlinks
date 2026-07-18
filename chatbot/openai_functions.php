@@ -159,29 +159,94 @@ function prepare_messages($input_text, array $content_history, $image_data_url =
 }
 
 /**
- * Generate an image using OpenAI's DALL-E model.
+ * Generate an image with the current OpenAI Image API and persist it locally.
  *
  * @param string $prompt
  * @param Client $client
  * @param string $model
- * @return string|null The URL of the generated image
+ * @return string|null A browser-accessible URL for the generated image
  */
-function generate_openai_image($prompt, Client $client, $model = 'dall-e-3')
+function generate_openai_image($prompt, Client $client, $model = 'gpt-image-2')
 {
+    $prompt = trim((string)$prompt);
+    if ($prompt === '') {
+        error_log('OpenAI image generation skipped: the prompt is empty.');
+        return null;
+    }
+
     $requestBody = [
         'model' => $model,
         'prompt' => $prompt,
         'n' => 1,
         'size' => '1024x1024',
+        'output_format' => 'png',
     ];
 
     try {
-        $response = $client->post('/v1/images/generations', ['body' => json_encode($requestBody)]);
-        $responseBody = json_decode($response->getBody()->getContents(), true);
+        $response = $client->post('/v1/images/generations', [
+            'json' => $requestBody,
+            // Image generation can legitimately take longer than chat requests.
+            'timeout' => 180,
+        ]);
+        $responseBody = json_decode(
+            $response->getBody()->getContents(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
 
-        return $responseBody['data'][0]['url'] ?? null;
-    } catch (Exception $e) {
-        // Log error or handle as needed
+        $image = $responseBody['data'][0] ?? null;
+        if (!is_array($image)) {
+            throw new RuntimeException('The API response contains no image data.');
+        }
+
+        $base64Image = $image['b64_json'] ?? null;
+        if (!is_string($base64Image) || $base64Image === '') {
+            throw new RuntimeException('The API response contains no base64 image data.');
+        }
+
+        $imageBytes = base64_decode($base64Image, true);
+        if ($imageBytes === false) {
+            throw new RuntimeException('The API returned invalid base64 image data.');
+        }
+
+        if ($imageBytes === '') {
+            throw new RuntimeException('The generated image is empty.');
+        }
+        if (strlen($imageBytes) > 25 * 1024 * 1024) {
+            throw new RuntimeException('The generated image exceeds the 25 MB storage limit.');
+        }
+
+        $imageInfo = @getimagesizefromstring($imageBytes);
+        $extensions = [
+            IMAGETYPE_JPEG => 'jpg',
+            IMAGETYPE_PNG => 'png',
+            IMAGETYPE_WEBP => 'webp',
+        ];
+        $extension = is_array($imageInfo) ? ($extensions[$imageInfo[2]] ?? null) : null;
+        if ($extension === null) {
+            throw new RuntimeException('The API response is not a supported image format.');
+        }
+
+        $directory = __DIR__ . DIRECTORY_SEPARATOR . 'generated_images';
+        if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+            throw new RuntimeException('Unable to create the generated image directory.');
+        }
+
+        $filename = bin2hex(random_bytes(16)) . '.' . $extension;
+        $path = $directory . DIRECTORY_SEPARATOR . $filename;
+        if (file_put_contents($path, $imageBytes, LOCK_EX) === false) {
+            throw new RuntimeException('Unable to save the generated image.');
+        }
+
+        $scriptDirectory = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+        $scriptDirectory = $scriptDirectory === '/' || $scriptDirectory === '.'
+            ? ''
+            : rtrim($scriptDirectory, '/');
+
+        return $scriptDirectory . '/generated_images/' . rawurlencode($filename);
+    } catch (Throwable $e) {
+        error_log('OpenAI image generation failed: ' . $e->getMessage());
         return null;
     }
 }
