@@ -99,7 +99,7 @@ function handleImageUpload(): ?string {
 function processUserInput($input_text): void {
     $openai_data = init_openai();
     $client = $openai_data[1];
-    $selected_model = $_SESSION['model_choice'] ?? 'gpt-5.6-terra';
+    $selected_model = $_SESSION['model_choice'] ?? 'gpt-6-astra';
     $content_history = &$_SESSION['content_history'];
 
     $generate_image = isset($_POST['generate_image']);
@@ -377,11 +377,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function displayModelChoices(): void
 {
     // Check POST first, then fallback to SESSION, then default value
-    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-5.6-terra';
+    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-6-astra';
     // Store the selected model in session
     $_SESSION['model_choice'] = $selected_model;
 
     // echo "<br>" . $selected_model . "<br>";
+    echo generateRadioOption('gpt-6-astra', 'GPT-6 Astra', $selected_model);
     echo generateRadioOption('gpt-5.6-terra', 'simple and fast using model gpt-5.6-terra', $selected_model);
     echo generateRadioOption('gpt-5.6-sol', 'more accurate but slower using model gpt-5.6-sol', $selected_model);
 }

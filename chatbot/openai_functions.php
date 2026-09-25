@@ -98,6 +98,10 @@ function get_openai_response_for_model($input_text, $model, Client $client, arra
 {
     $messages = prepare_messages($input_text, $content_history, $image_data_url);
     $requestBody = ['model' => $model, 'messages' => $messages];
+    if ($model === 'gpt-6-astra') {
+        // Astra requires reasoning; use its lowest effort for interactive chat.
+        $requestBody['reasoning_effort'] = 'low';
+    }
     $response = make_request($client, $requestBody);
     $completion = $response['choices'][0]['message']['content'] ?? null;
 
