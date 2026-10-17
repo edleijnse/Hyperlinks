@@ -245,13 +245,14 @@ function copyAnswerToClipboard(event) {
         var playBtnEl = document.getElementById('playAudioBtnEl');
         var stopBtn = document.getElementById('stopAudioBtn');
         
-        const playBtns = [playBtn, playBtnDe, playBtnEs, playBtnFr, playBtnIt, playBtnNl, playBtnEl];
-        playBtns.forEach(btn => {
+        var playBtns = [playBtn, playBtnDe, playBtnEs, playBtnFr, playBtnIt, playBtnNl, playBtnEl];
+        for (var i = 0; i < playBtns.length; i++) {
+            var btn = playBtns[i];
             if (btn) {
                 btn.disabled = playing;
                 btn.style.opacity = playing ? '0.5' : '1';
             }
-        });
+        }
         if (stopBtn) stopBtn.disabled = !playing;
     }
 
@@ -301,8 +302,15 @@ function copyAnswerToClipboard(event) {
             var voices = window.speechSynthesis.getVoices();
             console.log('Available voices count:', voices.length);
             if (voices && voices.length) {
-                var preferred = voices.find(v => v.lang.toLowerCase() === requestedLang.toLowerCase()) || 
-                                voices.find(v => v.lang.toLowerCase().startsWith(requestedLang.toLowerCase().split('-')[0]));
+                var preferred = null;
+                for (var vIdx = 0; vIdx < voices.length; vIdx++) {
+                    var v = voices[vIdx];
+                    if (v.lang && (v.lang.toLowerCase() === requestedLang.toLowerCase() ||
+                        v.lang.toLowerCase().indexOf(requestedLang.toLowerCase().split('-')[0]) === 0)) {
+                        preferred = v;
+                        break;
+                    }
+                }
                 
                 if (preferred) {
                     console.log('Selected voice:', preferred.name, preferred.lang);
@@ -317,7 +325,13 @@ function copyAnswerToClipboard(event) {
                     
                     // Fallback to English ONLY if the requested language was English and we found an English voice
                     if (requestedLang.toLowerCase().startsWith('en')) {
-                        var englishFallback = voices.find(v => /en(-|_|\b)/i.test(v.lang));
+                        var englishFallback = null;
+                        for (var eIdx = 0; eIdx < voices.length; eIdx++) {
+                            if (/en(-|_|\b)/i.test(voices[eIdx].lang)) {
+                                englishFallback = voices[eIdx];
+                                break;
+                            }
+                        }
                         if (englishFallback) {
                             currentUtterance.voice = englishFallback;
                             currentUtterance.lang = englishFallback.lang;
@@ -391,9 +405,10 @@ function copyAnswerToClipboard(event) {
     var currentActiveBtn = null;
 
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        [voiceBtnEn, voiceBtnDe, voiceBtnEs, voiceBtnFr, voiceBtnIt, voiceBtnNl, voiceBtnEl, voiceProcessBtn].forEach(btn => {
-            if (btn) btn.style.display = 'none';
-        });
+        var voiceBtns = [voiceBtnEn, voiceBtnDe, voiceBtnEs, voiceBtnFr, voiceBtnIt, voiceBtnNl, voiceBtnEl, voiceProcessBtn];
+        for (var i = 0; i < voiceBtns.length; i++) {
+            if (voiceBtns[i]) voiceBtns[i].style.display = 'none';
+        }
         return;
     }
 
@@ -649,4 +664,73 @@ window.addEventListener('DOMContentLoaded', function () {
             };
         }
     }
+
+    // Tab model choice tracking
+    var allRadios = document.querySelectorAll('#tabContentAll input[type="radio"]');
+    if (allRadios.length > 0) {
+        allRadios.forEach(function(radio) {
+            if (radio.checked) {
+                window.lastSelectedAllModel = radio.value;
+            }
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    window.lastSelectedAllModel = this.value;
+                }
+            });
+        });
+    }
 });
+
+window.switchChatTab = function(tabName) {
+    var activeTabInput = document.getElementById('active_tab');
+    var tabBtnBest = document.getElementById('tabBtnBest');
+    var tabBtnAll = document.getElementById('tabBtnAll');
+    var tabContentBest = document.getElementById('tabContentBest');
+    var tabContentAll = document.getElementById('tabContentAll');
+    var bestRadio = document.getElementById('best_gpt-6-astra');
+    var allAstraRadio = document.getElementById('all_gpt-6-astra');
+    var allTerraRadio = document.getElementById('all_gpt-5.6-terra');
+    var allSolRadio = document.getElementById('all_gpt-5.6-sol');
+
+    if (tabName === 'best') {
+        if (activeTabInput) activeTabInput.value = 'best';
+        if (tabBtnBest) {
+            tabBtnBest.classList.add('active');
+            tabBtnBest.setAttribute('aria-selected', 'true');
+        }
+        if (tabBtnAll) {
+            tabBtnAll.classList.remove('active');
+            tabBtnAll.setAttribute('aria-selected', 'false');
+        }
+        if (tabContentBest) tabContentBest.style.display = 'block';
+        if (tabContentAll) tabContentAll.style.display = 'none';
+
+        if (bestRadio) bestRadio.checked = true;
+    } else {
+        if (activeTabInput) activeTabInput.value = 'all';
+        if (tabBtnAll) {
+            tabBtnAll.classList.add('active');
+            tabBtnAll.setAttribute('aria-selected', 'true');
+        }
+        if (tabBtnBest) {
+            tabBtnBest.classList.remove('active');
+            tabBtnBest.setAttribute('aria-selected', 'false');
+        }
+        if (tabContentAll) tabContentAll.style.display = 'block';
+        if (tabContentBest) tabContentBest.style.display = 'none';
+
+        var anyCheckedInAll = (allAstraRadio && allAstraRadio.checked) ||
+                             (allTerraRadio && allTerraRadio.checked) ||
+                             (allSolRadio && allSolRadio.checked);
+
+        if (!anyCheckedInAll) {
+            var lastAllModel = window.lastSelectedAllModel || 'gpt-6-astra';
+            var targetRadio = document.getElementById('all_' + lastAllModel);
+            if (targetRadio) {
+                targetRadio.checked = true;
+            } else if (allAstraRadio) {
+                allAstraRadio.checked = true;
+            }
+        }
+    }
+};

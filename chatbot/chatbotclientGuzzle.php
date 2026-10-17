@@ -138,6 +138,10 @@ $flash_error = detectUploadErrors();
 $answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_button']));
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['active_tab'])) {
+        $_SESSION['active_tab'] = $_POST['active_tab'];
+    }
+
     if (isset($_POST['model_choice_chosen'])) {
         $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
     }
@@ -158,7 +162,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <head>
         <title>ChatGPT client</title>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="chatbot.css">
+        <link rel="stylesheet" href="chatbot.css?v=<?php echo file_exists(__DIR__ . '/chatbot.css') ? filemtime(__DIR__ . '/chatbot.css') : time(); ?>">
+        <script>
+            function switchChatTab(tabName) {
+                var activeTabInput = document.getElementById('active_tab');
+                var tabBtnBest = document.getElementById('tabBtnBest');
+                var tabBtnAll = document.getElementById('tabBtnAll');
+                var tabContentBest = document.getElementById('tabContentBest');
+                var tabContentAll = document.getElementById('tabContentAll');
+                var bestRadio = document.getElementById('best_gpt-6-astra');
+                var allAstraRadio = document.getElementById('all_gpt-6-astra');
+                var allTerraRadio = document.getElementById('all_gpt-5.6-terra');
+                var allSolRadio = document.getElementById('all_gpt-5.6-sol');
+
+                if (tabName === 'best') {
+                    if (activeTabInput) activeTabInput.value = 'best';
+                    if (tabBtnBest) {
+                        tabBtnBest.className = 'tab-btn active';
+                        tabBtnBest.setAttribute('aria-selected', 'true');
+                    }
+                    if (tabBtnAll) {
+                        tabBtnAll.className = 'tab-btn';
+                        tabBtnAll.setAttribute('aria-selected', 'false');
+                    }
+                    if (tabContentBest) tabContentBest.style.display = 'block';
+                    if (tabContentAll) tabContentAll.style.display = 'none';
+
+                    if (bestRadio) bestRadio.checked = true;
+                } else {
+                    if (activeTabInput) activeTabInput.value = 'all';
+                    if (tabBtnAll) {
+                        tabBtnAll.className = 'tab-btn active';
+                        tabBtnAll.setAttribute('aria-selected', 'true');
+                    }
+                    if (tabBtnBest) {
+                        tabBtnBest.className = 'tab-btn';
+                        tabBtnBest.setAttribute('aria-selected', 'false');
+                    }
+                    if (tabContentAll) tabContentAll.style.display = 'block';
+                    if (tabContentBest) tabContentBest.style.display = 'none';
+
+                    var anyCheckedInAll = (allAstraRadio && allAstraRadio.checked) ||
+                                         (allTerraRadio && allTerraRadio.checked) ||
+                                         (allSolRadio && allSolRadio.checked);
+
+                    if (!anyCheckedInAll) {
+                        var lastAllModel = window.lastSelectedAllModel || 'gpt-6-astra';
+                        var targetRadio = document.getElementById('all_' + lastAllModel);
+                        if (targetRadio) {
+                            targetRadio.checked = true;
+                        } else if (allAstraRadio) {
+                            allAstraRadio.checked = true;
+                        }
+                    }
+                }
+            }
+            window.switchChatTab = switchChatTab;
+        </script>
     </head>
 
     <body>
@@ -357,7 +417,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
     <textarea id="outputhistory" style="display:none;"><?php echo htmlentities($content_history_text); ?></textarea>
 
-    <script src="chatbot.js"></script>
+    <script src="chatbot.js?v=<?php echo file_exists(__DIR__ . '/chatbot.js') ? filemtime(__DIR__ . '/chatbot.js') : time(); ?>"></script>
     <?php if (!empty($answeringOnLoad)): ?>
     <script>
         window.addEventListener('load', function() {
@@ -381,10 +441,56 @@ function displayModelChoices(): void
     // Store the selected model in session
     $_SESSION['model_choice'] = $selected_model;
 
-    // echo "<br>" . $selected_model . "<br>";
-    echo generateRadioOption('gpt-6-astra', 'GPT-6 Astra', $selected_model);
-    echo generateRadioOption('gpt-5.6-terra', 'simple and fast using model gpt-5.6-terra', $selected_model);
-    echo generateRadioOption('gpt-5.6-sol', 'more accurate but slower using model gpt-5.6-sol', $selected_model);
+    // Determine active tab: 'best' (first tab) or 'all' (second tab)
+    $active_tab = $_POST['active_tab'] ?? $_SESSION['active_tab'] ?? ($selected_model !== 'gpt-6-astra' ? 'all' : 'best');
+    $_SESSION['active_tab'] = $active_tab;
+
+    $is_best_tab = ($active_tab === 'best');
+    $is_all_tab = !$is_best_tab;
+
+    $best_tab_btn_active = $is_best_tab ? 'active' : '';
+    $all_tab_btn_active = $is_all_tab ? 'active' : '';
+
+    $best_tab_style = $is_best_tab ? 'display: block;' : 'display: none;';
+    $all_tab_style = $is_all_tab ? 'display: block;' : 'display: none;';
+
+    // Best tab option: only the best option (GPT-6 Astra)
+    $best_checked = $is_best_tab ? 'checked' : '';
+
+    // All tab options: all options to chat (GPT-6 Astra, gpt-5.6-terra, gpt-5.6-sol)
+    $all_astra_checked = ($is_all_tab && $selected_model === 'gpt-6-astra') ? 'checked' : '';
+    $all_terra_checked = ($is_all_tab && $selected_model === 'gpt-5.6-terra') ? 'checked' : '';
+    $all_sol_checked = ($is_all_tab && $selected_model === 'gpt-5.6-sol') ? 'checked' : '';
+
+    if ($is_all_tab && !$all_astra_checked && !$all_terra_checked && !$all_sol_checked) {
+        $all_astra_checked = 'checked';
+    }
+    if ($is_best_tab && !$best_checked) {
+        $best_checked = 'checked';
+    }
+
+    $aria_best = $is_best_tab ? 'true' : 'false';
+    $aria_all = $is_all_tab ? 'true' : 'false';
+
+    echo <<<HTML
+    <input type="hidden" name="active_tab" id="active_tab" value="$active_tab">
+    <div class="tabs-nav" role="tablist">
+        <button type="button" class="tab-btn $best_tab_btn_active" id="tabBtnBest" role="tab" aria-selected="$aria_best" aria-controls="tabContentBest" onclick="switchChatTab('best')">Best Option</button>
+        <button type="button" class="tab-btn $all_tab_btn_active" id="tabBtnAll" role="tab" aria-selected="$aria_all" aria-controls="tabContentAll" onclick="switchChatTab('all')">All Options</button>
+    </div>
+    <div id="tabContentBest" class="tab-content" role="tabpanel" aria-labelledby="tabBtnBest" style="$best_tab_style">
+        <input type="radio" id="best_gpt-6-astra" name="model_choice_chosen" value="gpt-6-astra" $best_checked class="large-font">
+        <label for="best_gpt-6-astra" class="large-font">GPT-6 Astra</label><br>
+    </div>
+    <div id="tabContentAll" class="tab-content" role="tabpanel" aria-labelledby="tabBtnAll" style="$all_tab_style">
+        <input type="radio" id="all_gpt-6-astra" name="model_choice_chosen" value="gpt-6-astra" $all_astra_checked class="large-font">
+        <label for="all_gpt-6-astra" class="large-font">GPT-6 Astra</label><br>
+        <input type="radio" id="all_gpt-5.6-terra" name="model_choice_chosen" value="gpt-5.6-terra" $all_terra_checked class="large-font">
+        <label for="all_gpt-5.6-terra" class="large-font">simple and fast using model gpt-5.6-terra</label><br>
+        <input type="radio" id="all_gpt-5.6-sol" name="model_choice_chosen" value="gpt-5.6-sol" $all_sol_checked class="large-font">
+        <label for="all_gpt-5.6-sol" class="large-font">more accurate but slower using model gpt-5.6-sol</label><br>
+    </div>
+HTML;
 }
 
 function generateRadioOption($id, $label, $selected_model): string
