@@ -154,6 +154,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['content_history'] = [];
     }
 }
+
+$selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-6-astra';
+$active_tab = $_POST['active_tab'] ?? $_SESSION['active_tab'] ?? ($selected_model !== 'gpt-6-astra' ? 'all' : 'simple');
 ?>
 
     <!DOCTYPE html>
@@ -166,29 +169,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <script>
             function switchChatTab(tabName) {
                 var activeTabInput = document.getElementById('active_tab');
+                var tabBtnSimple = document.getElementById('tabBtnSimple');
                 var tabBtnBest = document.getElementById('tabBtnBest');
                 var tabBtnAll = document.getElementById('tabBtnAll');
+                var tabContentSimple = document.getElementById('tabContentSimple');
                 var tabContentBest = document.getElementById('tabContentBest');
                 var tabContentAll = document.getElementById('tabContentAll');
+                var simpleRadio = document.getElementById('simple_gpt-6-astra');
                 var bestRadio = document.getElementById('best_gpt-6-astra');
                 var allAstraRadio = document.getElementById('all_gpt-6-astra');
                 var allTerraRadio = document.getElementById('all_gpt-5.6-terra');
                 var allSolRadio = document.getElementById('all_gpt-5.6-sol');
+                var voiceControls = document.getElementById('voiceControls') || document.querySelector('.voice-controls');
+                var voiceStatus = document.getElementById('voiceStatus');
+                var audioSection = document.getElementById('audioSection');
 
-                if (tabName === 'best') {
+                if (tabName === 'simple') {
+                    if (activeTabInput) activeTabInput.value = 'simple';
+                    if (tabBtnSimple) {
+                        tabBtnSimple.className = 'tab-btn active';
+                        tabBtnSimple.setAttribute('aria-selected', 'true');
+                    }
+                    if (tabBtnBest) {
+                        tabBtnBest.className = 'tab-btn';
+                        tabBtnBest.setAttribute('aria-selected', 'false');
+                    }
+                    if (tabBtnAll) {
+                        tabBtnAll.className = 'tab-btn';
+                        tabBtnAll.setAttribute('aria-selected', 'false');
+                    }
+                    if (tabContentSimple) tabContentSimple.style.display = 'block';
+                    if (tabContentBest) tabContentBest.style.display = 'none';
+                    if (tabContentAll) tabContentAll.style.display = 'none';
+
+                    if (simpleRadio) simpleRadio.checked = true;
+
+                    if (voiceControls) voiceControls.style.display = 'none';
+                    if (voiceStatus) voiceStatus.style.display = 'none';
+                    if (audioSection) audioSection.style.display = 'none';
+                    if (typeof stopAnswerAudio === 'function') {
+                        try { stopAnswerAudio(); } catch(e) {}
+                    }
+                } else if (tabName === 'best') {
                     if (activeTabInput) activeTabInput.value = 'best';
                     if (tabBtnBest) {
                         tabBtnBest.className = 'tab-btn active';
                         tabBtnBest.setAttribute('aria-selected', 'true');
+                    }
+                    if (tabBtnSimple) {
+                        tabBtnSimple.className = 'tab-btn';
+                        tabBtnSimple.setAttribute('aria-selected', 'false');
                     }
                     if (tabBtnAll) {
                         tabBtnAll.className = 'tab-btn';
                         tabBtnAll.setAttribute('aria-selected', 'false');
                     }
                     if (tabContentBest) tabContentBest.style.display = 'block';
+                    if (tabContentSimple) tabContentSimple.style.display = 'none';
                     if (tabContentAll) tabContentAll.style.display = 'none';
 
                     if (bestRadio) bestRadio.checked = true;
+
+                    if (voiceControls) voiceControls.style.display = 'flex';
+                    if (voiceStatus) voiceStatus.style.display = '';
+                    if (audioSection) audioSection.style.display = '';
                 } else {
                     if (activeTabInput) activeTabInput.value = 'all';
                     if (tabBtnAll) {
@@ -199,8 +243,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         tabBtnBest.className = 'tab-btn';
                         tabBtnBest.setAttribute('aria-selected', 'false');
                     }
+                    if (tabBtnSimple) {
+                        tabBtnSimple.className = 'tab-btn';
+                        tabBtnSimple.setAttribute('aria-selected', 'false');
+                    }
                     if (tabContentAll) tabContentAll.style.display = 'block';
                     if (tabContentBest) tabContentBest.style.display = 'none';
+                    if (tabContentSimple) tabContentSimple.style.display = 'none';
 
                     var anyCheckedInAll = (allAstraRadio && allAstraRadio.checked) ||
                                          (allTerraRadio && allTerraRadio.checked) ||
@@ -215,6 +264,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             allAstraRadio.checked = true;
                         }
                     }
+
+                    if (voiceControls) voiceControls.style.display = 'flex';
+                    if (voiceStatus) voiceStatus.style.display = '';
+                    if (audioSection) audioSection.style.display = '';
                 }
             }
             window.switchChatTab = switchChatTab;
@@ -243,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php $display_text = getDisplayText(); ?>
             <div class="input-container">
                 <textarea name="input_text" id="input_text" class="input" rows="3" cols="40" style="width: 100%; box-sizing: border-box;"><?php echo $display_text; ?></textarea>
-                <div class="voice-controls">
+                <div class="voice-controls" id="voiceControls"<?php echo ($active_tab === 'simple') ? ' style="display: none;"' : ''; ?>>
                     <span class="microphone-icon" title="Voice Input">
                         <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" style="vertical-align: middle;"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
                     </span>
@@ -271,7 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="button" id="voiceProcessBtn" class="voice-process-btn hidden" title="Process spoken text">Process</button>
                 </div>
             </div>
-            <div id="voiceStatus" class="voice-status hidden">Microphone ready...</div>
+            <div id="voiceStatus" class="voice-status hidden"<?php echo ($active_tab === 'simple') ? ' style="display: none;"' : ''; ?>>Microphone ready...</div>
         </div>
 
         <div class="controls-section">
@@ -306,7 +359,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <div class="controls-section">
+    <div class="controls-section" id="audioSection"<?php echo ($active_tab === 'simple') ? ' style="display: none;"' : ''; ?>>
         <span class="section-title">Audio</span>
         <div class="button-group">
             <span class="play-icon" title="Play Audio">
@@ -441,18 +494,30 @@ function displayModelChoices(): void
     // Store the selected model in session
     $_SESSION['model_choice'] = $selected_model;
 
-    // Determine active tab: 'best' (first tab) or 'all' (second tab)
-    $active_tab = $_POST['active_tab'] ?? $_SESSION['active_tab'] ?? ($selected_model !== 'gpt-6-astra' ? 'all' : 'best');
+    // Determine active tab: 'simple' (first tab), 'best' (second tab), or 'all' (third tab)
+    $active_tab = $_POST['active_tab'] ?? $_SESSION['active_tab'] ?? ($selected_model !== 'gpt-6-astra' ? 'all' : 'simple');
     $_SESSION['active_tab'] = $active_tab;
 
+    $is_simple_tab = ($active_tab === 'simple');
     $is_best_tab = ($active_tab === 'best');
-    $is_all_tab = !$is_best_tab;
+    $is_all_tab = ($active_tab === 'all');
 
+    if (!$is_simple_tab && !$is_best_tab && !$is_all_tab) {
+        $is_simple_tab = true;
+        $active_tab = 'simple';
+        $_SESSION['active_tab'] = 'simple';
+    }
+
+    $simple_tab_btn_active = $is_simple_tab ? 'active' : '';
     $best_tab_btn_active = $is_best_tab ? 'active' : '';
     $all_tab_btn_active = $is_all_tab ? 'active' : '';
 
+    $simple_tab_style = $is_simple_tab ? 'display: block;' : 'display: none;';
     $best_tab_style = $is_best_tab ? 'display: block;' : 'display: none;';
     $all_tab_style = $is_all_tab ? 'display: block;' : 'display: none;';
+
+    // Simple tab option: copy of Best Option (GPT-6 Astra) without language buttons
+    $simple_checked = $is_simple_tab ? 'checked' : '';
 
     // Best tab option: only the best option (GPT-6 Astra)
     $best_checked = $is_best_tab ? 'checked' : '';
@@ -468,15 +533,24 @@ function displayModelChoices(): void
     if ($is_best_tab && !$best_checked) {
         $best_checked = 'checked';
     }
+    if ($is_simple_tab && !$simple_checked) {
+        $simple_checked = 'checked';
+    }
 
+    $aria_simple = $is_simple_tab ? 'true' : 'false';
     $aria_best = $is_best_tab ? 'true' : 'false';
     $aria_all = $is_all_tab ? 'true' : 'false';
 
     echo <<<HTML
     <input type="hidden" name="active_tab" id="active_tab" value="$active_tab">
     <div class="tabs-nav" role="tablist">
+        <button type="button" class="tab-btn $simple_tab_btn_active" id="tabBtnSimple" role="tab" aria-selected="$aria_simple" aria-controls="tabContentSimple" onclick="switchChatTab('simple')">Simple</button>
         <button type="button" class="tab-btn $best_tab_btn_active" id="tabBtnBest" role="tab" aria-selected="$aria_best" aria-controls="tabContentBest" onclick="switchChatTab('best')">Best Option</button>
         <button type="button" class="tab-btn $all_tab_btn_active" id="tabBtnAll" role="tab" aria-selected="$aria_all" aria-controls="tabContentAll" onclick="switchChatTab('all')">All Options</button>
+    </div>
+    <div id="tabContentSimple" class="tab-content" role="tabpanel" aria-labelledby="tabBtnSimple" style="$simple_tab_style">
+        <input type="radio" id="simple_gpt-6-astra" name="model_choice_chosen" value="gpt-6-astra" $simple_checked class="large-font">
+        <label for="simple_gpt-6-astra" class="large-font">GPT-6 Astra</label><br>
     </div>
     <div id="tabContentBest" class="tab-content" role="tabpanel" aria-labelledby="tabBtnBest" style="$best_tab_style">
         <input type="radio" id="best_gpt-6-astra" name="model_choice_chosen" value="gpt-6-astra" $best_checked class="large-font">

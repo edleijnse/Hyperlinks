@@ -473,8 +473,15 @@ body.waiting, body.waiting * {
 }
 
 @media screen and (max-width: 1000px) {
+    .tabs-nav {
+        flex-direction: column;
+    }
+
     .tab-btn {
         font-size: 36px;
         padding: 14px 28px;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
     }
 }

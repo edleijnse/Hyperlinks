@@ -683,29 +683,70 @@ window.addEventListener('DOMContentLoaded', function () {
 
 window.switchChatTab = function(tabName) {
     var activeTabInput = document.getElementById('active_tab');
+    var tabBtnSimple = document.getElementById('tabBtnSimple');
     var tabBtnBest = document.getElementById('tabBtnBest');
     var tabBtnAll = document.getElementById('tabBtnAll');
+    var tabContentSimple = document.getElementById('tabContentSimple');
     var tabContentBest = document.getElementById('tabContentBest');
     var tabContentAll = document.getElementById('tabContentAll');
+    var simpleRadio = document.getElementById('simple_gpt-6-astra');
     var bestRadio = document.getElementById('best_gpt-6-astra');
     var allAstraRadio = document.getElementById('all_gpt-6-astra');
     var allTerraRadio = document.getElementById('all_gpt-5.6-terra');
     var allSolRadio = document.getElementById('all_gpt-5.6-sol');
+    var voiceControls = document.getElementById('voiceControls') || document.querySelector('.voice-controls');
+    var voiceStatus = document.getElementById('voiceStatus');
+    var audioSection = document.getElementById('audioSection');
 
-    if (tabName === 'best') {
+    if (tabName === 'simple') {
+        if (activeTabInput) activeTabInput.value = 'simple';
+        if (tabBtnSimple) {
+            tabBtnSimple.classList.add('active');
+            tabBtnSimple.setAttribute('aria-selected', 'true');
+        }
+        if (tabBtnBest) {
+            tabBtnBest.classList.remove('active');
+            tabBtnBest.setAttribute('aria-selected', 'false');
+        }
+        if (tabBtnAll) {
+            tabBtnAll.classList.remove('active');
+            tabBtnAll.setAttribute('aria-selected', 'false');
+        }
+        if (tabContentSimple) tabContentSimple.style.display = 'block';
+        if (tabContentBest) tabContentBest.style.display = 'none';
+        if (tabContentAll) tabContentAll.style.display = 'none';
+
+        if (simpleRadio) simpleRadio.checked = true;
+
+        if (voiceControls) voiceControls.style.display = 'none';
+        if (voiceStatus) voiceStatus.style.display = 'none';
+        if (audioSection) audioSection.style.display = 'none';
+        if (typeof stopAnswerAudio === 'function') {
+            try { stopAnswerAudio(); } catch(e) {}
+        }
+    } else if (tabName === 'best') {
         if (activeTabInput) activeTabInput.value = 'best';
         if (tabBtnBest) {
             tabBtnBest.classList.add('active');
             tabBtnBest.setAttribute('aria-selected', 'true');
+        }
+        if (tabBtnSimple) {
+            tabBtnSimple.classList.remove('active');
+            tabBtnSimple.setAttribute('aria-selected', 'false');
         }
         if (tabBtnAll) {
             tabBtnAll.classList.remove('active');
             tabBtnAll.setAttribute('aria-selected', 'false');
         }
         if (tabContentBest) tabContentBest.style.display = 'block';
+        if (tabContentSimple) tabContentSimple.style.display = 'none';
         if (tabContentAll) tabContentAll.style.display = 'none';
 
         if (bestRadio) bestRadio.checked = true;
+
+        if (voiceControls) voiceControls.style.display = 'flex';
+        if (voiceStatus) voiceStatus.style.display = '';
+        if (audioSection) audioSection.style.display = '';
     } else {
         if (activeTabInput) activeTabInput.value = 'all';
         if (tabBtnAll) {
@@ -716,8 +757,13 @@ window.switchChatTab = function(tabName) {
             tabBtnBest.classList.remove('active');
             tabBtnBest.setAttribute('aria-selected', 'false');
         }
+        if (tabBtnSimple) {
+            tabBtnSimple.classList.remove('active');
+            tabBtnSimple.setAttribute('aria-selected', 'false');
+        }
         if (tabContentAll) tabContentAll.style.display = 'block';
         if (tabContentBest) tabContentBest.style.display = 'none';
+        if (tabContentSimple) tabContentSimple.style.display = 'none';
 
         var anyCheckedInAll = (allAstraRadio && allAstraRadio.checked) ||
                              (allTerraRadio && allTerraRadio.checked) ||
@@ -732,5 +778,9 @@ window.switchChatTab = function(tabName) {
                 allAstraRadio.checked = true;
             }
         }
+
+        if (voiceControls) voiceControls.style.display = 'flex';
+        if (voiceStatus) voiceStatus.style.display = '';
+        if (audioSection) audioSection.style.display = '';
     }
 };
