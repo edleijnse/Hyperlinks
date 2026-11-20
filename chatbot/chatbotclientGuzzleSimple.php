@@ -1,0 +1,352 @@
+<?php
+session_start();
+require 'vendor/autoload.php';
+require 'openai_functions.php';
+
+use GuzzleHttp\Client;
+
+/**
+ * Initialize session history if not already set.
+ */
+function initSession(): void {
+    if (!isset($_SESSION['content_history']) || !is_array($_SESSION['content_history'])) {
+        $_SESSION['content_history'] = [];
+    }
+}
+
+/**
+ * Convert php.ini size values (e.g., "50M") to bytes.
+ */
+function toBytes($val): int {
+    $val = trim((string)$val);
+    $last = strtolower(substr($val, -1));
+    $num = (int)$val;
+    switch ($last) {
+        case 'g': return $num * 1024 * 1024 * 1024;
+        case 'm': return $num * 1024 * 1024;
+        case 'k': return $num * 1024;
+        default: return $num;
+    }
+}
+
+/**
+ * Detect upload errors and request size issues.
+ */
+function detectUploadErrors(): ?string {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return null;
+    }
+
+    $contentLength = (int)($_SERVER['CONTENT_LENGTH'] ?? 0);
+    $postMax = toBytes(ini_get('post_max_size'));
+    if ($contentLength > 0 && $postMax > 0 && $contentLength > $postMax && empty($_POST) && empty($_FILES)) {
+        return sprintf('The request is too large (%0.1f MB). Maximum allowed is %0.1f MB.', $contentLength / 1048576, $postMax / 1048576);
+    }
+
+    if (isset($_FILES['image_file']['error'])) {
+        $err = (int)$_FILES['image_file']['error'];
+        if ($err !== UPLOAD_ERR_OK && $err !== UPLOAD_ERR_NO_FILE) {
+            switch ($err) {
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    $uMax = toBytes(ini_get('upload_max_filesize'));
+                    return sprintf('The selected image exceeds the upload limit of %0.1f MB.', $uMax / 1048576);
+                case UPLOAD_ERR_PARTIAL:
+                    return 'The image upload was incomplete.';
+                case UPLOAD_ERR_NO_TMP_DIR:
+                case UPLOAD_ERR_CANT_WRITE:
+                case UPLOAD_ERR_EXTENSION:
+                    return 'The server could not store the uploaded file.';
+                default:
+                    return 'An unexpected upload error occurred.';
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * Process image upload and return data URL.
+ */
+function handleImageUpload(): ?string {
+    if (!isset($_FILES['image_file']) || $_FILES['image_file']['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    $tmpName = $_FILES['image_file']['tmp_name'];
+    $mime = $_FILES['image_file']['type'] ?: null;
+    if (!$mime && function_exists('finfo_open')) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        if ($finfo) {
+            $mime = finfo_file($finfo, $tmpName);
+            finfo_close($finfo);
+        }
+    }
+
+    $allowed = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
+    if ($mime && in_array($mime, $allowed, true)) {
+        $bytes = @file_get_contents($tmpName);
+        if ($bytes !== false) {
+            return "data:$mime;base64," . base64_encode($bytes);
+        }
+    }
+    return null;
+}
+
+/**
+ * Process user input and call OpenAI API.
+ */
+function processUserInput($input_text): void {
+    $openai_data = init_openai();
+    $client = $openai_data[1];
+    $selected_model = $_SESSION['model_choice'] ?? 'gpt-6-astra';
+    $content_history = &$_SESSION['content_history'];
+
+    $generate_image = isset($_POST['generate_image']);
+    $image_url = null;
+    if ($generate_image && !empty($input_text)) {
+        $image_url = generate_openai_image($input_text, $client);
+    }
+
+    $image_data_url = handleImageUpload();
+    $myquestion = "QUESTION: " . $input_text . ($image_data_url ? " [image attached]" : "");
+
+    if ($generate_image) {
+        // Image generation is a complete operation. Do not follow it with a
+        // Chat Completions request, which may not be permitted for this key.
+        $mycompletion = $image_url
+            ? "ANSWER: [GENERATED_IMAGE: " . $image_url . "]"
+            : "ANSWER: Image generation failed. Check the server error log.";
+    } else {
+        $mycompletion = "ANSWER: " . get_openai_response_for_model(
+            $input_text,
+            $selected_model,
+            $client,
+            $content_history,
+            $image_data_url
+        );
+    }
+
+    $content_history[] = $myquestion;
+    $content_history[] = $mycompletion;
+    $_SESSION['content_history'] = $content_history;
+}
+
+// Main logic
+initSession();
+$flash_error = detectUploadErrors();
+$answeringOnLoad = ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_button']));
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['model_choice_chosen'])) {
+        $_SESSION['model_choice'] = $_POST['model_choice_chosen'];
+    }
+
+    if (isset($_POST['submit_button']) && (!empty($_POST['input_text']) || (isset($_FILES['image_file']) && isset($_FILES['image_file']['error']) && $_FILES['image_file']['error'] === UPLOAD_ERR_OK))) {
+        processUserInput($_POST['input_text'] ?? '');
+    }
+
+    if (isset($_POST['clear_history_button'])) {
+        $_SESSION['content_history'] = [];
+    }
+}
+
+$selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-6-astra';
+?>
+
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <title>ChatGPT client</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="chatbot.css?v=<?php echo file_exists(__DIR__ . '/chatbot.css') ? filemtime(__DIR__ . '/chatbot.css') : time(); ?>">
+    </head>
+
+    <body>
+
+    <?php if (!empty($flash_error)): ?>
+        <div class="upload-error" role="alert" aria-live="assertive">
+            <?php echo htmlspecialchars($flash_error); ?>
+        </div>
+    <?php endif; ?>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="controls-section">
+            <span class="section-title">I want to chat:</span>
+            <?php displayModelChoices(); ?>
+            <div style="margin-top: 10px;">
+                <label class="large-font">
+                    <input type="checkbox" name="generate_image" id="generate_image" class="large-font">
+                    Generate an image
+                </label>
+            </div>
+            
+            <?php $display_text = getDisplayText(); ?>
+            <div class="input-container">
+                <textarea name="input_text" id="input_text" class="input" rows="3" cols="40" style="width: 100%; box-sizing: border-box;"><?php echo $display_text; ?></textarea>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <span class="section-title">Attach image (optional):</span>
+            <input type="file" name="image_file" id="image_file" accept="image/*">
+            <div id="imagePreviewWrapper" class="mt-2 hidden">
+                <img id="imagePreview" alt="Selected image preview">
+                <div id="imagePreviewNote" class="preview-note"></div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="button-group">
+                <input type="submit" name="submit_button" class="ask green-background" value="ASK">
+                <input type="submit" name="clear_history_button" class="ask red-background" value="NEW CHAT">
+            </div>
+        </div>
+    </form>
+
+    <div id="loadingOverlay" aria-live="polite" role="status" aria-busy="true">
+        <div class="loading-content">
+            <div class="loader" aria-hidden="true"></div>
+            <div class="label">Working…</div>
+        </div>
+    </div>
+
+    <div class="controls-section">
+        <span class="section-title">Copy to clipboard</span>
+        <div class="button-group">
+            <button class="copy red-background" onclick="copyOutputToClipboard(event)">Chat</button>
+            <button class="copy red-background" onclick="copyAnswerToClipboard(event)">Last answer</button>
+        </div>
+    </div>
+    <?php
+    // Form submission already processed before HTML rendering
+    ?>
+
+    <?php
+    if (!empty($_SESSION['content_history'])) {
+        $history_count = count($_SESSION['content_history']);
+        if ($history_count >= 2) {
+            $last_question = $_SESSION['content_history'][$history_count - 2];
+            $last_answer = $_SESSION['content_history'][$history_count - 1];
+            ?>
+            <div class="latest-interaction">
+                <?php
+                $display_question = (strpos($last_question, 'QUESTION: ') === 0) ? substr($last_question, 10) : $last_question;
+                $display_answer = (strpos($last_answer, 'ANSWER: ') === 0) ? substr($last_answer, 8) : $last_answer;
+
+                $gen_image_url = null;
+                if (preg_match('/\[GENERATED_IMAGE: ((?:https?:\/\/|\/)[^\]]+)\]/', $display_answer, $matches)) {
+                    $gen_image_url = $matches[1];
+                    $display_answer = str_replace($matches[0], '', $display_answer);
+                }
+                ?>
+                <div class="question"><?php echo htmlspecialchars($display_question); ?></div>
+                <?php if ($gen_image_url): ?>
+                    <div class="generated-image">
+                        <img src="<?php echo htmlspecialchars($gen_image_url); ?>" alt="Generated image" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                    </div>
+                <?php endif; ?>
+                <div class="answer"><?php echo htmlspecialchars($display_answer); ?></div>
+            </div>
+            <?php
+        }
+    }
+    ?>
+
+    <div id="chatHistory">
+    <?php
+    if (!empty($_SESSION['content_history'])) {
+        foreach ($_SESSION['content_history'] as $entry) {
+            if (strpos($entry, 'QUESTION: ') === 0) {
+                $text = htmlspecialchars(substr($entry, 10));
+                ?>
+                <div class="chat-bubble-container user">
+                    <div class="chat-bubble user"><?php echo $text; ?></div>
+                </div>
+                <?php
+            } elseif (strpos($entry, 'ANSWER: ') === 0) {
+                $text = htmlspecialchars(substr($entry, 8));
+                $gen_image_url = null;
+                if (preg_match('/\[GENERATED_IMAGE: ((?:https?:\/\/|\/)[^\]]+)\]/', $text, $matches)) {
+                    $gen_image_url = $matches[1];
+                    $text = str_replace($matches[0], '', $text);
+                }
+                ?>
+                <div class="chat-bubble-container ai">
+                    <div class="chat-bubble ai">
+                        <?php if ($gen_image_url): ?>
+                            <div class="generated-image">
+                                <img src="<?php echo htmlspecialchars($gen_image_url); ?>" alt="Generated image" style="max-width: 100%; border-radius: 8px; margin-bottom: 10px;">
+                            </div>
+                        <?php endif; ?>
+                        <?php echo $text; ?>
+                    </div>
+                </div>
+                <?php
+            }
+        }
+    } else {
+        ?>
+        <div class="no-history">No chat history yet. Start by asking a question above.</div>
+        <?php
+    }
+    ?>
+    </div>
+
+    <?php
+    // Output content history as text
+    $content_history_text = implode("\n", $_SESSION['content_history']);
+    ?>
+    <textarea id="outputhistory" style="display:none;"><?php echo htmlentities($content_history_text); ?></textarea>
+
+    <script src="chatbot.js?v=<?php echo file_exists(__DIR__ . '/chatbot.js') ? filemtime(__DIR__ . '/chatbot.js') : time(); ?>"></script>
+    <?php if (!empty($answeringOnLoad)): ?>
+    <script>
+        window.addEventListener('load', function() {
+            if (typeof showAnswering === 'function') {
+                showAnswering();
+            }
+        });
+    </script>
+    <?php endif; ?>
+    <button id="scrollToTop" onclick="scrollToTop()">Top</button>
+    </body>
+
+    </html>
+
+<?php
+
+function displayModelChoices(): void
+{
+    // Check POST first, then fallback to SESSION, then default value
+    $selected_model = $_POST['model_choice_chosen'] ?? $_SESSION['model_choice'] ?? 'gpt-6-astra';
+    // Store the selected model in session
+    $_SESSION['model_choice'] = $selected_model;
+
+    $checked = ($selected_model === 'gpt-6-astra') ? 'checked' : '';
+    if (!$checked) {
+        $checked = 'checked';
+    }
+
+    echo <<<HTML
+    <input type="radio" id="simple_gpt-6-astra" name="model_choice_chosen" value="gpt-6-astra" $checked class="large-font">
+    <label for="simple_gpt-6-astra" class="large-font">GPT-6 Astra</label><br>
+HTML;
+}
+
+function generateRadioOption($id, $label, $selected_model): string
+{
+    $checked = $selected_model === $id ? 'checked' : '';
+    return <<<HTML
+    <input type="radio" id="$id" name="model_choice_chosen" value="$id" $checked class="large-font">
+    <label for="$id" class="large-font">$label</label><br>
+HTML;
+}
+
+function getDisplayText(): string
+{
+    return '';
+}
+
+?>
