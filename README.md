@@ -93,7 +93,7 @@ Option B — Docker (optional):
 - Empty replies: Check that your API key is valid and that `openai_functions.php` is accessible. Review PHP error logs for details.
 
 #### Files involved
-- `chatbot/chatbotclientGuzzle.php` — the UI/controller described above
+- `chatbot/chatbotclientGuzzleExtended.php` — the UI/controller described above
 - `chatbot/openai_functions.php` — shared OpenAI integration helpers
 - `chatbot/head.php` — shared stylesheet and meta includes used by the page
 - `chatbot/vendor/autoload.php` — Composer autoloader (ensure Guzzle is installed)
